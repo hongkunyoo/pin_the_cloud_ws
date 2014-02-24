@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>SEUNGMIN</Machine>
+    <WindowsUser>rfrost</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <PackageIdentityName>a22ade4e-0f8e-4756-ad95-fd9cdb05eb0c</PackageIdentityName>
+    <RegisteredManifestChecksum>DB8646DCF2E8674D43039F1FC12D88BA82FB0302BE15C9DDCBA7792BB16AF686</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>a22ade4e-0f8e-4756-ad95-fd9cdb05eb0c_1.0.0.0_neutral__76pqrdrx2mk16</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>a22ade4e-0f8e-4756-ad95-fd9cdb05eb0c_76pqrdrx2mk16!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>a22ade4e-0f8e-4756-ad95-fd9cdb05eb0c</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=rfrost</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2014-02-24T14:30:50.465</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\PintheCloudWS.exe">
+      <PackagePath>PintheCloudWS.exe</PackagePath>
+      <Modified>2014-02-24T14:30:46.849</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\Assets\Logo.scale-100.png">
+      <PackagePath>Assets\Logo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-04-25T21:12:22.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\Assets\SmallLogo.scale-100.png">
+      <PackagePath>Assets\SmallLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-04-25T21:12:22.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\Assets\SplashScreen.scale-100.png">
+      <PackagePath>Assets\SplashScreen.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-04-25T21:12:22.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\Assets\StoreLogo.scale-100.png">
+      <PackagePath>Assets\StoreLogo.scale-100.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-04-25T21:12:22.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\Common\ReadMe.txt">
+      <PackagePath>Common\ReadMe.txt</PackagePath>
+      <Modified>2014-02-24T13:32:51.538</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\App.xbf">
+      <PackagePath>App.xbf</PackagePath>
+      <Modified>2014-02-24T14:30:46.448</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\Pages\SplashPage.xbf">
+      <PackagePath>Pages\SplashPage.xbf</PackagePath>
+      <Modified>2014-02-24T14:30:46.451</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2014-02-24T14:30:48.794</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>
