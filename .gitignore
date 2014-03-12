@@ -88,9 +88,14 @@ csx
 # Windows Store app package directory
 AppPackages/
 
+#Ignore thumbnails created by Windows
+Thumbs.db
+
 # Others
 [Bb]in
 [Oo]bj
+[Bb]ld/
+[Aa]pp[Pp]ackages/
 sql
 TestResults
 [Tt]est[Rr]esult*
