@@ -1,15 +1,11 @@
 ﻿using PintheCloudWS.Common;
-using PintheCloudWS.Locale;
-using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,8 +21,9 @@ namespace PintheCloudWS.Pages
     /// <summary>
     /// 대부분의 응용 프로그램에 공통되는 특성을 제공하는 기본 페이지입니다.
     /// </summary>
-    public sealed partial class SplashPage : PtcPage
+    public sealed partial class SettingsPage : PtcPage
     {
+
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
@@ -48,7 +45,7 @@ namespace PintheCloudWS.Pages
         }
 
 
-        public SplashPage()
+        public SettingsPage()
         {
             this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
@@ -97,34 +94,7 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
-
-
-            // Check main platform at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY] = Account.StorageAccountType.ONE_DRIVE.ToString();
-
-            // Check nick name at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = App.ResourceLoader.GetString(ResourcesKeys.AtHere);
-
-            // Check location access consent at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.LOCATION_ACCESS_CONSENT_KEY))
-                App.ApplicationSettings.Values[Account.LOCATION_ACCESS_CONSENT_KEY] = false;
-
-
-            // SIgn in
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                for (int i = 0; i < App.IStorageManagers.Length; i++)
-                {
-                    // If main platform is signed in, process it.
-                    // Otherwise, ignore and go to explorer page.
-                    if (App.IStorageManagers[i].IsSignIn())
-                        App.TaskHelper.AddSignInTask(App.IStorageManagers[i].GetStorageName(), App.IStorageManagers[i].SignIn());
-                }
-            }
         }
-
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {

@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>PintheCloudWS_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <ExpressionBlendVersion>12.0.41212.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,7 +104,6 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <Folder Include="Assets\pajeon\" />
     <Folder Include="Workers\" />
   </ItemGroup>
   <ItemGroup>
@@ -117,9 +117,11 @@
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\AESHelper.cs" />
     <Compile Include="Helpers\ConvertToFileObjectHelper.cs" />
+    <Compile Include="Helpers\EventHelper.cs" />
     <Compile Include="Helpers\ParseHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Locale\ResourcesKeys.cs" />
+    <Compile Include="Managers\DropboxManager.cs" />
     <Compile Include="Managers\GoogleDriveManager.cs" />
     <Compile Include="Managers\IStorageManager.cs" />
     <Compile Include="Managers\OneDriveManager.cs" />
@@ -129,8 +131,15 @@
     <Compile Include="Models\AccountType.cs" />
     <Compile Include="Models\FileObject.cs" />
     <Compile Include="Models\Spot.cs" />
+    <Compile Include="Pages\PtcPage.cs" />
+    <Compile Include="Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SplashPage.xaml.cs">
       <DependentUpon>SplashPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\SpotListPage.xaml.cs">
+      <DependentUpon>SpotListPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ShareException.cs" />
@@ -141,8 +150,45 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\pajeon\spot list\png\bar_logo.png" />
+    <Content Include="Assets\pajeon\spot list\png\bar_setting.png" />
+    <Content Include="Assets\pajeon\spot list\png\spotlist_lock.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_#.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_a.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_b.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_c.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_d.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_e.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_f.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_g.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_h.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_i.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_j.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_k.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_l.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_m.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_n.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_o.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_p.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_q.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_r.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_s.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_t.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_u.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_v.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_w.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_x.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_y.png" />
+    <Content Include="Assets\pajeon\spot list\png\spot_label_z.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
     <PRIResource Include="Locale\en-US\Resources.resw" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_position.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_size.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_spot_font.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_spot_position.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_spot_size.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_spot_spacing.pdf" />
+    <None Include="Assets\pajeon\spot list\guide\spotlist_guide_swipe_position.pdf" />
     <None Include="packages.config" />
     <None Include="PintheCloudWS_TemporaryKey.pfx" />
   </ItemGroup>
@@ -158,7 +204,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Assets\CustomResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SplashPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\SpotListPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,42 +1,29 @@
 ﻿using PintheCloudWS.Common;
-using PintheCloudWS.Locale;
-using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
-using Windows.UI.Xaml;
+using System.Text;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-// 기본 페이지 항목 템플릿에 대한 설명은 http://go.microsoft.com/fwlink/?LinkId=234237에 나와 있습니다.
 
 namespace PintheCloudWS.Pages
 {
-    /// <summary>
-    /// 대부분의 응용 프로그램에 공통되는 특성을 제공하는 기본 페이지입니다.
-    /// </summary>
-    public sealed partial class SplashPage : PtcPage
+    public partial class PtcPage : Page
     {
-        private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        protected const string PREV_PAGE_KEY = "PREV_PAGE";
+        protected const string PLATFORM_KEY = "PLATFORM_KEY";
 
-        /// <summary>
-        /// 이는 강력한 형식의 뷰 모델로 변경될 수 있습니다.
-        /// </summary>
-        public ObservableDictionary DefaultViewModel
-        {
-            get { return this.defaultViewModel; }
-        }
+        protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
+        protected const string FILE_OBJECT_VIEW_MODEL_KEY = "FILE_OBJECT_VIEW_MODEL_KEY";
+
+        protected const string SELECTED_FILE_KEY = "SELECTED_FILE_KEY";
+
+        protected const string NULL_PASSWORD = "null";
+
+
+        private NavigationHelper navigationHelper;
+
 
         /// <summary>
         /// NavigationHelper는 각 페이지에서 탐색 및 프로세스 수명 관리를 
@@ -48,13 +35,13 @@ namespace PintheCloudWS.Pages
         }
 
 
-        public SplashPage()
+        public PtcPage()
         {
-            this.InitializeComponent();
             this.navigationHelper = new NavigationHelper(this);
             this.navigationHelper.LoadState += navigationHelper_LoadState;
             this.navigationHelper.SaveState += navigationHelper_SaveState;
         }
+
 
         /// <summary>
         /// 탐색 중 전달된 콘텐츠로 페이지를 채웁니다. 이전 세션의 페이지를
@@ -83,6 +70,7 @@ namespace PintheCloudWS.Pages
         {
         }
 
+
         #region NavigationHelper 등록
 
         /// 이 섹션에서 제공되는 메서드는 NavigationHelper에서
@@ -98,31 +86,19 @@ namespace PintheCloudWS.Pages
         {
             navigationHelper.OnNavigatedTo(e);
 
+            // Windows Phone 8
+            //// Get previous page and set it.
+            //string previousPage = null;
+            //if (PhoneApplicationService.Current.State.ContainsKey(PREV_PAGE_KEY))
+            //    previousPage = (string)PhoneApplicationService.Current.State[PREV_PAGE_KEY];
+            //PhoneApplicationService.Current.State[PREV_PAGE_KEY] = this.NavigationService.CurrentSource.ToString().Split('?')[0];
 
-            // Check main platform at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY] = Account.StorageAccountType.ONE_DRIVE.ToString();
+            //// Get previous pivot.
+            //int previousPivot = 0;
+            //if (PhoneApplicationService.Current.State.ContainsKey(PIVOT_KEY))
+            //    previousPivot = (int)PhoneApplicationService.Current.State[PIVOT_KEY];
 
-            // Check nick name at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = App.ResourceLoader.GetString(ResourcesKeys.AtHere);
-
-            // Check location access consent at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.LOCATION_ACCESS_CONSENT_KEY))
-                App.ApplicationSettings.Values[Account.LOCATION_ACCESS_CONSENT_KEY] = false;
-
-
-            // SIgn in
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                for (int i = 0; i < App.IStorageManagers.Length; i++)
-                {
-                    // If main platform is signed in, process it.
-                    // Otherwise, ignore and go to explorer page.
-                    if (App.IStorageManagers[i].IsSignIn())
-                        App.TaskHelper.AddSignInTask(App.IStorageManagers[i].GetStorageName(), App.IStorageManagers[i].SignIn());
-                }
-            }
+            //EventHelper.FireEvent((string)PhoneApplicationService.Current.State[PREV_PAGE_KEY], previousPage, previousPivot);
         }
 
 

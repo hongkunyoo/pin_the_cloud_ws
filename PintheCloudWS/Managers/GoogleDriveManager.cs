@@ -20,7 +20,7 @@ using Windows.Storage;
 
 namespace PintheCloudWS.Managers
 {
-    public class GoogleDriveManager
+    public class GoogleDriveManager : IStorageManager
     {
         #region Variables
         private const string GOOGLE_DRIVE_CLIENT_ID = "109786198225-m8fihmv82b2fmf5k4d69u9039ebn68fn.apps.googleusercontent.com";
@@ -148,7 +148,7 @@ namespace PintheCloudWS.Managers
         public bool IsSigningIn()
         {
             if (this.tcs != null)
-                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.Keys.Contains(GOOGLE_DRIVE_SIGN_IN_KEY);
+                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_SIGN_IN_KEY);
             else
                 return false;
 
@@ -174,7 +174,7 @@ namespace PintheCloudWS.Managers
 
         public bool IsSignIn()
         {
-            return App.ApplicationSettings.Values.Keys.Contains(GOOGLE_DRIVE_SIGN_IN_KEY);
+            return App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_SIGN_IN_KEY);
         }
 
 
@@ -313,7 +313,7 @@ namespace PintheCloudWS.Managers
 
         private string _GetUserSession()
         {
-            if (App.ApplicationSettings.Values.Keys.Contains(GOOGLE_DRIVE_USER_KEY))
+            if (App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_USER_KEY))
             {
                 return (string)App.ApplicationSettings.Values[GOOGLE_DRIVE_USER_KEY];
             }

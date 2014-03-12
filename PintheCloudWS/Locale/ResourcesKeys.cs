@@ -8,6 +8,8 @@ namespace PintheCloudWS.Locale
 {
     public class ResourcesKeys
     {
+        public const string AtHere = "AtHere";
+
         public const string GB = "GB";
         public const string MB = "MB";
         public const string KB = "KB";

@@ -50,6 +50,10 @@ namespace PintheCloudWS
         public static IStorageManager[] IStorageManagers = null;
         public static TaskHelper TaskHelper = null;
 
+        private static OneDriveManager OneDriveManager = null;
+        private static DropboxManager DropBoxManager = null;
+        private static GoogleDriveManager GoogleDriveManger = null;
+
 
 
         /// <summary>
@@ -80,6 +84,10 @@ namespace PintheCloudWS
             SpotManager = new SpotManagerImplement();
             Geolocator = new Geolocator();
 
+            OneDriveManager = new OneDriveManager();
+            DropBoxManager = new DropboxManager();
+            GoogleDriveManger = new GoogleDriveManager();
+            IStorageManagers = new IStorageManager[] { OneDriveManager, DropBoxManager, GoogleDriveManger };
             TaskHelper = new TaskHelper();
         }
 
@@ -126,6 +134,7 @@ namespace PintheCloudWS
                 // 필요한 정보를 탐색 매개 변수로 전달하여 새 페이지를
                 // 구성합니다.
                 rootFrame.Navigate(typeof(SplashPage), e.Arguments);
+                rootFrame.Navigate(typeof(SpotListPage), e.Arguments);
             }
             // 현재 창이 활성 창인지 확인
             Window.Current.Activate();

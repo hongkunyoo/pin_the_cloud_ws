@@ -71,7 +71,7 @@ namespace PintheCloudWS.Managers
         public bool IsSigningIn()
         {
             if (this.tcs != null)
-                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.Keys.Contains(ONE_DRIVE_SIGN_IN_KEY);
+                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.ContainsKey(ONE_DRIVE_SIGN_IN_KEY);
             else
                 return false;
         }
@@ -98,7 +98,7 @@ namespace PintheCloudWS.Managers
 
         public bool IsSignIn()
         {
-            return App.ApplicationSettings.Values.Keys.Contains(ONE_DRIVE_SIGN_IN_KEY);
+            return App.ApplicationSettings.Values.ContainsKey(ONE_DRIVE_SIGN_IN_KEY);
         }
 
 
@@ -204,7 +204,7 @@ namespace PintheCloudWS.Managers
         //     The input stream to download file.
         // Windows Phone 8
         //public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
-        public async Task<IInputStream> DownloadFileStreamAsync(string sourceFileId)
+        public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
         {
             System.Threading.CancellationTokenSource ctsDownload = new System.Threading.CancellationTokenSource();
             LiveDownloadOperationResult result = null;
@@ -219,7 +219,9 @@ namespace PintheCloudWS.Managers
                 throw new ShareException(sourceFileId, ShareException.ShareType.DOWNLOAD);
             }
 
-            return result.Stream;
+            // Windows Phone 8
+            //return result.Stream;
+            return result.Stream.AsStreamForRead();
         }
 
 
@@ -235,7 +237,7 @@ namespace PintheCloudWS.Managers
         //
         // Returns:
         //     The StorageFolder where you downloaded folder.
-        public async Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, IInputStream outstream)
+        public async Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream)
         {
             ProgressBar progressBar = new ProgressBar();
             progressBar.Value = 0;
@@ -249,7 +251,7 @@ namespace PintheCloudWS.Managers
                 //LiveOperationResult result = await this.LiveClient
                 //    .UploadAsync(folderIdToStore, fileName, outstream, OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
                 LiveOperationResult result = await this.LiveClient
-                    .BackgroundUploadAsync(folderIdToStore, fileName, outstream, OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
+                    .BackgroundUploadAsync(folderIdToStore, fileName, outstream.AsInputStream(), OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
             }
             catch
             {

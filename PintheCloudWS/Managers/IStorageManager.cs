@@ -27,12 +27,8 @@ namespace PintheCloudWS.Managers
         Task<List<FileObject>> GetRootFilesAsync();
         Task<FileObject> GetFileAsync(string fileId);
         Task<List<FileObject>> GetFilesFromFolderAsync(string folderId);
-        // Windows Phone 8
-        //Task<Stream> DownloadFileStreamAsync(string sourceFileId);
-        Task<IInputStream> DownloadFileStreamAsync(string sourceFileId);
-        // Windows Phone 8
-        //Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream);
-        Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, IInputStream outstream);
+        Task<Stream> DownloadFileStreamAsync(string sourceFileId);
+        Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream);
 
     }
 }
