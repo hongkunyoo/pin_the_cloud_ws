@@ -29,3 +29,4 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\qualifiers.txt
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\qualifiers.txt.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\MultipleQualifiersPerDimensionFound.txt
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\ProjectArchitectures.txt
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\PintheCloudWS.csprojResolveAssemblyReference.cache
