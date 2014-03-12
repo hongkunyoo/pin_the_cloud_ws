@@ -1,24 +1,5 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
     <LocalAssembly PathName="d:\imagine cup\develop\pinthecloudws\pinthecloudws\obj\debug\intermediatexaml\pinthecloudws.exe" HashGuid="3a01a635-dee5-9ccf-6789-99674c66c6d2" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.auth.1.8.0-rc\lib\netcore45\google.apis.auth.dll" HashGuid="17e36bab-cba3-c3e8-63bd-7f4b6218fa36" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.auth.1.8.0-rc\lib\netcore45\google.apis.auth.platformservices.dll" HashGuid="64ce095f-5d1d-5ad6-db13-9f3d52d367b8" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.core.1.8.0-rc\lib\portable-net4+sl4+wp71+win8\google.apis.core.dll" HashGuid="29d591e3-b690-f0fe-1bc1-056bcbc7ff9e" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.1.8.0-rc\lib\netcore45\google.apis.dll" HashGuid="17e7b524-af46-4911-5b9a-c945ae326882" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.drive.v2.1.8.0.1130-rc\lib\portable-net4+sl4+wp71+win8\google.apis.drive.v2.dll" HashGuid="4e7522d8-e333-b1d7-569c-038f77a6b6bb" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\google.apis.1.8.0-rc\lib\netcore45\google.apis.platformservices.dll" HashGuid="bd27adbe-86a4-a8a4-a03f-0fb1a6499d23" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.data.edm.5.6.0\lib\portable-net40+sl5+wp8+win8\microsoft.data.edm.portable.dll" HashGuid="f045e1a5-0e06-a083-1449-ff381767d07b" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.data.odata.5.6.0\lib\portable-net40+sl5+wp8+win8\microsoft.data.odata.portable.dll" HashGuid="286ad8e6-6a8c-62c8-4d27-161dd3caf466" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\livesdk.5.5\windowsxaml\microsoft.live.dll" HashGuid="035fef31-110d-14b6-b574-790e84e2279a" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.bcl.async.1.0.165\lib\win8\microsoft.threading.tasks.dll" HashGuid="3a1beea5-1547-d5c6-af32-3b5c761c2a6a" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.bcl.async.1.0.165\lib\win8\microsoft.threading.tasks.extensions.dll" HashGuid="79a01987-c06c-c9d7-37eb-629809787680" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\windowsazure.mobileservices.1.1.4\lib\netcore45\microsoft.windowsazure.mobile.dll" HashGuid="a6c5abef-1d88-78bc-fafc-53b939174976" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\windowsazure.mobileservices.1.1.4\lib\netcore45\microsoft.windowsazure.mobile.ext.dll" HashGuid="5f1c9559-3f7b-fabf-491b-b0b7501d7e4d" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\windowsazure.storage-preview.3.0.3.0-preview\lib\win8\microsoft.windowsazure.storage.winmd" HashGuid="704c48fc-fd9e-7981-909b-4ca9a47c1000" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\newtonsoft.json.5.0.8\lib\netcore45\newtonsoft.json.dll" HashGuid="fccaaf2a-e039-795e-45a4-59ce84d1518d" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.net.http.2.2.18\lib\win8\system.net.http.extensions.dll" HashGuid="b50282f8-b9f8-4408-8d49-ba2efe301624" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\microsoft.net.http.2.2.18\lib\win8\system.net.http.primitives.dll" HashGuid="7b71418d-e056-7613-c839-85fb8f6472a6" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\system.spatial.5.6.0\lib\portable-net40+sl5+wp8+win8\system.spatial.portable.dll" HashGuid="5fe7c047-94c0-1029-eb83-ede093ee2841" />
-    <ReferenceAssembly PathName="d:\imagine cup\develop\pinthecloudws\packages\zlib.portable.1.9.2\lib\portable-net4+sl4+wp71+win8\zlib.portable.dll" HashGuid="44ecb3b7-5eb5-b73b-8912-604dedfbbdd3" />
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>

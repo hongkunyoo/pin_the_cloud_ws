@@ -1,6 +1,8 @@
 # Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 [Bb]in/
 [Oo]bj/
+[Bb]ld/
+[Aa]pp[Pp]ackages/
 
 # mstest test results
 TestResults
@@ -94,8 +96,6 @@ Thumbs.db
 # Others
 [Bb]in
 [Oo]bj
-[Bb]ld/
-[Aa]pp[Pp]ackages/
 sql
 TestResults
 [Tt]est[Rr]esult*
