@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Locale;
 using System;
 using System.Collections.Generic;
 using System.IO;

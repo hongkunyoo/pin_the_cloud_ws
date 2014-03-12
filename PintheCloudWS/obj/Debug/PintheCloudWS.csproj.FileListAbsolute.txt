@@ -132,6 +132,16 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Port
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\zh-Hans\System.Spatial.resw
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\zh-Hant\System.Spatial.resw
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\PintheCloudWS.csproj.GenerateResource.Cache
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable.pri
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\qualifiers.txt
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable.pri
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\qualifiers.txt
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile.pri
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\qualifiers.txt
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable.pri
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\qualifiers.txt
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile.Ext.pri.xml
+D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\bin\Debug\DropNetRT.dll
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\layout.resfiles
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\layout.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\Resources.resfiles
@@ -140,8 +150,6 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\pri.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\priconfig.xml
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\priconfig.xml.intermediate
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable.pri
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.Edm.Portable\qualifiers.txt
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\layout.resfiles
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\layout.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\Resources.resfiles
@@ -150,8 +158,6 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.ODat
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\pri.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\priconfig.xml
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\priconfig.xml.intermediate
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable.pri
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.Data.OData.Portable\qualifiers.txt
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\layout.resfiles
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\layout.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\Resources.resfiles
@@ -160,8 +166,6 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAz
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\pri.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\priconfig.xml
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\priconfig.xml.intermediate
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile.pri
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile\qualifiers.txt
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\layout.resfiles
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\layout.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\Resources.resfiles
@@ -170,6 +174,3 @@ D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Port
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\pri.resfiles.intermediate
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\priconfig.xml
 D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\priconfig.xml.intermediate
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable.pri
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\System.Spatial.Portable\qualifiers.txt
-D:\Imagine Cup\Develop\PintheCloudWS\PintheCloudWS\obj\Debug\Microsoft.WindowsAzure.Mobile.Ext.pri.xml

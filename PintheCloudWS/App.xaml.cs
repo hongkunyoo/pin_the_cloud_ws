@@ -1,4 +1,6 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
+using PintheCloudWS.Helpers;
+using PintheCloudWS.Managers;
 using PintheCloudWS.Pages;
 using System;
 using System.Collections.Generic;
@@ -7,8 +9,11 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Resources;
+using Windows.Devices.Geolocation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,6 +40,15 @@ namespace PintheCloudWS
 
         // App
         public static MobileServiceClient MobileService = null;
+        public static ResourceLoader ResourceLoader = null;
+        public static ApplicationDataContainer ApplicationSettings = null;
+
+        // Manager
+        public static SpotManager SpotManager = null;
+        public static Geolocator Geolocator = null;
+
+        public static IStorageManager[] IStorageManagers = null;
+        public static TaskHelper TaskHelper = null;
 
 
 
@@ -59,6 +73,14 @@ namespace PintheCloudWS
             MobileServiceUser mobileServiceUser = new MobileServiceUser(App.AZURE_MOBILE_SERVICE_ID);
             mobileServiceUser.MobileServiceAuthenticationToken = App.AZURE_MOBILE_SERVICE_TOKEN;
             MobileService.CurrentUser = mobileServiceUser;
+            ResourceLoader = new ResourceLoader();
+            ApplicationSettings = ApplicationData.Current.LocalSettings;
+
+            // Manager
+            SpotManager = new SpotManagerImplement();
+            Geolocator = new Geolocator();
+
+            TaskHelper = new TaskHelper();
         }
 
         /// <summary>
