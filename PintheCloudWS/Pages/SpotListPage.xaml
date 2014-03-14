@@ -26,22 +26,53 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Background="White">
-    	<Grid.ColumnDefinitions>
-    		<ColumnDefinition Width="80"/>
-    		<ColumnDefinition/>
-    	</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-    	<Grid Background="#FF00A4BF">
-    		<Image  Stretch="None" Source="ms-appx:///Assets/pajeon/spot list/png/bar_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,22,0,0"/>
-    		<Button x:Name="uiSettingButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiSettingButton_Click" Margin="0,0,0,31">
-    			<Image Source="ms-appx:///Assets/pajeon/spot list/png/bar_setting.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
-    		</Button>
-    	</Grid>
-    	<Grid x:Name="ContentGrid" Grid.Column="1"/>
+        <Grid Background="#FF00A4BF">
+            <Image  Stretch="None" Source="ms-appx:///Assets/pajeon/spot_list/png/bar_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,22,0,0"/>
+            <Button x:Name="uiSettingButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiSettingButton_Click" Margin="0,0,0,31" BorderThickness="0" Padding="0">
+                <Image Source="ms-appx:///Assets/pajeon/spot_list/png/bar_setting.png" Stretch="None"/>
+            </Button>
+        </Grid>
+        <Grid x:Name="ContentGrid" Grid.Column="1">
+            <ProgressRing x:Name="uiSpotListProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200"/>
+            <GridView x:Name="uiSpotGridView" ItemsSource="{Binding Items}" Padding="0" Margin="96,113,0,0" SelectionMode="Single" ItemClick="uiSpotGridView_ItemClick" IsItemClickEnabled="True">
+			<GridView.Resources>
+                <DataTemplate x:Key="uiSpotGirdViewItemTemplate">
+                    <Grid>
+                		<Grid.RowDefinitions>
+                			<RowDefinition Height="140"/>
+                			<RowDefinition/>
+                		</Grid.RowDefinitions>
+                		<Image Source="{Binding SpotNameInitialImage, Converter={StaticResource StringToSpotNameInitialUriConverter}}" Stretch="None"/>
+                		<Image Source="{Binding IsPrivateImage}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stretch="None"/>
+                		<StackPanel Grid.Row="1" Margin="14,15,0,0">
+                			<TextBlock Text="{Binding SpotName}" TextWrapping="Wrap" Margin="1,0,0,0" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
+                			<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                				<TextBlock Text="{Binding AccountName}" TextWrapping="Wrap" Padding="0,0,14,0" FontFamily="Segoe WP Light" FontSize="22" Foreground="#FF919FA6"/>
+                				<TextBlock Text="{Binding SpotDistance}" TextWrapping="Wrap" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
+                				<TextBlock Text="m" TextWrapping="Wrap" FontFamily="Segoe WP Light" FontSize="22" Foreground="#FF919FA6"/>
+                			</StackPanel>
+                		</StackPanel>
+                	</Grid>
+                </DataTemplate>
+            </GridView.Resources>
+            	<GridView.ItemContainerStyle>
+            		<StaticResource ResourceKey="SpotGridViewItemContainerStyle"/>
+            	</GridView.ItemContainerStyle>
+            	<GridView.ItemTemplate>
+            		<StaticResource ResourceKey="uiSpotGirdViewItemTemplate"/>
+            	</GridView.ItemTemplate>
+			</GridView>
+            <TextBlock x:Name="uiSpotGridMessage" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="22" Foreground="Black" FontFamily="Segoe WP"/>
+        </Grid>
 
         <!-- Back button and page title -->
     </Grid>

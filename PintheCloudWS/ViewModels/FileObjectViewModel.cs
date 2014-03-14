@@ -16,10 +16,10 @@ namespace PintheCloudWS.ViewModels
         // Instances
         public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/at_here/png/general_checkbox.png";
         public const string CHECK_IMAGE_URI = "/Assets/pajeon/at_here/png/general_checkbox_p.png";
-        public const string TRANSPARENT_IMAGE_URI = "/Assets/pajeon/at_here/png/general_transparent.png";
+        public const string TRANSPARENT_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_transparent.png";
 
         public const string DELETE_IMAGE_URI = "/Assets/pajeon/at_here/png/upload_list_delete.png";
-        public const string IS_PRIVATE_IMAGE_URI = "/Assets/pajeon/at_here/png/pin_label_lock.png";
+        public const string IS_PRIVATE_IMAGE_URI = "/Assets/pajeon/spot_list/png/spotlist_lock.png";
 
         public const string DELETING_IMAGE_URI = "DELETING_SPOT_IMAGE_URI";
         public const string UPLOADING_IMAGE_URI = "UPLOADING_FILE_IMAGE_URI";

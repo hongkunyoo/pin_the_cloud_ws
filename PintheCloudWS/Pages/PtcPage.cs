@@ -1,9 +1,15 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Locale;
+using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
+using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,7 +26,6 @@ namespace PintheCloudWS.Pages
         protected const string SELECTED_FILE_KEY = "SELECTED_FILE_KEY";
 
         protected const string NULL_PASSWORD = "null";
-
 
         private NavigationHelper navigationHelper;
 
@@ -105,6 +110,87 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedFrom(e);
+        }
+
+        #endregion
+
+        #region Protected Shared Logical Methods
+
+        protected async void SetProgressRing(ProgressRing progressRing, bool value)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                progressRing.IsActive = value;
+            });
+        }
+
+
+        protected async void ShowMessageDialog(string message)
+        {
+            // Create the message dialog and set its content
+            MessageDialog messageDialog = new MessageDialog(message);
+
+            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+            messageDialog.Commands.Add(new UICommand(
+                App.ResourceLoader.GetString(ResourcesKeys.OK),
+                new UICommandInvokedHandler((command) => { })));
+
+            // Set the command that will be invoked by default
+            messageDialog.DefaultCommandIndex = 0;
+
+            // Set the command to be invoked when escape is pressed
+            messageDialog.CancelCommandIndex = 0;
+
+            // Show the message dialog
+            await messageDialog.ShowAsync();
+        }
+
+
+        protected void ShowGeolocatorStatusMessageDialog()
+        {
+            string message = String.Empty;
+            bool showMessage = false;
+            switch (App.Geolocator.LocationStatus)
+            {
+                case PositionStatus.Ready:
+                    message = "Location is available.";
+                    showMessage = false;
+                    break;
+
+                case PositionStatus.Initializing:
+                    message = "Geolocation service is initializing.";
+                    showMessage = false;
+                    break;
+
+                case PositionStatus.NotInitialized:
+                    message = "Location status is not initialized because " +
+                                "the app has not yet requested location data.";
+                    showMessage = false;
+                    break;
+
+                case PositionStatus.Disabled:
+                    message = "Location services are disabled. Use the " +
+                                "Settings charm to enable them.";
+                    showMessage = true;
+                    break;
+
+                case PositionStatus.NoData:
+                    message = "Location service data is not available.";
+                    showMessage = true;
+                    break;
+
+                case PositionStatus.NotAvailable:
+                    message = "Location services are not supported on your system.";
+                    showMessage = true;
+                    break;
+
+                default:
+                    message = "Unknown PositionStatus value.";
+                    showMessage = true;
+                    break;
+            };
+            if(showMessage)
+                this.ShowMessageDialog(message);
         }
 
         #endregion

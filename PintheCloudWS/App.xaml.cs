@@ -42,6 +42,7 @@ namespace PintheCloudWS
         public static MobileServiceClient MobileService = null;
         public static ResourceLoader ResourceLoader = null;
         public static ApplicationDataContainer ApplicationSettings = null;
+        public static ApplicationDataContainer ApplicationRoamingSettings = null;
 
         // Manager
         public static SpotManager SpotManager = null;
@@ -79,6 +80,7 @@ namespace PintheCloudWS
             MobileService.CurrentUser = mobileServiceUser;
             ResourceLoader = new ResourceLoader();
             ApplicationSettings = ApplicationData.Current.LocalSettings;
+            ApplicationRoamingSettings = ApplicationData.Current.RoamingSettings;
 
             // Manager
             SpotManager = new SpotManagerImplement();

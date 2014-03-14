@@ -10,6 +10,9 @@ namespace PintheCloudWS.Locale
     {
         public const string AtHere = "AtHere";
 
+        public const string OK = "OK";
+        public const string Cancel = "Cancel";
+
         public const string GB = "GB";
         public const string MB = "MB";
         public const string KB = "KB";
@@ -20,5 +23,17 @@ namespace PintheCloudWS.Locale
         public const string OneDrive = "OneDrive";
         public const string Dropbox = "Dropbox";
         public const string GoogleDrive = "GoogleDrive";
+
+        public const string InternetUnavailableMessage = "InternetUnavailableMessage";
+        public const string LocationAccessMessage = "LocationAccessMessage";
+        
+        public const string NoNearSpotMessage = "NoNearSpotMessage";
+
+        public const string BadLoadingSpotMessage = "BadLoadingSpotMessage";
+        public const string BadLocationServiceMessage = "BadLocationServiceMessage";
+
+        public const string NoLocationServiceMessage = "NoLocationServiceMessage";
+
+        public const string Loading = "Loading";
     }
 }
