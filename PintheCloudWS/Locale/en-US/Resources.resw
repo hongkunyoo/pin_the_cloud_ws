@@ -135,6 +135,9 @@
   <data name="Dropbox" xml:space="preserve">
     <value>Dropbox</value>
   </data>
+  <data name="File/Text" xml:space="preserve">
+    <value>File</value>
+  </data>
   <data name="GB" xml:space="preserve">
     <value>GB</value>
   </data>
@@ -173,5 +176,11 @@
   </data>
   <data name="OneDrive" xml:space="preserve">
     <value>OneDrive</value>
+  </data>
+  <data name="Pick" xml:space="preserve">
+    <value>Pick</value>
+  </data>
+  <data name="Pin" xml:space="preserve">
+    <value>Pin</value>
   </data>
 </root>

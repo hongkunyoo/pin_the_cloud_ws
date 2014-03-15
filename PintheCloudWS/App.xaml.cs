@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
+using PintheCloudWS.Common;
 using PintheCloudWS.Helpers;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Pages;
@@ -42,7 +43,9 @@ namespace PintheCloudWS
         public static MobileServiceClient MobileService = null;
         public static ResourceLoader ResourceLoader = null;
         public static ApplicationDataContainer ApplicationSettings = null;
-        public static ApplicationDataContainer ApplicationRoamingSettings = null;
+        public static IDictionary<string, object> ApplicationSession = null;
+
+        
 
         // Manager
         public static SpotManager SpotManager = null;
@@ -80,7 +83,7 @@ namespace PintheCloudWS
             MobileService.CurrentUser = mobileServiceUser;
             ResourceLoader = new ResourceLoader();
             ApplicationSettings = ApplicationData.Current.LocalSettings;
-            ApplicationRoamingSettings = ApplicationData.Current.RoamingSettings;
+            ApplicationSession = SuspensionManager.SessionState;
 
             // Manager
             SpotManager = new SpotManagerImplement();

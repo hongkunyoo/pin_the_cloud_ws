@@ -9,6 +9,10 @@ namespace PintheCloudWS.Locale
     public class ResourcesKeys
     {
         public const string AtHere = "AtHere";
+        
+        public const string Pick = "Pick";
+        public const string Pin = "Pin";
+        public const string File = "File";
 
         public const string OK = "OK";
         public const string Cancel = "Cancel";

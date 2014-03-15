@@ -3,6 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:PintheCloudWS" 
     xmlns:Converters="using:PintheCloudWS.Converters"
+    xmlns:Locale="using:PintheCloudWS.Locale"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d">
@@ -74,11 +75,11 @@
     							<VisualState x:Name="PointerFocused"/>
     						</VisualStateGroup>
     					</VisualStateManager.VisualStateGroups>
-    					<Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
+    					<Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" RenderTransformOrigin="0.5,0.5">
     						<Border.RenderTransform>
     							<CompositeTransform/>
     						</Border.RenderTransform>
-    						<ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+    						<ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0"/>
     					</Border>
     					<Rectangle x:Name="FocusVisualWhite" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualWhiteStrokeThemeBrush}" StrokeDashArray="1,1"/>
     					<Rectangle x:Name="FocusVisualBlack" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1"/>
@@ -533,7 +534,7 @@
     	<Setter Property="Template">
     		<Setter.Value>
     			<ControlTemplate TargetType="ListViewItem">
-    				                <Border x:Name="OuterContainer">
+    				              <Border x:Name="OuterContainer">
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup x:Name="CommonStates">
                             <VisualState x:Name="Normal"/>
@@ -547,19 +548,9 @@
                                                                    Storyboard.TargetProperty="Fill">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedPointerOverBackgroundThemeBrush}" />
                                     </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="PointerOverBorder">
-                                    	<DiscreteObjectKeyFrame KeyTime="0">
-                                    		<DiscreteObjectKeyFrame.Value>
-                                    			<SolidColorBrush Color="White"/>
-                                    		</DiscreteObjectKeyFrame.Value>
-                                    	</DiscreteObjectKeyFrame>
-                                    </ObjectAnimationUsingKeyFrames>
                                 </Storyboard>
                             </VisualState>
                             <VisualState x:Name="Pressed">
-                                <Storyboard>
-                                    <PointerDownThemeAnimation TargetName="ContentContainer" />
-                                </Storyboard>
                             </VisualState>
                             <VisualState x:Name="PointerOverPressed">
                                 <Storyboard>
@@ -570,13 +561,6 @@
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SelectedEarmark"
                                                                    Storyboard.TargetProperty="Fill">
                                         <DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ListViewItemSelectedPointerOverBackgroundThemeBrush}" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill)" Storyboard.TargetName="PointerOverBorder">
-                                    	<DiscreteObjectKeyFrame KeyTime="0">
-                                    		<DiscreteObjectKeyFrame.Value>
-                                    			<SolidColorBrush Color="White"/>
-                                    		</DiscreteObjectKeyFrame.Value>
-                                    	</DiscreteObjectKeyFrame>
                                     </ObjectAnimationUsingKeyFrames>
                                 </Storyboard>
                             </VisualState>
@@ -686,7 +670,7 @@
                                     <DoubleAnimation Storyboard.TargetName="SelectedBorder"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
-                                                     To="1" />
+                                                     To="0" />
                                     <DoubleAnimation Storyboard.TargetName="SelectingGlyph"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
@@ -707,34 +691,27 @@
                             </VisualState>
                             <VisualState x:Name="Selected">
                                 <Storyboard>
-                            		<DoubleAnimation Storyboard.TargetName="SelectionBackground"
-                            			Storyboard.TargetProperty="Opacity"
-                            			Duration="0"
-                            			To="1" />
-                            		<DoubleAnimation Storyboard.TargetName="SelectedBorder"
-                            			Storyboard.TargetProperty="Opacity"
-                            			Duration="0"
-                            			To="1" />
-                            		<DoubleAnimation Storyboard.TargetName="SelectedCheckMark"
-                            			Storyboard.TargetProperty="Opacity"
-                            			Duration="0"
-                            			To="1" />
-                            		<ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter"
-                            			Storyboard.TargetProperty="Foreground">
-                            			<DiscreteObjectKeyFrame KeyTime="0" >
-                            				<DiscreteObjectKeyFrame.Value>
-                            					<SolidColorBrush Color="#FF919FA6"/>
-                            				</DiscreteObjectKeyFrame.Value>
-                            			</DiscreteObjectKeyFrame>
-                            		</ObjectAnimationUsingKeyFrames>
-                            		<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="SelectedCheckMark">
-                            			<DiscreteObjectKeyFrame KeyTime="0">
-                            				<DiscreteObjectKeyFrame.Value>
-                            					<Visibility>Collapsed</Visibility>
-                            				</DiscreteObjectKeyFrame.Value>
-                            			</DiscreteObjectKeyFrame>
-                            		</ObjectAnimationUsingKeyFrames>
-                            	</Storyboard>
+                                    <DoubleAnimation Storyboard.TargetName="SelectionBackground"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     Duration="0"
+                                                     To="1" />
+                                    <DoubleAnimation Storyboard.TargetName="SelectedBorder"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     Duration="0"
+                                                     To="0" />
+                                    <DoubleAnimation Storyboard.TargetName="SelectedCheckMark"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     Duration="0"
+                                                     To="0" />
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter"
+                                                                   Storyboard.TargetProperty="Foreground">
+                                        <DiscreteObjectKeyFrame KeyTime="0" >
+                                        	<DiscreteObjectKeyFrame.Value>
+                                        		<SolidColorBrush Color="#FF919FA6"/>
+                                        	</DiscreteObjectKeyFrame.Value>
+                                        </DiscreteObjectKeyFrame>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
                             </VisualState>
                             <VisualState x:Name="SelectedSwiping">
                                 <Storyboard>
@@ -745,11 +722,11 @@
                                     <DoubleAnimation Storyboard.TargetName="SelectedBorder"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
-                                                     To="1" />
+                                                     To="0" />
                                     <DoubleAnimation Storyboard.TargetName="SelectedCheckMark"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
-                                                     To="1" />
+                                                     To="0" />
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter"
                                                                    Storyboard.TargetProperty="Foreground">
                                         <DiscreteObjectKeyFrame KeyTime="0" >
@@ -769,11 +746,11 @@
                                     <DoubleAnimation Storyboard.TargetName="SelectedBorder"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
-                                                     To="1" />
+                                                     To="0" />
                                     <DoubleAnimation Storyboard.TargetName="SelectedCheckMark"
                                                      Storyboard.TargetProperty="Opacity"
                                                      Duration="0"
-                                                     To="1" />
+                                                     To="0" />
                                     <ObjectAnimationUsingKeyFrames Storyboard.TargetName="contentPresenter"
                                                                    Storyboard.TargetProperty="Foreground">
                                         <DiscreteObjectKeyFrame KeyTime="0" >
@@ -906,7 +883,7 @@
                                 <Rectangle x:Name="PointerOverBorder"
                                            IsHitTestVisible="False"
                                            Opacity="0"
-                                           Fill="{ThemeResource ListViewItemPointerOverBackgroundThemeBrush}" Stroke="#FF00AAFF" />
+                                           Fill="White" Stroke="#FF919FA6" />
                                 <Rectangle x:Name="FocusVisual"
                                            IsHitTestVisible="False"
                                            Opacity="0"
@@ -948,12 +925,13 @@
                                 </Border>
                                 <Rectangle x:Name="SelectedBorder"
                                            IsHitTestVisible="False"
-                                           Opacity="0" />
+                                           Opacity="0"
+                                           StrokeThickness="{ThemeResource ListViewItemSelectedBorderThemeThickness}" Fill="White" />
                                 <Border x:Name="SelectedCheckMarkOuter"
                                         IsHitTestVisible="False"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Top"
-                                        Margin="4" Visibility="Collapsed">
+                                        Margin="4">
                                     <Grid x:Name="SelectedCheckMark" Opacity="0" Height="40" Width="40">
                                         <Path x:Name="SelectedEarmark" Data="M0,0 L40,0 L40,40 z"  Fill="{ThemeResource ListViewItemSelectedBackgroundThemeBrush}" Stretch="Fill"/>
                                         <Path Data="F1 M133.1,17.9 L137.2,13.2 L144.6,19.6 L156.4,5.8 L161.2,9.9 L145.6,28.4 z" Fill="{ThemeResource ListViewItemCheckThemeBrush}" Height="13" Stretch="Fill" Width="15" HorizontalAlignment="Right" Margin="0,5.5,5.5,0" VerticalAlignment="Top" FlowDirection="LeftToRight"/>

@@ -30,14 +30,13 @@
     		<ColumnDefinition Width="80"/>
     		<ColumnDefinition Width="200"/>
     		<ColumnDefinition/>
-    		<ColumnDefinition Width="476"/>
     	</Grid.ColumnDefinitions>
         <Grid.ChildrenTransitions>
             <TransitionCollection>
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-        <Grid x:Name="SideBarGrid" Background="#FF00A4BF">
+        <Grid x:Name="uiSideBarGrid" Background="#FF00A4BF">
         	<Image  Stretch="None" Source="ms-appx:///Assets/pajeon/spot_list/png/bar_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,22,0,0"/>
         	<Button x:Name="backButton" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
         		Style="{StaticResource NavigationBackButtonNormalStyle}"
@@ -49,22 +48,20 @@
         		<Image Source="ms-appx:///Assets/pajeon/spot_list/png/bar_setting.png" Stretch="None"/>
         	</Button>
         </Grid>
-        <Grid x:Name="ExplorerBarGrid" Grid.Column="1" Background="#FFE9EDF0" Opacity="0.8">
+        <Grid x:Name="uiExplorerBarGrid" Grid.Column="1" Background="#FFE9EDF0" Opacity="0.8">
         	<Grid.RowDefinitions>
         		<RowDefinition Height="210"/>
         		<RowDefinition/>
         	</Grid.RowDefinitions>
         	<StackPanel VerticalAlignment="Top" Margin="16,70,16,0">
-        		<TextBlock x:Name="uiSpotNameText" TextWrapping="Wrap" Text="TextBlock" Margin="0,0,0,18" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
-        		<TextBlock x:Name="uiAccountNameText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
+        		<TextBlock x:Name="uiSpotNameText" TextWrapping="Wrap" Margin="0,0,0,18" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
+        		<TextBlock x:Name="uiAccountNameText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
         	</StackPanel>
-        	<ListView Grid.Row="1" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}" SelectedIndex="-1" SelectionMode="Single" SelectionChanged="ListView_SelectionChanged">
-        		<ListViewItem Margin="0" FontFamily="Segoe WP" FontSize="22" Foreground="#FF919FA6" Height="50" Content="Pick" VerticalContentAlignment="Center"/>
-        		<ListViewItem Content="Pin" Margin="0" FontFamily="Segoe WP" FontSize="22" Foreground="#FF919FA6" Height="50" VerticalContentAlignment="Center"/>
-        	</ListView>
+        	<ListView x:Name="uiExplorerList" Grid.Row="1" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}" SelectedIndex="-1" SelectionMode="Single" SelectionChanged="uiExplorerList_SelectionChanged"/>
         </Grid>
-        <Grid x:Name="ContentGrid1" Grid.Column="1"/>
-        <Grid x:Name="ContentGrid2" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="100" Grid.ColumnSpan="2"/>
+        <Grid x:Name="uiContentGrid" Grid.Column="2">
+        	<UserControl x:Name="uiExplorerUserControl"/>
+        </Grid>
 
     </Grid>
 </local:PtcPage>

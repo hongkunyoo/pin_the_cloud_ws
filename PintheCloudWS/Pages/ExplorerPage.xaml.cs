@@ -1,7 +1,10 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Converters;
+using PintheCloudWS.Locale;
 using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,7 +27,30 @@ namespace PintheCloudWS.Pages
     /// </summary>
     public sealed partial class ExplorerPage : PtcPage
     {
+        private const string SELECTED_EXPLORER_INDEX_KEY = "SELECTED_EXPLORER_INDEX_KEY";
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private Frame HiddenFrame = null;
+
+        private List<Explorer> ExplorerList = new List<Explorer>
+        {
+            new Explorer() { Title = App.ResourceLoader.GetString(ResourcesKeys.Pick), ClassType = typeof(PickPage) },
+            new Explorer() { Title = App.ResourceLoader.GetString(ResourcesKeys.Pin), ClassType = typeof(PinPage) },
+        };
+
+
+        public class Explorer
+        {
+            public string Title { get; set; }
+
+            public Type ClassType { get; set; }
+
+            public override string ToString()
+            {
+                return Title;
+            }
+        }
+
+
 
         /// <summary>
         /// 이는 강력한 형식의 뷰 모델로 변경될 수 있습니다.
@@ -38,6 +64,9 @@ namespace PintheCloudWS.Pages
         public ExplorerPage()
         {
             this.InitializeComponent();
+
+            this.HiddenFrame = new Windows.UI.Xaml.Controls.Frame();
+            this.HiddenFrame.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
 
 
@@ -57,6 +86,10 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
             SpotViewItem spotViewItem = e.Parameter as SpotViewItem;
 
+            uiSpotNameText.Text = spotViewItem.SpotName;
+            uiAccountNameText.Text = spotViewItem.AccountName;
+
+            this.PopulateExplorers();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -75,17 +108,98 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private void ListView_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        private void uiExplorerList_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
-        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+            if (uiExplorerList.SelectedItem != null)
+            {
+                ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
+                App.ApplicationSession[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
+
+                Explorer explorer = selectedListBoxItem.Content as Explorer;
+                this.LoadExplorer(explorer.ClassType);
+            }
         }
 
         #endregion
 
+
         #region Private Methods
 
+        /// <summary>
+        /// This method is responsible for loading the individual input and output sections for each scenario.  This 
+        /// is based on navigating a hidden Frame to the ScenarioX.xaml page and then extracting out the input
+        /// and output sections into the respective UserControl on the main page.
+        /// </summary>
+        /// <param name="scenarioName"></param>
+        public void LoadExplorer(Type explorerClass)
+        {
+            // Load the ScenarioX.xaml file into the Frame.
+            this.HiddenFrame.Navigate(explorerClass, this);
+
+            // Get the top element, the Page, so we can look up the elements
+            // that represent the input and output sections of the ScenarioX file.
+            Page hiddenPage = HiddenFrame.Content as Page;
+
+            // Get each element.
+            UIElement contentGrid = hiddenPage.FindName("uiContentGrid") as UIElement;
+
+            if (contentGrid == null)
+            {
+                // Malformed input section.
+                return;
+            }
+
+            // Find the LayoutRoot which parents the input and output sections in the main page.
+            Panel panel = hiddenPage.FindName("uiLayoutRoot") as Panel;
+
+            if (panel != null)
+            {
+                // Get rid of the content that is currently in the intput and output sections.
+                panel.Children.Remove(contentGrid);
+
+                // Populate the input and output sections with the newly loaded content.
+                uiExplorerUserControl.Content = contentGrid;
+            }
+            else
+            {
+                // Malformed Scenario file.
+            }
+        }
+
+
+        private void PopulateExplorers()
+        {
+            ObservableCollection<object> ExplorerBindingList = new ObservableCollection<object>();
+
+            // Populate the ListBox with the list of scenarios as defined in Constants.cs.
+            foreach (Explorer s in ExplorerList)
+            {
+                ListViewItem item = new ListViewItem();
+                item.Content = s;
+                item.Name = s.ClassType.FullName;
+                item.FontSize = 22;
+                item.Foreground = new SolidColorBrush(ColorHexStringToBrushConverter.GetColorFromHexString("919FA6"));
+                item.Margin = new Thickness(0);
+                item.VerticalContentAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
+                ExplorerBindingList.Add(item);
+            }
+
+            // Bind the ListBox to the scenario list.
+            uiExplorerList.ItemsSource = ExplorerBindingList;
+
+            // Starting scenario is the first or based upon a previous selection.
+            int startingScenarioIndex = -1;
+
+            if (App.ApplicationSession.ContainsKey(SELECTED_EXPLORER_INDEX_KEY))
+            {
+                int selectedScenarioIndex = Convert.ToInt32(App.ApplicationSession[SELECTED_EXPLORER_INDEX_KEY]);
+                startingScenarioIndex = selectedScenarioIndex;
+            }
+            uiExplorerList.SelectedIndex = startingScenarioIndex != -1 ? startingScenarioIndex : 0;
+        }
+
+
         // Get parameters from given spot view item
-        
         private string GetParameterStringFromSpotViewItem(SpotViewItem spotViewItem)
         {
             // Go to File List Page with parameters.
