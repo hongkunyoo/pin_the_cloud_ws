@@ -23,9 +23,9 @@ namespace PintheCloudWS.Pages
     /// </summary>
     public sealed partial class SettingsPage : PtcPage
     {
-
-        private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+
+
 
         /// <summary>
         /// 이는 강력한 형식의 뷰 모델로 변경될 수 있습니다.
@@ -35,50 +35,12 @@ namespace PintheCloudWS.Pages
             get { return this.defaultViewModel; }
         }
 
-        /// <summary>
-        /// NavigationHelper는 각 페이지에서 탐색 및 프로세스 수명 관리를 
-        /// 지원하는 데 사용됩니다.
-        /// </summary>
-        public NavigationHelper NavigationHelper
-        {
-            get { return this.navigationHelper; }
-        }
-
 
         public SettingsPage()
         {
             this.InitializeComponent();
-            this.navigationHelper = new NavigationHelper(this);
-            this.navigationHelper.LoadState += navigationHelper_LoadState;
-            this.navigationHelper.SaveState += navigationHelper_SaveState;
         }
 
-        /// <summary>
-        /// 탐색 중 전달된 콘텐츠로 페이지를 채웁니다. 이전 세션의 페이지를
-        /// 다시 만들 때 저장된 상태도 제공됩니다.
-        /// </summary>
-        /// <param name="sender">
-        /// 대개 <see cref="NavigationHelper"/>인 이벤트 소스
-        /// </param>
-        /// <param name="e">다음에 전달된 탐색 매개 변수를 제공하는 이벤트 데이터입니다.
-        /// <see cref="Frame.Navigate(Type, Object)"/>에 전달된 매개 변수와
-        /// 이전 세션 동안 이 페이지에 유지된
-        /// 유지됩니다. 페이지를 처음 방문할 때는 이 상태가 null입니다.</param>
-        private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
-        {
-        }
-
-        /// <summary>
-        /// 응용 프로그램이 일시 중지되거나 탐색 캐시에서 페이지가 삭제된 경우
-        /// 이 페이지와 관련된 상태를 유지합니다.  값은
-        /// <see cref="SuspensionManager.SessionState"/>의 serialization 요구 사항을 만족해야 합니다.
-        /// </summary>
-        /// <param name="sender"> 대개 <see cref="NavigationHelper"/>인 이벤트 소스</param>
-        /// <param name="e">serializable 상태로 채워질
-        /// 빈 사전입니다.</param>
-        private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
-        {
-        }
 
         #region NavigationHelper 등록
 
@@ -93,12 +55,12 @@ namespace PintheCloudWS.Pages
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedTo(e);
+            this.NavigationHelper.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            navigationHelper.OnNavigatedFrom(e);
+            this.NavigationHelper.OnNavigatedFrom(e);
         }
 
         #endregion

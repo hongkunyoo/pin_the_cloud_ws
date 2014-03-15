@@ -82,7 +82,45 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedFrom(e);
         }
 
+        #endregion
 
+        #region UI Methods
+
+        private void uiSpotGridView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        {
+            // Get Selected Spot View Item
+            SpotViewItem spotViewItem = e.ClickedItem as SpotViewItem;
+
+            //if (spotViewItem.IsPrivateImage.Equals(FileObjectViewModel.IS_PRIVATE_IMAGE_URI))
+            //{
+            //    SubmitSpotPasswordPopup submitSpotPasswordPopup =
+            //        new SubmitSpotPasswordPopup(this.SubmitSpotPasswordParentPopup, spotViewItem.SpotId, spotViewItem.SpotPassword,
+            //            uiPickPivot.ActualWidth, uiPickPivot.ActualHeight, uiPivotTitleGrid.ActualHeight);
+            //    this.SubmitSpotPasswordParentPopup.Child = submitSpotPasswordPopup;
+            //    this.SubmitSpotPasswordParentPopup.IsOpen = true;
+            //    this.SubmitSpotPasswordParentPopup.Closed += (senderObject, args) =>
+            //    {
+            //        if (((SubmitSpotPasswordPopup)((Popup)senderObject).Child).result)
+            //            this.NavigateToFileListPage(spotViewItem);
+            //    };
+            //}
+            //else
+            //{
+            //    this.NavigateToFileListPage(spotViewItem);
+            //}
+            this.Frame.Navigate(typeof(ExplorerPage), spotViewItem);
+        }
+
+
+        private void uiSettingButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            this.Frame.Navigate(typeof(SettingsPage));
+        }
+
+        #endregion
+
+
+        #region Private Methods
 
         private void SetSpotGridView(string message)
         {
@@ -157,36 +195,6 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private void uiSpotGridView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
-        {
-            // Get Selected Spot View Item
-            SpotViewItem spotViewItem = e.ClickedItem as SpotViewItem;
-
-            //if (spotViewItem.IsPrivateImage.Equals(FileObjectViewModel.IS_PRIVATE_IMAGE_URI))
-            //{
-            //    SubmitSpotPasswordPopup submitSpotPasswordPopup =
-            //        new SubmitSpotPasswordPopup(this.SubmitSpotPasswordParentPopup, spotViewItem.SpotId, spotViewItem.SpotPassword,
-            //            uiPickPivot.ActualWidth, uiPickPivot.ActualHeight, uiPivotTitleGrid.ActualHeight);
-            //    this.SubmitSpotPasswordParentPopup.Child = submitSpotPasswordPopup;
-            //    this.SubmitSpotPasswordParentPopup.IsOpen = true;
-            //    this.SubmitSpotPasswordParentPopup.Closed += (senderObject, args) =>
-            //    {
-            //        if (((SubmitSpotPasswordPopup)((Popup)senderObject).Child).result)
-            //            this.NavigateToFileListPage(spotViewItem);
-            //    };
-            //}
-            //else
-            //{
-            //    this.NavigateToFileListPage(spotViewItem);
-            //}
-            this.Frame.Navigate(typeof(ExplorerPage), spotViewItem);
-        }
-
-
-        private void uiSettingButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(SettingsPage));
-        }
 
         #endregion
     }

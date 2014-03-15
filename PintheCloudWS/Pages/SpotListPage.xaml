@@ -43,7 +43,7 @@
         </Grid>
         <Grid x:Name="ContentGrid" Grid.Column="1">
             <ProgressRing x:Name="uiSpotListProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200"/>
-            <GridView x:Name="uiSpotGridView" ItemsSource="{Binding Items}" Padding="0" Margin="96,113,0,0" SelectionMode="Single" ItemClick="uiSpotGridView_ItemClick" IsItemClickEnabled="True">
+            <GridView x:Name="uiSpotGridView" ItemsSource="{Binding Items}" Padding="0" Margin="96,113,0,0" SelectionMode="None" ItemClick="uiSpotGridView_ItemClick" IsItemClickEnabled="True">
 			<GridView.Resources>
                 <DataTemplate x:Key="uiSpotGirdViewItemTemplate">
                     <Grid>
