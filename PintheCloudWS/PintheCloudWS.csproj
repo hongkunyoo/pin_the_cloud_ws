@@ -115,6 +115,7 @@
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Converters\ColorHexStringToBrushConverter.cs" />
     <Compile Include="Converters\StringToSpotNameInitialUriConverter.cs" />
+    <Compile Include="Converters\StringToThumnailUriConverter.cs" />
     <Compile Include="Helpers\AccountHelper.cs" />
     <Compile Include="Helpers\AESHelper.cs" />
     <Compile Include="Helpers\ConvertToFileObjectHelper.cs" />
@@ -122,6 +123,7 @@
     <Compile Include="Helpers\ParseHelper.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Locale\ResourcesKeys.cs" />
+    <Compile Include="Managers\BlobStorageManager.cs" />
     <Compile Include="Managers\DropboxManager.cs" />
     <Compile Include="Managers\GoogleDriveManager.cs" />
     <Compile Include="Managers\IStorageManager.cs" />

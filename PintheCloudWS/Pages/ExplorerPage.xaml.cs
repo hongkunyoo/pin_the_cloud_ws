@@ -29,7 +29,9 @@ namespace PintheCloudWS.Pages
     {
         private const string SELECTED_EXPLORER_INDEX_KEY = "SELECTED_EXPLORER_INDEX_KEY";
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        
         private Frame HiddenFrame = null;
+        private SpotViewItem SpotViewItem = null;
 
         private List<Explorer> ExplorerList = new List<Explorer>
         {
@@ -84,12 +86,12 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.NavigationHelper.OnNavigatedTo(e);
-            SpotViewItem spotViewItem = e.Parameter as SpotViewItem;
+            this.SpotViewItem = e.Parameter as SpotViewItem;
 
-            uiSpotNameText.Text = spotViewItem.SpotName;
-            uiAccountNameText.Text = spotViewItem.AccountName;
+            uiSpotNameText.Text = this.SpotViewItem.SpotName;
+            uiAccountNameText.Text = this.SpotViewItem.AccountName;
 
-            this.PopulateExplorers();
+            this.PopulateExplorerList();
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -116,7 +118,7 @@ namespace PintheCloudWS.Pages
                 App.ApplicationSession[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
 
                 Explorer explorer = selectedListBoxItem.Content as Explorer;
-                this.LoadExplorer(explorer.ClassType);
+                this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
             }
         }
 
@@ -131,10 +133,10 @@ namespace PintheCloudWS.Pages
         /// and output sections into the respective UserControl on the main page.
         /// </summary>
         /// <param name="scenarioName"></param>
-        public void LoadExplorer(Type explorerClass)
+        public void LoadExplorer(Type explorerClass, object parameter)
         {
             // Load the ScenarioX.xaml file into the Frame.
-            this.HiddenFrame.Navigate(explorerClass, this);
+            this.HiddenFrame.Navigate(explorerClass, parameter);
 
             // Get the top element, the Page, so we can look up the elements
             // that represent the input and output sections of the ScenarioX file.
@@ -167,7 +169,7 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private void PopulateExplorers()
+        private void PopulateExplorerList()
         {
             ObservableCollection<object> ExplorerBindingList = new ObservableCollection<object>();
 
@@ -179,8 +181,6 @@ namespace PintheCloudWS.Pages
                 item.Name = s.ClassType.FullName;
                 item.FontSize = 22;
                 item.Foreground = new SolidColorBrush(ColorHexStringToBrushConverter.GetColorFromHexString("919FA6"));
-                item.Margin = new Thickness(0);
-                item.VerticalContentAlignment = Windows.UI.Xaml.VerticalAlignment.Center;
                 ExplorerBindingList.Add(item);
             }
 
@@ -196,19 +196,6 @@ namespace PintheCloudWS.Pages
                 startingScenarioIndex = selectedScenarioIndex;
             }
             uiExplorerList.SelectedIndex = startingScenarioIndex != -1 ? startingScenarioIndex : 0;
-        }
-
-
-        // Get parameters from given spot view item
-        private string GetParameterStringFromSpotViewItem(SpotViewItem spotViewItem)
-        {
-            // Go to File List Page with parameters.
-            string spotId = spotViewItem.SpotId;
-            string spotName = spotViewItem.SpotName;
-            string accountId = spotViewItem.AccountId;
-            string accountName = spotViewItem.AccountName;
-            string parameters = "?spotId=" + spotId + "&spotName=" + spotName + "&accountId=" + accountId + "&accountName=" + accountName;
-            return parameters;
         }
 
         #endregion

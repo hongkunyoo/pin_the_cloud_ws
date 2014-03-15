@@ -12,10 +12,12 @@ namespace PintheCloudWS.Locale
         
         public const string Pick = "Pick";
         public const string Pin = "Pin";
-        public const string File = "File";
 
         public const string OK = "OK";
         public const string Cancel = "Cancel";
+
+        public const string SignIn = "SignIn";
+        public const string SignOut = "SignOut";
 
         public const string GB = "GB";
         public const string MB = "MB";
@@ -37,6 +39,7 @@ namespace PintheCloudWS.Locale
         public const string BadLocationServiceMessage = "BadLocationServiceMessage";
 
         public const string NoLocationServiceMessage = "NoLocationServiceMessage";
+        public const string NoFileInSpotMessage = "NoFileInSpotMessage";
 
         public const string Loading = "Loading";
     }

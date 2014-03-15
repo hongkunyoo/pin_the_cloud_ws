@@ -57,7 +57,7 @@
         		<TextBlock x:Name="uiSpotNameText" TextWrapping="Wrap" Margin="0,0,0,18" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
         		<TextBlock x:Name="uiAccountNameText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
         	</StackPanel>
-        	<ListView x:Name="uiExplorerList" Grid.Row="1" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}" SelectedIndex="-1" SelectionMode="Single" SelectionChanged="uiExplorerList_SelectionChanged"/>
+        	<ListView x:Name="uiExplorerList" Grid.Row="1" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}" SelectedIndex="-1" SelectionMode="Single" SelectionChanged="uiExplorerList_SelectionChanged" HorizontalContentAlignment="Stretch"/>
         </Grid>
         <Grid x:Name="uiContentGrid" Grid.Column="2">
         	<UserControl x:Name="uiExplorerUserControl"/>

@@ -50,6 +50,7 @@ namespace PintheCloudWS
         // Manager
         public static SpotManager SpotManager = null;
         public static Geolocator Geolocator = null;
+        public static BlobStorageManager BlobStorageManager = null;
 
         public static IStorageManager[] IStorageManagers = null;
         public static TaskHelper TaskHelper = null;
@@ -88,6 +89,7 @@ namespace PintheCloudWS
             // Manager
             SpotManager = new SpotManagerImplement();
             Geolocator = new Geolocator();
+            BlobStorageManager = new BlobStorageManager();
 
             OneDriveManager = new OneDriveManager();
             DropBoxManager = new DropboxManager();

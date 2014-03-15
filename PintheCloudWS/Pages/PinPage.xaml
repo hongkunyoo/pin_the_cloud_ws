@@ -1,4 +1,4 @@
-﻿<Page
+﻿<local:PtcPage
     x:Name="pageRoot"
     x:Class="PintheCloudWS.Pages.PinPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -10,10 +10,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Page.Resources>
+    <local:PtcPage.Resources>
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">My Application</x:String>
-    </Page.Resources>
+    </local:PtcPage.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -31,8 +31,18 @@
                 <EntranceThemeTransition/>
             </TransitionCollection>
         </Grid.ChildrenTransitions>
-    	<Grid x:Name="uiContentGrid"/>
+    	<Grid x:Name="uiContentGrid" Background="White">
+    		<Grid.RowDefinitions>
+    			<RowDefinition Height="173"/>
+    			<RowDefinition/>
+    		</Grid.RowDefinitions>
+    		<StackPanel Margin="50,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480">
+    			<ComboBox x:Name="uiCloudModeComboBox" BorderThickness="0"/>
+    			<Grid x:Name="uiCurrentPathGrid" Height="100"/>
+    		</StackPanel>
+    		<GridView x:Name="uiFileListGridView" Grid.Row="1"/>
+    	</Grid>
 
         <!-- Back button and page title -->
     </Grid>
-</Page>
+</local:PtcPage>

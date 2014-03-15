@@ -32,8 +32,6 @@ namespace PintheCloudWS.Pages
     public sealed partial class SpotListPage : PtcPage
     {
         // Instances
-        private bool SetNearSpotListLock = false;
-
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         public SpotViewModel NearSpotViewModel = new SpotViewModel();
 
@@ -141,7 +139,6 @@ namespace PintheCloudWS.Pages
         private async void SetSpotGridViewItemAsync(string message)
         {
             // Show Progress Indicator
-            this.SetNearSpotListLock = true;
             base.SetProgressRing(uiSpotListProgressRing, true);
 
             // Check whether GPS works well or not
@@ -160,7 +157,6 @@ namespace PintheCloudWS.Pages
                         {
                             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
-                                this.SetNearSpotListLock = false;
                                 this.NearSpotViewModel.IsDataLoaded = true;
                                 this.NearSpotViewModel.SetItems(spots);
                             });
