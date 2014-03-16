@@ -9,6 +9,7 @@ namespace PintheCloudWS.ViewModels
 {
     public class CloudModeViewItem : INotifyPropertyChanged
     {
+        public string CloudName { get; set; }
         public string CloudModeImage { get; set; }
         public string CloudModeColor { get; set; }
 
@@ -30,8 +31,9 @@ namespace PintheCloudWS.ViewModels
         }
 
 
-        public CloudModeViewItem(string cloudModeImage, string cloudModeColor, string accountName)
+        public CloudModeViewItem(string cloudName, string cloudModeImage, string cloudModeColor, string accountName)
         {
+            this.CloudName = cloudName;
             this.CloudModeImage = cloudModeImage;
             this.CloudModeColor = cloudModeColor;
             this.AccountName = accountName;

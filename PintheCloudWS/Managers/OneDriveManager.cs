@@ -30,7 +30,7 @@ namespace PintheCloudWS.Managers
         private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
 
         private LiveConnectClient LiveClient = null;
-        private Account CurrentAccount = null;
+        private StorageAccount CurrentAccount = null;
         private TaskCompletionSource<bool> tcs = null;
         #endregion
 
@@ -51,10 +51,18 @@ namespace PintheCloudWS.Managers
                 string accountUserName = (string)operationResult.Result["name"];
 
                 // Register account
-                Account account = await AccountHelper.GetAccountAsync(accountId);
-                if (account == null)
-                    await AccountHelper.CreateAccountAsync(accountId, accountUserName, Account.StorageAccountType.ONE_DRIVE);
-                this.CurrentAccount = account;
+                StorageAccount storageAccount = App.AccountManager.GetPtcAccount().GetStorageAccountById(accountId);
+                if (storageAccount == null)
+                {
+                    storageAccount = new StorageAccount();
+                    storageAccount.Id = accountId;
+                    storageAccount.StorageName = this.GetStorageName();
+                    storageAccount.UserName = accountUserName;
+                    storageAccount.UsedSize = 0.0;
+                    await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(storageAccount);
+                }
+
+                this.CurrentAccount = storageAccount;
 
                 // Save sign in setting.
                 App.ApplicationSettings.Values[ONE_DRIVE_SIGN_IN_KEY] = true;
@@ -132,7 +140,7 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Account GetAccount()
+        public StorageAccount GetStorageAccount()
         {
             return this.CurrentAccount;
         }
@@ -202,15 +210,12 @@ namespace PintheCloudWS.Managers
         //
         // Returns:
         //     The input stream to download file.
-        // Windows Phone 8
-        //public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
         public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
         {
             System.Threading.CancellationTokenSource ctsDownload = new System.Threading.CancellationTokenSource();
             LiveDownloadOperationResult result = null;
             try
             {
-                // Windows Phone 8
                 //result = await this.LiveClient.DownloadAsync(sourceFileId + "/content");
                 result = await this.LiveClient.BackgroundDownloadAsync(sourceFileId + "/content");
             }
@@ -219,8 +224,6 @@ namespace PintheCloudWS.Managers
                 throw new ShareException(sourceFileId, ShareException.ShareType.DOWNLOAD);
             }
 
-            // Windows Phone 8
-            //return result.Stream;
             return result.Stream.AsStreamForRead();
         }
 
@@ -247,7 +250,6 @@ namespace PintheCloudWS.Managers
             System.Threading.CancellationTokenSource ctsUpload = new System.Threading.CancellationTokenSource();
             try
             {
-                // Windows Phone 8
                 //LiveOperationResult result = await this.LiveClient
                 //    .UploadAsync(folderIdToStore, fileName, outstream, OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
                 LiveOperationResult result = await this.LiveClient
@@ -359,5 +361,6 @@ namespace PintheCloudWS.Managers
             return fileObject;
         }
         #endregion
+
     }
 }

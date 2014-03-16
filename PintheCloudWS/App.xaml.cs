@@ -51,14 +51,15 @@ namespace PintheCloudWS
         public static SpotManager SpotManager = null;
         public static Geolocator Geolocator = null;
         public static BlobStorageManager BlobStorageManager = null;
+        public static LocalStorageManager LocalStorageManager = null;
 
-        public static IStorageManager[] IStorageManagers = null;
         public static TaskHelper TaskHelper = null;
 
         private static OneDriveManager OneDriveManager = null;
         private static DropboxManager DropBoxManager = null;
         private static GoogleDriveManager GoogleDriveManger = null;
 
+        public static AccountManager AccountManager = null;
 
 
         /// <summary>
@@ -90,12 +91,22 @@ namespace PintheCloudWS
             SpotManager = new SpotManagerImplement();
             Geolocator = new Geolocator();
             BlobStorageManager = new BlobStorageManager();
+            LocalStorageManager = new LocalStorageManager();
 
             OneDriveManager = new OneDriveManager();
             DropBoxManager = new DropboxManager();
             GoogleDriveManger = new GoogleDriveManager();
-            IStorageManagers = new IStorageManager[] { OneDriveManager, DropBoxManager, GoogleDriveManger };
+
+            /////////////////////////////////////////////////////
+            // This order will be displayed at every App Pages
+            /////////////////////////////////////////////////////
+            StorageHelper.AddStorageManager(OneDriveManager.GetStorageName(), OneDriveManager);
+            StorageHelper.AddStorageManager(DropBoxManager.GetStorageName(), DropBoxManager);
+            StorageHelper.AddStorageManager(GoogleDriveManger.GetStorageName(), GoogleDriveManger);
+
+            Switcher.SetStorageToMainPlatform();
             TaskHelper = new TaskHelper();
+            AccountManager = new AccountManager();
         }
 
         /// <summary>

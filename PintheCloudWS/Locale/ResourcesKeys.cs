@@ -40,7 +40,9 @@ namespace PintheCloudWS.Locale
 
         public const string NoLocationServiceMessage = "NoLocationServiceMessage";
         public const string NoFileInSpotMessage = "NoFileInSpotMessage";
+        public const string NoFileInFolderMessage = "NoFileInFolderMessage";
 
         public const string Loading = "Loading";
+        public const string Refrshing = "Refrshing";
     }
 }

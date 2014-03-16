@@ -37,10 +37,74 @@
     			<RowDefinition/>
     		</Grid.RowDefinitions>
     		<StackPanel Margin="50,60,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="480">
-    			<ComboBox x:Name="uiCloudModeComboBox" BorderThickness="0"/>
-    			<Grid x:Name="uiCurrentPathGrid" Height="100"/>
+    			<ComboBox x:Name="uiCloudModeComboBox" ItemsSource="{Binding Items}" BorderThickness="0" Height="55" SelectionChanged="uiCloudModeComboBox_SelectionChanged">
+					<ComboBox.Resources>
+						 <DataTemplate x:Key="uiCloudModeComboBoxItemTemplate">
+							<Grid Height="55">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="55"/>
+									<ColumnDefinition/>
+								</Grid.ColumnDefinitions>
+								<Image Source="{Binding CloudModeImage}" Stretch="None"/>
+								<Grid Grid.Column="1" Background="{Binding CloudModeColor, Converter={StaticResource ColorHexStringToBrushConverter}}">
+									<TextBlock x:Name="uiAccountNameText" TextWrapping="Wrap" Text="{Binding AccountName}" FontSize="26" FontFamily="Segoe WP Light" Margin="18,0,0,0" VerticalAlignment="Center" />
+								</Grid>
+                			</Grid>
+						 </DataTemplate>
+					</ComboBox.Resources>
+    				<ComboBox.Style>
+    					<StaticResource ResourceKey="CustomComboBoxStyle"/>
+    				</ComboBox.Style>
+    				<ComboBox.ItemContainerStyle>
+    					<StaticResource ResourceKey="CloudModeComboBoxItemContainerStyle"/>
+    				</ComboBox.ItemContainerStyle>
+    				<ComboBox.ItemTemplate>
+    					<StaticResource ResourceKey="uiCloudModeComboBoxItemTemplate"/>
+    				</ComboBox.ItemTemplate>
+				</ComboBox>
+    			<Grid Background="#FFF1F1F2" Opacity="0.8">
+    				<Button x:Name="uiPinFileListUpButton" Foreground="Black" BorderBrush="Transparent" Click="uiPinFileListUpButton_Click" FontSize="22" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CustomButtonStyle}" BorderThickness="0">
+    					<Grid Height="32">
+    						<Grid.ColumnDefinitions>
+    							<ColumnDefinition Width="55"/>
+    							<ColumnDefinition/>
+    						</Grid.ColumnDefinitions>
+    						<Image Source="ms-appx:///Assets/pajeon/pin/png/back.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,8,0,0"/>
+    						<TextBlock x:Name="uiPinFileCurrentPathText" FontFamily="Segoe WP Light" Foreground="#FF919FA6" TextTrimming="WordEllipsis" Grid.Column="1" VerticalAlignment="Center" FontSize="18" Margin="18,0,0,0"/>
+    					</Grid>
+    				</Button>
+    			</Grid>
     		</StackPanel>
-    		<GridView x:Name="uiFileListGridView" Grid.Row="1"/>
+    		<Grid Grid.Row="1">
+    			<ProgressRing x:Name="uiFileListProgressRing" Width="150" Height="150"/>
+    			<GridView x:Name="uiFileListGridView" ItemsSource="{Binding Items}">
+					<GridView.Resources>
+						<DataTemplate x:Key="uiFileListGridViewItemTemplate">
+							<Grid Width="380">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<StackPanel Orientation="Horizontal">
+									<Image Stretch="None" Source="{Binding ThumnailType}" Margin="9,7,14,0"/>
+									<TextBlock x:Name="uiFileNameText" Text="{Binding Name}" TextWrapping="Wrap" FontFamily="Segoe WP" FontSize="22" Foreground="#FF404041" Margin="0,22,0,0"/>
+								</StackPanel>
+								<StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,24,0,0">
+									<TextBlock TextWrapping="Wrap" Text="{Binding Size}" FontFamily="Segoe WP Light" FontSize="18" Foreground="#FF919FA6"/>
+									<TextBlock TextWrapping="Wrap" Text="{Binding SizeUnit}" FontFamily="Segoe WP Light" Margin="0,0,15,0" FontSize="18" Foreground="#FF919FA6"/>
+									<Image Stretch="None" Source="{Binding SelectFileImage}" Margin="0"/>
+								</StackPanel>
+							</Grid>
+						</DataTemplate>
+					</GridView.Resources>
+    				<GridView.ItemContainerStyle>
+    					<StaticResource ResourceKey="FileListGridViewItemContainerStyle"/>
+    				</GridView.ItemContainerStyle>
+    				<GridView.ItemTemplate>
+    					<StaticResource ResourceKey="uiFileListGridViewItemTemplate"/>
+    				</GridView.ItemTemplate>
+				</GridView>
+    		</Grid>
     	</Grid>
 
         <!-- Back button and page title -->

@@ -1,5 +1,6 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json.Linq;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
@@ -87,19 +88,22 @@ namespace PintheCloudWS.Managers
         {
             // Get My signed in ids
             List<string> ids = new List<string>();
-            for (int i = 0; i < App.IStorageManagers.Length; i++)
+            using (var itr = StorageHelper.GetStorageEnumerator())
             {
-                if (App.IStorageManagers[i].IsSignIn())
+                while (itr.MoveNext())
                 {
-                    // Wait task
-                    IStorageManager iStorageManager = App.IStorageManagers[i];
-                    await App.TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
-                    await App.TaskHelper.WaitSignOutTask(iStorageManager.GetStorageName());
+                    if (itr.Current.IsSignIn())
+                    {
+                        // Wait task
+                        IStorageManager iStorageManager = itr.Current;
+                        await App.TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
+                        await App.TaskHelper.WaitSignOutTask(iStorageManager.GetStorageName());
 
-                    // If it wasn't signed out, set list.
-                    // Othersie, show sign in grid.
-                    if (iStorageManager.GetAccount() != null)  // Wasn't signed out.
-                        ids.Add(iStorageManager.GetAccount().account_platform_id);
+                        // If it wasn't signed out, set list.
+                        // Othersie, show sign in grid.
+                        if (iStorageManager.GetStorageAccount() != null)  // Wasn't signed out.
+                            ids.Add(iStorageManager.GetStorageAccount().Id);
+                    }
                 }
             }
 

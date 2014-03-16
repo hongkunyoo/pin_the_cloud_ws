@@ -16,7 +16,7 @@ namespace PintheCloudWS.Managers
         bool IsSigningIn();
         void SignOut();
         bool IsPopup();
-        Account GetAccount();
+        StorageAccount GetStorageAccount();
         bool IsSignIn();
         string GetStorageName();
         string GetStorageImageUri();
@@ -29,6 +29,5 @@ namespace PintheCloudWS.Managers
         Task<List<FileObject>> GetFilesFromFolderAsync(string folderId);
         Task<Stream> DownloadFileStreamAsync(string sourceFileId);
         Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream);
-
     }
 }

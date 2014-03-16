@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using System;
@@ -59,30 +60,27 @@ namespace PintheCloudWS.Pages
         {
             this.NavigationHelper.OnNavigatedTo(e);
 
-
-            // Check main platform at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_MAIN_PLATFORM_TYPE_KEY] = Account.StorageAccountType.ONE_DRIVE.ToString();
-
             // Check nick name at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
-                App.ApplicationSettings.Values[Account.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = App.ResourceLoader.GetString(ResourcesKeys.AtHere);
+            if (!App.ApplicationSettings.Values.ContainsKey(StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
+            {
+                App.ApplicationSettings.Values[StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = App.ResourceLoader.GetString(ResourcesKeys.AtHere);
+            }
 
             // Check location access consent at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(Account.LOCATION_ACCESS_CONSENT_KEY))
-                App.ApplicationSettings.Values[Account.LOCATION_ACCESS_CONSENT_KEY] = false;
-
-
-            // SIgn in
-            if (NetworkInterface.GetIsNetworkAvailable())
+            if (!App.ApplicationSettings.Values.ContainsKey(StorageAccount.LOCATION_ACCESS_CONSENT_KEY))
             {
-                for (int i = 0; i < App.IStorageManagers.Length; i++)
-                {
-                    // If main platform is signed in, process it.
-                    // Otherwise, ignore and go to explorer page.
-                    if (App.IStorageManagers[i].IsSignIn())
-                        App.TaskHelper.AddSignInTask(App.IStorageManagers[i].GetStorageName(), App.IStorageManagers[i].SignIn());
-                }
+                App.ApplicationSettings.Values[StorageAccount.LOCATION_ACCESS_CONSENT_KEY] = false;
+            }
+
+            if (App.AccountManager.IsSignIn())
+            {
+                if (NetworkInterface.GetIsNetworkAvailable())
+                    App.TaskHelper.AddTask(App.AccountManager.GetPtcId(), App.AccountManager.SignIn());
+                this.Frame.Navigate(typeof(SpotListPage));
+            }
+            else
+            {
+                // Go to profile page
             }
         }
 

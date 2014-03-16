@@ -7,6 +7,7 @@ using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,7 @@ namespace PintheCloudWS.Managers
         #region Variables
         private const string DROPBOX_CLIENT_KEY = "gxjfureco8noyle";
         private const string DROPBOX_CLIENT_SECRET = "iskekcebjky6vbm";
-        public const string DROPBOX_AUTH_URI = "http://54.214.19.198";
+        public const string DROPBOX_AUTH_URI = "http://www.pinthecloud.com/index.html";
 
         private const string DROPBOX_USER_KEY = "DROPBOX_USER_KEY";
         private const string DROPBOX_SIGN_IN_KEY = "DROPBOX_SIGN_IN_KEY";
@@ -31,33 +32,28 @@ namespace PintheCloudWS.Managers
         private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
 
         private DropNetClient _client = null;
-        private Account CurrentAccount = null;
+        private StorageAccount CurrentAccount = null;
         private TaskCompletionSource<bool> tcs = null;
         #endregion
 
 
-        private async Task<Account> GetMyAccountAsync()
+        private Task<StorageAccount> GetMyAccountAsync()
         {
-            TaskCompletionSource<Account> tcs = new TaskCompletionSource<Account>();
-            
-            // Windows Phone 8
+            TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
             //this._client.AccountInfoAsync((info) =>
             //{
-            //    tcs.SetResult(new Account(info.uid.ToString(), Account.StorageAccountType.DROPBOX, info.display_name, 0.0, AccountType.NORMAL_ACCOUNT_TYPE));
+            //    tcs.SetResult(new StorageAccount(info.uid.ToString(), StorageAccount.StorageAccountType.DROPBOX, info.display_name, 0.0));
             //}, (fail) =>
             //{
             //    tcs.SetException(new Exception("Account Info Get Failed"));
             //});
-            AccountInfo info = await this._client.AccountInfo();
-
-            // Windows Phone 8
-            //return tcs.Task;
-            return new Account(info.Uid.ToString(), Account.StorageAccountType.DROPBOX, info.DisplayName, 0.0, AccountType.NORMAL_ACCOUNT_TYPE);
+            return tcs.Task;
         }
 
 
-        public async Task<bool> SignIn()
+        public Task<bool> SignIn()
         {
+            Debug.WriteLine("SignIn!");
             // Get dropbox _client.
             this.tcs = new TaskCompletionSource<bool>();
             this._client = new DropNetClient(DROPBOX_CLIENT_KEY, DROPBOX_CLIENT_SECRET);
@@ -71,11 +67,10 @@ namespace PintheCloudWS.Managers
             {
                 this._client.UserLogin = dropboxUser;
                 //this.CurrentAccount = await this.GetMyAccountAsync();
-                // Windows Phone 8
                 //this._client.AccountInfoAsync((info) =>
                 //{
                 //    //tcs.SetResult(new Account(info.uid.ToString(), Account.StorageAccountType.DROPBOX, info.display_name, 0.0, AccountType.NORMAL_ACCOUNT_TYPE));
-                //    this.CurrentAccount = new Account(info.uid.ToString(), Account.StorageAccountType.DROPBOX, info.display_name, 0.0, AccountType.NORMAL_ACCOUNT_TYPE);
+                //    this.CurrentAccount = new StorageAccount(info.uid.ToString(), StorageAccount.StorageAccountType.DROPBOX, info.display_name, 0.0);
                 //    tcs.SetResult(true);
                 //}, (fail) =>
                 //{
@@ -83,51 +78,53 @@ namespace PintheCloudWS.Managers
                 //    this.CurrentAccount = null;
                 //    tcs.SetResult(false);
                 //});
-                AccountInfo info = await this._client.AccountInfo();
-                this.CurrentAccount = new Account(info.Uid.ToString(), Account.StorageAccountType.DROPBOX, info.DisplayName, 0.0, AccountType.NORMAL_ACCOUNT_TYPE);
             }
             else
             {
-                // Windows Phone 8
-               // _client.GetTokenAsync(async (userLogin) =>
+               // this._client.GetTokenAsync(async (userLogin) =>
                // {
-               //     string authUri = _client.BuildAuthorizeUrl(DROPBOX_AUTH_URI);
+               //     string authUri = this._client.BuildAuthorizeUrl(DROPBOX_AUTH_URI);
                //     DropboxWebBrowserTask webBrowser = new DropboxWebBrowserTask(authUri);
                //     await webBrowser.ShowAsync();
 
-               //     _client.GetAccessTokenAsync(async (accessToken) =>
+               //     this._client.GetAccessTokenAsync(async (accessToken) =>
                //     {
                //         UserLogin user = new UserLogin();
                //         user.Token = accessToken.Token;
                //         user.Secret = accessToken.Secret;
-               //         _client.UserLogin = user;
+               //         this._client.UserLogin = user;
 
                //         // Save dropbox user got and sign in setting.
                //         this.CurrentAccount = await this.GetMyAccountAsync();
+               //         StorageAccount account = App.AccountManager.GetPtcAccount().GetStorageAccountById(this.CurrentAccount.Id);
+               //         if (account == null)
+               //         {
+               //             await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(this.CurrentAccount);
+               //         }
+
                //         App.ApplicationSettings.Values[DROPBOX_SIGN_IN_KEY] = true;
                //         App.ApplicationSettings.Values[DROPBOX_USER_KEY] = user;
                //         tcs.SetResult(true);
                //     },
                //     (error) =>
                //     {
+               //         Debug.WriteLine(error.ToString());
                //         tcs.SetResult(false);
                //     });
                // },
                //(error) =>
                //{
+               //    var keys = error.Data.Keys;
+               //    for (var i = 0; i < keys.Count; i++)
+               //    {
+               //        Debug.WriteLine(error.Data[i]);
+               //    }
+               //    Debug.WriteLine(error.Message);
+               //    Debug.WriteLine(error.StackTrace);
                //    tcs.SetResult(false);
                //});
-                UserLogin userLogin = await this._client.GetRequestToken();
-                userLogin = await this._client.GetAccessToken();
-                this._client.UserLogin = userLogin;
-
-                this.CurrentAccount = await this.GetMyAccountAsync();
-                App.ApplicationSettings.Values[DROPBOX_SIGN_IN_KEY] = true;
-                App.ApplicationSettings.Values[DROPBOX_USER_KEY] = userLogin;
             }
-            // Windows Phone 8
-            //return tcs.Task;
-            return true;
+            return tcs.Task;
         }
 
 
@@ -194,7 +191,7 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Account GetAccount()
+        public StorageAccount GetStorageAccount()
         {
             return this.CurrentAccount;
         }
@@ -204,26 +201,18 @@ namespace PintheCloudWS.Managers
         {
             return this.GetFileAsync("/");
         }
-
-
         public Task<List<FileObject>> GetRootFilesAsync()
         {
             return this.GetFilesFromFolderAsync("/");
         }
-
-
         public async Task<FileObject> GetFileAsync(string fileId)
         {
-            // Windows Phone 8
             //MetaData metaTask = await this._client.GetMetaDataTask(fileId);
             MetaData metaTask = await this._client.GetMetaData(fileId);
             return ConvertToFileObjectHelper.ConvertToFileObject(metaTask);
         }
-
-
         public async Task<List<FileObject>> GetFilesFromFolderAsync(string folderId)
         {
-            // Windows Phone 8
             //MetaData metaTask = await this._client.GetMetaDataTask(folderId);
             MetaData metaTask = await this._client.GetMetaData(folderId);
             List<FileObject> list = new List<FileObject>();
@@ -237,14 +226,9 @@ namespace PintheCloudWS.Managers
 
             return list;
         }
-
-
-        // Windows Phone 8
-        public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
+        public Task<Stream> DownloadFileStreamAsync(string sourceFileId)
         {
             TaskCompletionSource<Stream> tcs = new TaskCompletionSource<Stream>();
-
-            // Windows Phone 8
             //this._client.GetFileAsync(sourceFileId, new Action<IRestResponse>((response) =>
             //{
             //    MemoryStream stream = new MemoryStream(response.RawBytes);
@@ -254,20 +238,15 @@ namespace PintheCloudWS.Managers
             //    tcs.SetException(new Exception("failed"));
             //    throw new ShareException(sourceFileId, ShareException.ShareType.DOWNLOAD);
             //}));
-            //return tcs.Task;
-            return new MemoryStream(await this._client.GetFile(sourceFileId));
+
+            return tcs.Task;
         }
-
-
         public async Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream)
         {
             try
             {
                 //MetaData d = await _client.UploadFileTask(folderIdToStore, fileName, CreateStream(outstream).ToArray());
-
-                // Windows Phone 8
                 //MetaData d = await this._client.UploadFileTask(folderIdToStore, fileName, outstream);
-                MetaData d = await this._client.Upload(folderIdToStore, fileName, outstream);
                 return true;
             }
             catch
@@ -287,8 +266,6 @@ namespace PintheCloudWS.Managers
                 {
                     output.Write(buffer, 0, count);
                 }
-
-                // Windows Phone 8
                 //input.Close();
                 //output.Close();
                 return true;

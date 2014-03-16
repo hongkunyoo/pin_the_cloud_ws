@@ -41,7 +41,7 @@ namespace PintheCloudWS.Managers
 
         private DriveService service;
         private UserCredential credential;
-        private Account CurrentAccount;
+        private StorageAccount CurrentAccount;
         private User user;
         private string rootFodlerId = "";
         private TaskCompletionSource<bool> tcs = null;
@@ -81,7 +81,6 @@ namespace PintheCloudWS.Managers
             // Add application settings before work for good UX
             try
             {
-                // Windows Phone 8
                 //credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                 //    new ClientSecrets
                 //    {
@@ -93,19 +92,11 @@ namespace PintheCloudWS.Managers
                 //    CancellationToken.None
                 //);
 
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    new Uri(GOOGLE_DRIVE_CLIENT_SECRET),
-                    new[] { DriveService.Scope.Drive },
-                    this._GetUserSession(),
-                    CancellationToken.None
-                );
-
                 this.service = new DriveService(new BaseClientService.Initializer()
                 {
                     HttpClientInitializer = credential,
                     ApplicationName = "athere",
                 });
-
                 AboutResource aboutResource = service.About;
                 About about = await aboutResource.Get().ExecuteAsync();
                 this.user = about.User;
@@ -114,11 +105,11 @@ namespace PintheCloudWS.Managers
                 string id = about.PermissionId;
 
                 // Register account
-                Account account = await AccountHelper.GetAccountAsync(id);
+                StorageAccount account = App.AccountManager.GetPtcAccount().GetStorageAccountById(id);
                 if (account == null)
                 {
-                    account = new Account(id, Account.StorageAccountType.GOOGLE_DRIVE, name, 0, AccountType.NORMAL_ACCOUNT_TYPE);
-                    await AccountHelper.CreateAccountAsync(account);
+                    account = new StorageAccount(id, StorageAccount.StorageAccountType.GOOGLE_DRIVE, name, 0.0);
+                    await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(account);
                 }
                 this.CurrentAccount = account;
 
@@ -126,7 +117,6 @@ namespace PintheCloudWS.Managers
                 App.ApplicationSettings.Values[GOOGLE_DRIVE_SIGN_IN_KEY] = true;
                 tcs.SetResult(true);
             }
-            // Windows Phone 8
             //catch (Microsoft.Phone.Controls.WebBrowserNavigationException ex)
             //{
             //    Debug.WriteLine(ex.ToString());
@@ -208,7 +198,7 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Account GetAccount()
+        public StorageAccount GetStorageAccount()
         {
             return this.CurrentAccount;
         }
