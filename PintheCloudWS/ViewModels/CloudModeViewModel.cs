@@ -27,11 +27,11 @@ namespace PintheCloudWS.ViewModels
         {
             this.Items = new ObservableCollection<CloudModeViewItem>();
             this.Items.Add(new CloudModeViewItem(App.ResourceLoader.GetString(ResourcesKeys.OneDrive), 
-                ONE_DRIVE_IMAGE_URI, ONE_DRIVE_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.SignIn)));
+                ONE_DRIVE_IMAGE_URI, ONE_DRIVE_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.Empty)));
             this.Items.Add(new CloudModeViewItem(App.ResourceLoader.GetString(ResourcesKeys.Dropbox), 
-                DROPBOX_IMAGE_URI, DROPBOX_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.SignIn)));
+                DROPBOX_IMAGE_URI, DROPBOX_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.Empty)));
             this.Items.Add(new CloudModeViewItem(App.ResourceLoader.GetString(ResourcesKeys.GoogleDrive), 
-                GOOGLE_DRIVE_IMAGE_URI, GOOGLE_DRIVE_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.SignIn)));
+                GOOGLE_DRIVE_IMAGE_URI, GOOGLE_DRIVE_COLOR_HEX_STRING, App.ResourceLoader.GetString(ResourcesKeys.Empty)));
         }
 
 

@@ -135,6 +135,12 @@
   <data name="Dropbox" xml:space="preserve">
     <value>Dropbox</value>
   </data>
+  <data name="Empty" xml:space="preserve">
+    <value>(empty)</value>
+  </data>
+  <data name="EmptyAccountText/Text" xml:space="preserve">
+    <value>No Account Registered.</value>
+  </data>
   <data name="File/Text" xml:space="preserve">
     <value>File</value>
   </data>

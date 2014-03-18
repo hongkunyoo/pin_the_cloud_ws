@@ -25,30 +25,26 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid x:Name="uiLayoutRoot" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <EntranceThemeTransition/>
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
-    	<Grid x:Name="uiContentGrid">
-    		<Grid.ColumnDefinitions>
-    			<ColumnDefinition Width="610*"/>
-    			<ColumnDefinition Width="476*"/>
-    		</Grid.ColumnDefinitions>
-    		<Grid x:Name="uiFileGrid" Background="White">
-    			<Grid.RowDefinitions>
-    				<RowDefinition Height="145"/>
-    				<RowDefinition/>
-    			</Grid.RowDefinitions>
-    			<Grid>
-    				<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-    				<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
-    					<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
-    				</Button>
-    			</Grid>
-    			<ProgressRing x:Name="uiFileListProgressRing" HorizontalAlignment="Center" Grid.Row="1" Width="150" Height="150"/>
-    			<ListView x:Name="uiFileListView" ItemsSource="{Binding Items}" Grid.Row="1" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiFileListView_ItemClick">
+    <Grid x:Name="uiContentGrid">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="610*"/>
+			<ColumnDefinition Width="476*"/>
+		</Grid.ColumnDefinitions>
+		<Grid x:Name="uiFileGrid" Background="White">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="145"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid>
+				<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
+				<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
+					<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
+				</Button>
+			</Grid>
+			<ProgressRing x:Name="uiFileListProgressRing" HorizontalAlignment="Center" Grid.Row="1" Width="150" Height="150"/>
+			<Grid Grid.Row="1">
+				<TextBlock x:Name="uiPickFileListMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" FontFamily="Segoe WP" Foreground="Black" Margin="73,38,0,0"/>
+				<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiFileListView_ItemClick">
 					<ListView.Resources>
 						<DataTemplate x:Key="uiFileListViewItemTemplate">
 							<Grid>
@@ -81,26 +77,29 @@
 							</Grid>
 						</DataTemplate>
 					</ListView.Resources>
-    				<ListView.ItemTemplate>
-    					<StaticResource ResourceKey="uiFileListViewItemTemplate"/>
-    				</ListView.ItemTemplate>
-    				<ListView.ItemContainerStyle>
-    					<StaticResource ResourceKey="PickFileListViewItemContainerStyle"/>
-    				</ListView.ItemContainerStyle>
+					<ListView.ItemTemplate>
+						<StaticResource ResourceKey="uiFileListViewItemTemplate"/>
+					</ListView.ItemTemplate>
+					<ListView.ItemContainerStyle>
+						<StaticResource ResourceKey="PickFileListViewItemContainerStyle"/>
+					</ListView.ItemContainerStyle>
 				</ListView>
-    		</Grid>
-    		<Grid x:Name="uiHistoryGrid" Grid.Column="1" Background="#FFF2F4F6">
-    			<Grid.RowDefinitions>
-    				<RowDefinition Height="142"/>
-    				<RowDefinition/>
-    			</Grid.RowDefinitions>
-    			<Grid>
-    				<TextBlock x:Uid="History" TextWrapping="Wrap" Margin="47,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-    			</Grid>
-    			<Grid Grid.Row="1"/>
-    		</Grid>
-    	</Grid>
-
-        <!-- Back button and page title -->
-    </Grid>
+			</Grid>
+		</Grid>
+		<Grid x:Name="uiHistoryGrid" Grid.Column="1" Background="#FFF2F4F6">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="142"/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<Grid>
+				<TextBlock x:Uid="History" TextWrapping="Wrap" Margin="47,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
+			</Grid>
+			<Grid Grid.Row="1"/>
+		</Grid>
+		<!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+	</Grid>
 </local:PtcPage>

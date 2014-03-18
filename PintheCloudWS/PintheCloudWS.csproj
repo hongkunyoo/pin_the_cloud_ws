@@ -158,6 +158,12 @@
     <Compile Include="Pages\SpotListPage.xaml.cs">
       <DependentUpon>SpotListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Popups\NewSpotPopup.xaml.cs">
+      <DependentUpon>NewSpotPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\SubmitSpotPasswordPopup.xaml.cs">
+      <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ShareException.cs" />
     <Compile Include="ViewModels\CloudModeViewItem.cs" />
@@ -196,6 +202,7 @@
     <Content Include="Assets\pajeon\pin\png\ico_dropbox.png" />
     <Content Include="Assets\pajeon\pin\png\ico_googledrive.png" />
     <Content Include="Assets\pajeon\pin\png\ico_onedrive.png" />
+    <Content Include="Assets\pajeon\pin\png\sign_in.png" />
     <Content Include="Assets\pajeon\pin\screenshot\pin.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_logo.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_setting.png" />
@@ -229,9 +236,6 @@
     <Content Include="Assets\pajeon\spot_list\png\spot_label_y.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_z.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
-    <Content Include="Pages\path_back.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <PRIResource Include="Locale\en-US\Resources.resw" />
     <None Include="Assets\pajeon\pick\guide\1_pick_guide.pdf" />
     <None Include="Assets\pajeon\pick\guide\2_sub_bar_guide.pdf" />
@@ -291,6 +295,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SpotListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\NewSpotPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\SubmitSpotPasswordPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

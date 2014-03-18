@@ -1411,9 +1411,6 @@
     										</DiscreteObjectKeyFrame>
     									</ObjectAnimationUsingKeyFrames>
     									<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="PressedBackground"/>
-    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="DropDownGlyph">
-    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ComboBoxArrowPressedForegroundThemeBrush}"/>
-    									</ObjectAnimationUsingKeyFrames>
     								</Storyboard>
     							</VisualState>
     							<VisualState x:Name="Disabled">
@@ -1426,9 +1423,6 @@
     									</ObjectAnimationUsingKeyFrames>
     									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
     										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ComboBoxDisabledForegroundThemeBrush}"/>
-    									</ObjectAnimationUsingKeyFrames>
-    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="DropDownGlyph">
-    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ComboBoxArrowDisabledForegroundThemeBrush}"/>
     									</ObjectAnimationUsingKeyFrames>
     								</Storyboard>
     							</VisualState>
@@ -1489,7 +1483,7 @@
     						<TextBlock x:Name="PlaceholderTextBlock" Foreground="{ThemeResource ComboBoxPlaceholderTextForegroundThemeBrush}" FontWeight="{ThemeResource ComboBoxPlaceholderTextThemeFontWeight}" Text="{TemplateBinding PlaceholderText}"/>
     					</ContentPresenter>
     					<Grid Grid.Column="1" Grid.Row="1" Background="#FF919FA6">
-    						<TextBlock x:Name="DropDownGlyph" AutomationProperties.AccessibilityView="Raw" Foreground="{ThemeResource ComboBoxArrowForegroundThemeBrush}" FontWeight="Bold" FontSize="{ThemeResource ComboBoxArrowThemeFontSize}" FontFamily="{ThemeResource SymbolThemeFontFamily}" HorizontalAlignment="Right" IsHitTestVisible="False" Margin="0,0,6,4" Text="&#xE011;" VerticalAlignment="Center"/>
+    						<Image Source="/Assets/pajeon/pin/png/dropdown.png" Stretch="None"/>
     					</Grid>
     					<Popup x:Name="Popup">
     						<Border x:Name="PopupBorder" BorderBrush="{ThemeResource ComboBoxPopupBorderThemeBrush}" BorderThickness="{ThemeResource ComboBoxPopupBorderThemeThickness}" Background="{ThemeResource ComboBoxPopupBackgroundThemeBrush}" HorizontalAlignment="Stretch">

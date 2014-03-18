@@ -18,6 +18,7 @@ namespace PintheCloudWS.Locale
 
         public const string SignIn = "SignIn";
         public const string SignOut = "SignOut";
+        public const string Empty = "Empty";
 
         public const string GB = "GB";
         public const string MB = "MB";

@@ -77,33 +77,39 @@
     		</StackPanel>
     		<Grid Grid.Row="1">
     			<ProgressRing x:Name="uiFileListProgressRing" Width="150" Height="150"/>
-    			<GridView x:Name="uiFileListGridView" ItemsSource="{Binding Items}">
-					<GridView.Resources>
-						<DataTemplate x:Key="uiFileListGridViewItemTemplate">
-							<Grid Width="380">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition Width="Auto"/>
-								</Grid.ColumnDefinitions>
-								<StackPanel Orientation="Horizontal">
-									<Image Stretch="None" Source="{Binding ThumnailType}" Margin="9,7,14,0"/>
-									<TextBlock x:Name="uiFileNameText" Text="{Binding Name}" TextWrapping="Wrap" FontFamily="Segoe WP" FontSize="22" Foreground="#FF404041" Margin="0,22,0,0"/>
-								</StackPanel>
-								<StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,24,0,0">
-									<TextBlock TextWrapping="Wrap" Text="{Binding Size}" FontFamily="Segoe WP Light" FontSize="18" Foreground="#FF919FA6"/>
-									<TextBlock TextWrapping="Wrap" Text="{Binding SizeUnit}" FontFamily="Segoe WP Light" Margin="0,0,15,0" FontSize="18" Foreground="#FF919FA6"/>
-									<Image Stretch="None" Source="{Binding SelectFileImage}" Margin="0"/>
-								</StackPanel>
-							</Grid>
-						</DataTemplate>
-					</GridView.Resources>
-    				<GridView.ItemContainerStyle>
-    					<StaticResource ResourceKey="FileListGridViewItemContainerStyle"/>
-    				</GridView.ItemContainerStyle>
-    				<GridView.ItemTemplate>
-    					<StaticResource ResourceKey="uiFileListGridViewItemTemplate"/>
-    				</GridView.ItemTemplate>
-				</GridView>
+    			<Grid x:Name="uiPinFileListGrid" Visibility="Collapsed">
+    				<TextBlock x:Name="uiPinFileMessage" TextWrapping="Wrap" Foreground="Black" FontFamily="Segoe WP" FontSize="22" Margin="73,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed"/>
+    				<GridView x:Name="uiPinFileListGridView" Visibility="Collapsed">
+    					<GridView.Resources>
+    						<DataTemplate x:Key="uiFileListGridViewItemTemplate">
+    							<Grid Width="380">
+    								<Grid.ColumnDefinitions>
+    									<ColumnDefinition/>
+    									<ColumnDefinition Width="Auto"/>
+    								</Grid.ColumnDefinitions>
+    								<StackPanel Orientation="Horizontal">
+    									<Image Stretch="None" Source="{Binding ThumnailType}" Margin="9,7,14,0"/>
+    									<TextBlock x:Name="uiFileNameText" Text="{Binding Name}" TextWrapping="Wrap" FontFamily="Segoe WP" FontSize="22" Foreground="#FF404041" Margin="0,22,0,0"/>
+    								</StackPanel>
+    								<StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,24,0,0">
+    									<TextBlock TextWrapping="Wrap" Text="{Binding Size}" FontFamily="Segoe WP Light" FontSize="18" Foreground="#FF919FA6"/>
+    									<TextBlock TextWrapping="Wrap" Text="{Binding SizeUnit}" FontFamily="Segoe WP Light" Margin="0,0,15,0" FontSize="18" Foreground="#FF919FA6"/>
+    									<Image Stretch="None" Source="{Binding SelectFileImage}" Margin="0"/>
+    								</StackPanel>
+    							</Grid>
+    						</DataTemplate>
+    					</GridView.Resources>
+    					<GridView.ItemContainerStyle>
+    						<StaticResource ResourceKey="FileListGridViewItemContainerStyle"/>
+    					</GridView.ItemContainerStyle>
+    				</GridView>
+    			</Grid>
+    			<StackPanel x:Name="uiPinFileSignInPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin="73,38,0,0" Visibility="Collapsed">
+    				<TextBlock TextWrapping="Wrap" x:Uid="EmptyAccountText" FontFamily="Segoe WP" Foreground="Black" FontSize="22" Margin="0,0,121,0"/>
+    				<Button x:Name="uiPinFileSignInButton" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiPinFileSignInButton_Click">
+    					<Image Source="/Assets/pajeon/pin/png/sign_in.png" Stretch="None"/>
+    				</Button>
+    			</StackPanel>
     		</Grid>
     	</Grid>
 
