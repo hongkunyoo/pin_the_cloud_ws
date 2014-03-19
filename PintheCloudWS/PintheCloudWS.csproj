@@ -177,6 +177,12 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="Assets\pajeon\flyout\png\close.png" />
+    <Content Include="Assets\pajeon\flyout\png\flyout_new_bg.png" />
+    <Content Include="Assets\pajeon\flyout\png\input.png" />
+    <Content Include="Assets\pajeon\flyout\png\make.png" />
+    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new.png" />
+    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new_private.png" />
     <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_guide.png" />
     <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_inactivated_guide.png" />
     <Content Include="Assets\pajeon\pick\png\checkbox.png" />
@@ -237,6 +243,8 @@
     <Content Include="Assets\pajeon\spot_list\png\spot_label_z.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
     <PRIResource Include="Locale\en-US\Resources.resw" />
+    <None Include="Assets\pajeon\flyout\guide\1_ flyout_new_guide.pdf" />
+    <None Include="Assets\pajeon\flyout\guide\flyout_new_private_guide.pdf" />
     <None Include="Assets\pajeon\pick\guide\1_pick_guide.pdf" />
     <None Include="Assets\pajeon\pick\guide\2_sub_bar_guide.pdf" />
     <None Include="Assets\pajeon\pick\guide\2_sub_bar_guide2_font.pdf" />

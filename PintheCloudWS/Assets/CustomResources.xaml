@@ -2004,4 +2004,150 @@
     		</Setter.Value>
     	</Setter>
     </Style>
+    <Style x:Key="CustomToggleSwitchStyle" TargetType="ToggleSwitch">
+    	<Setter Property="Foreground" Value="{ThemeResource ToggleSwitchForegroundThemeBrush}"/>
+    	<Setter Property="HorizontalAlignment" Value="Left"/>
+    	<Setter Property="VerticalAlignment" Value="Center"/>
+    	<Setter Property="HorizontalContentAlignment" Value="Left"/>
+    	<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+    	<Setter Property="FontWeight" Value="SemiBold"/>
+    	<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+    	<Setter Property="MinWidth" Value="154"/>
+    	<Setter Property="Template">
+    		<Setter.Value>
+    			<ControlTemplate TargetType="ToggleSwitch">
+    				<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+    					<VisualStateManager.VisualStateGroups>
+    						<VisualStateGroup x:Name="CommonStates">
+    							<VisualState x:Name="Normal"/>
+    							<VisualState x:Name="PointerOver">
+    								<Storyboard>
+    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="SwitchKnob">
+    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchThumbPointerOverBorderThemeBrush}"/>
+    									</ObjectAnimationUsingKeyFrames>
+    								</Storyboard>
+    							</VisualState>
+    							<VisualState x:Name="Pressed">
+    								<Storyboard>
+    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="SwitchKnob">
+    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchThumbPressedForegroundThemeBrush}"/>
+    									</ObjectAnimationUsingKeyFrames>
+    								</Storyboard>
+    							</VisualState>
+    							<VisualState x:Name="Disabled">
+    								<Storyboard>
+    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="OuterBorder">
+    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchOuterBorderDisabledBorderThemeBrush}"/>
+    									</ObjectAnimationUsingKeyFrames>
+    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Stroke" Storyboard.TargetName="SwitchKnob">
+    										<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ToggleSwitchThumbDisabledBorderThemeBrush}"/>
+    									</ObjectAnimationUsingKeyFrames>
+    								</Storyboard>
+    							</VisualState>
+    						</VisualStateGroup>
+    						<VisualStateGroup x:Name="ToggleStates">
+    							<VisualStateGroup.Transitions>
+    								<VisualTransition x:Name="DraggingToOnTransition" From="Dragging" GeneratedDuration="0" To="On">
+    									<Storyboard>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.KnobCurrentToOnOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchKnob"/>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.CurtainCurrentToOnOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchCurtain"/>
+    									</Storyboard>
+    								</VisualTransition>
+    								<VisualTransition x:Name="DraggingToOffTransition" From="Dragging" GeneratedDuration="0" To="Off">
+    									<Storyboard>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.KnobCurrentToOffOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchKnob"/>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.CurtainCurrentToOffOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchCurtain"/>
+    									</Storyboard>
+    								</VisualTransition>
+    								<VisualTransition x:Name="OnToOffTransition" From="On" GeneratedDuration="0" To="Off">
+    									<Storyboard>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.KnobOnToOffOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchKnob"/>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.CurtainOnToOffOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchCurtain"/>
+    									</Storyboard>
+    								</VisualTransition>
+    								<VisualTransition x:Name="OffToOnTransition" From="Off" GeneratedDuration="0" To="On">
+    									<Storyboard>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.KnobOffToOnOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchKnob"/>
+    										<RepositionThemeAnimation FromHorizontalOffset="{Binding TemplateSettings.CurtainOffToOnOffset, RelativeSource={RelativeSource Mode=TemplatedParent}}" TargetName="SwitchCurtain"/>
+    									</Storyboard>
+    								</VisualTransition>
+    							</VisualStateGroup.Transitions>
+    							<VisualState x:Name="Dragging"/>
+    							<VisualState x:Name="Off">
+    								<Storyboard>
+    									<DoubleAnimation Duration="0" To="-44" Storyboard.TargetProperty="X" Storyboard.TargetName="CurtainTranslateTransform"/>
+    								</Storyboard>
+    							</VisualState>
+    							<VisualState x:Name="On">
+    								<Storyboard>
+    									<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="X" Storyboard.TargetName="CurtainTranslateTransform"/>
+    									<DoubleAnimation Duration="0" To="31" Storyboard.TargetProperty="X" Storyboard.TargetName="KnobTranslateTransform"/>
+    									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Margin)" Storyboard.TargetName="SwitchKnob">
+    										<DiscreteObjectKeyFrame KeyTime="0">
+    											<DiscreteObjectKeyFrame.Value>
+    												<Thickness>0,2,2,2</Thickness>
+    											</DiscreteObjectKeyFrame.Value>
+    										</DiscreteObjectKeyFrame>
+    									</ObjectAnimationUsingKeyFrames>
+    									<ColorAnimation Duration="0" To="#FF00A4BF" Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="SwitchKnob" d:IsOptimized="True"/>
+    								</Storyboard>
+    							</VisualState>
+    						</VisualStateGroup>
+    						<VisualStateGroup x:Name="ContentStates">
+    							<VisualState x:Name="OffContent"/>
+    							<VisualState x:Name="OnContent"/>
+    						</VisualStateGroup>
+    						<VisualStateGroup x:Name="FocusStates">
+    							<VisualState x:Name="Focused">
+    								<Storyboard>
+    									<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+    									<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+    								</Storyboard>
+    							</VisualState>
+    							<VisualState x:Name="Unfocused"/>
+    							<VisualState x:Name="PointerFocused"/>
+    						</VisualStateGroup>
+    					</VisualStateManager.VisualStateGroups>
+    					<Grid Margin="{TemplateBinding Padding}">
+    						<Grid.ColumnDefinitions>
+    							<ColumnDefinition Width="Auto"/>
+    							<ColumnDefinition/>
+    						</Grid.ColumnDefinitions>
+    						<Grid Background="Transparent" Grid.Column="1" ManipulationMode="None">
+    							<Grid x:Name="SwitchKnobBounds">
+    								<Border x:Name="OuterBorder" BorderBrush="{ThemeResource ToggleSwitchOuterBorderBorderThemeBrush}">
+    									<Border x:Name="InnerBorder" BorderBrush="{ThemeResource ToggleSwitchTrackBorderThemeBrush}" Background="#FF919FA6" Opacity="0.2">
+    										<ContentPresenter x:Name="SwitchCurtainBounds">
+    											<ContentPresenter x:Name="SwitchCurtainClip">
+    												<Rectangle x:Name="SwitchCurtain" Fill="#FF00A5BF" Opacity="0.2">
+    													<Rectangle.RenderTransform>
+    														<TranslateTransform x:Name="CurtainTranslateTransform" X="-44"/>
+    													</Rectangle.RenderTransform>
+    												</Rectangle>
+    											</ContentPresenter>
+    										</ContentPresenter>
+    									</Border>
+    								</Border>
+    								<Rectangle x:Name="SwitchKnob" Fill="#FF919FA6" Stroke="{ThemeResource ToggleSwitchThumbBorderThemeBrush}" StrokeThickness="0" Width="25" HorizontalAlignment="Left" Margin="2,2,0,2">
+    									<Rectangle.RenderTransform>
+    										<TranslateTransform x:Name="KnobTranslateTransform"/>
+    									</Rectangle.RenderTransform>
+    								</Rectangle>
+    								<Rectangle x:Name="FocusVisualWhite" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualWhiteStrokeThemeBrush}" StrokeDashArray="1,1" StrokeThickness="0"/>
+    								<Rectangle x:Name="FocusVisualBlack" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1" StrokeThickness="0"/>
+    							</Grid>
+    							<Thumb x:Name="SwitchThumb" AutomationProperties.AccessibilityView="Raw">
+    								<Thumb.Template>
+    									<ControlTemplate TargetType="Thumb">
+    										<Rectangle Fill="Transparent"/>
+    									</ControlTemplate>
+    								</Thumb.Template>
+    							</Thumb>
+    						</Grid>
+    					</Grid>
+    				</Border>
+    			</ControlTemplate>
+    		</Setter.Value>
+    	</Setter>
+    </Style>
 </ResourceDictionary>

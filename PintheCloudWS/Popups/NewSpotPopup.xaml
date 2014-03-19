@@ -6,10 +6,43 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignHeight="450"
+    d:DesignWidth="500">
     
-    <Grid>
+    <Grid Background="White">
+    	<Grid.RowDefinitions>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    		<RowDefinition Height="Auto"/>
+    	</Grid.RowDefinitions>
+    	<Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,16,16,16">
+    		<Image Source="/Assets/pajeon/flyout/png/close.png" Stretch="None"/>
+    	</Button>
+    	<StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,38">
+    		<TextBlock TextWrapping="Wrap" x:Uid="Spot Name" Foreground="#FF404041" Margin="0,0,0,14" FontFamily="Segoe WP" FontSize="22"/>
+    		<Grid>
+    			<TextBox x:Name="uiSpotNameTextBox" TextWrapping="Wrap" FontSize="18" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
+    			<Button x:Name="uiSpotNameSetButton" HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}">
+    				<Image Stretch="None"/>
+    			</Button>
+    		</Grid>
+    	</StackPanel>
+    	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="2" Margin="0,0,0,38">
+    		<StackPanel Orientation="Horizontal" Margin="0,0,0,14">
+    			<TextBlock TextWrapping="Wrap" x:Uid="PrivateMode" Foreground="#FF404041" FontFamily="Segoe WP" FontSize="22"/>
+    			<ToggleSwitch x:Name="uiPrivateModeToggleSwitchButton" HorizontalAlignment="Right" VerticalAlignment="Stretch" OffContent="" OnContent="" Style="{StaticResource CustomToggleSwitchStyle}" MinWidth="0" HorizontalContentAlignment="Left" Width="58" Height="29"/>
+    		</StackPanel>
+    		<Grid>
+    			<TextBox x:Name="uiPrivateModePasswordTextBox" TextWrapping="Wrap" FontSize="18" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
+    			<Button x:Name="uiPrivateModePasswordSetButton" HorizontalAlignment="Right" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}">
+    				<Image Stretch="None"/>
+    			</Button>
+    		</Grid>
+    	</StackPanel>
+    	<Button x:Name="uiMakeNewSpotButton" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="3" Style="{StaticResource CustomButtonStyle}" Click="uiMakeNewSpotButton_Click">
+    		<Image Source="/Assets/pajeon/flyout/png/make.png" Stretch="None"/>
+    	</Button>
 
     </Grid>
 </UserControl>

@@ -45,7 +45,7 @@ namespace PintheCloudWS.Pages
         public PickPage()
         {
             this.InitializeComponent();
-            uiFileListView.DataContext = this.FileObjectViewModel;
+            uiPickFileList.DataContext = this.FileObjectViewModel;
         }
 
 

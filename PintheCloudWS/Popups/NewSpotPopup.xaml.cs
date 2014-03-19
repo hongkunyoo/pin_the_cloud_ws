@@ -23,5 +23,11 @@ namespace PintheCloudWS.Popups
         {
             this.InitializeComponent();
         }
+		
+		
+        private void uiMakeNewSpotButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+			
+        }
     }
 }

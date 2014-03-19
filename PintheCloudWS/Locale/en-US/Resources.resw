@@ -198,6 +198,9 @@
   <data name="Pin" xml:space="preserve">
     <value>Pin</value>
   </data>
+  <data name="PrivateMode/Text" xml:space="preserve">
+    <value>Private Mode</value>
+  </data>
   <data name="Refreshing" xml:space="preserve">
     <value>Refreshing...</value>
   </data>
@@ -206,5 +209,8 @@
   </data>
   <data name="SignOut" xml:space="preserve">
     <value>Sign Out</value>
+  </data>
+  <data name="SpotName/Text" xml:space="preserve">
+    <value>Spot Name</value>
   </data>
 </root>
