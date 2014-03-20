@@ -53,7 +53,6 @@ namespace PintheCloudWS.Managers
 
         public Task<bool> SignIn()
         {
-            Debug.WriteLine("SignIn!");
             // Get dropbox _client.
             this.tcs = new TaskCompletionSource<bool>();
             this._client = new DropNetClient(DROPBOX_CLIENT_KEY, DROPBOX_CLIENT_SECRET);
@@ -78,6 +77,7 @@ namespace PintheCloudWS.Managers
                 //    this.CurrentAccount = null;
                 //    tcs.SetResult(false);
                 //});
+
             }
             else
             {
@@ -208,13 +208,13 @@ namespace PintheCloudWS.Managers
         public async Task<FileObject> GetFileAsync(string fileId)
         {
             //MetaData metaTask = await this._client.GetMetaDataTask(fileId);
-            MetaData metaTask = await this._client.GetMetaData(fileId);
+            MetaData metaTask = null;
             return ConvertToFileObjectHelper.ConvertToFileObject(metaTask);
         }
         public async Task<List<FileObject>> GetFilesFromFolderAsync(string folderId)
         {
             //MetaData metaTask = await this._client.GetMetaDataTask(folderId);
-            MetaData metaTask = await this._client.GetMetaData(folderId);
+            MetaData metaTask = null;
             List<FileObject> list = new List<FileObject>();
 
             if (metaTask.Contents == null) return list;
@@ -245,7 +245,6 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                //MetaData d = await _client.UploadFileTask(folderIdToStore, fileName, CreateStream(outstream).ToArray());
                 //MetaData d = await this._client.UploadFileTask(folderIdToStore, fileName, outstream);
                 return true;
             }
@@ -255,7 +254,32 @@ namespace PintheCloudWS.Managers
             }
         }
 
+        public async Task<FileObject> Synchronize()
+        {
+            FileObject fileObject = await GetRootFolderAsync();
+            fileObject.FileList = await _GetChildAsync(fileObject);
+            return fileObject;
+        }
+
         #region Private Methods
+
+        private async Task<List<FileObject>> _GetChildAsync(FileObject fileObject)
+        {
+            if (FileObjectViewModel.FOLDER.Equals(fileObject.Type.ToString()))
+            {
+                List<FileObject> list = await this.GetFilesFromFolderAsync(fileObject.Id);
+                foreach (FileObject file in list)
+                {
+                    file.FileList = await _GetChildAsync(file);
+                }
+                return list;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private bool _Streaming(Stream input, Stream output)
         {
             byte[] buffer = new byte[1024000];

@@ -133,10 +133,12 @@
     <Compile Include="Managers\LocalStorageManager.cs" />
     <Compile Include="Managers\OneDriveManager.cs" />
     <Compile Include="Managers\SpotManager.cs" />
-    <Compile Include="Managers\SpotManagerImplement.cs" />
     <Compile Include="Models\FileObject.cs" />
+    <Compile Include="Models\LogObject.cs" />
+    <Compile Include="Models\NoteObject.cs" />
+    <Compile Include="Models\ProfileObject.cs" />
     <Compile Include="Models\PtcAccount.cs" />
-    <Compile Include="Models\Spot.cs" />
+    <Compile Include="Models\SpotObject.cs" />
     <Compile Include="Models\StorageAccount.cs" />
     <Compile Include="Models\StorageAccountType.cs" />
     <Compile Include="Pages\ExplorerPage.xaml.cs">
@@ -166,6 +168,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ShareException.cs" />
+    <Compile Include="Utilities\StorageExplorer.cs" />
     <Compile Include="ViewModels\CloudModeViewItem.cs" />
     <Compile Include="ViewModels\CloudModeViewModel.cs" />
     <Compile Include="ViewModels\FileObjectViewItem.cs" />

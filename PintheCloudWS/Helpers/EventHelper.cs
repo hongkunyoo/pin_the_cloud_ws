@@ -14,6 +14,11 @@ namespace PintheCloudWS.Helpers
         public const string FILE_LIST_PAGE = "/Pages/FileListPage.xaml";
         public const string NEW_SPOT_PAGE = "/Pages/NewSpotPage.xaml";
         public const string ADD_FILE_PAGE = "/Pages/AddFilePage.xaml";
+        public const string PROFILE_PAGE = "/Pages/ProfilePage.xaml";
+        public const string SIGNIN_PAGE = "/Pages/SignInPage.xaml";
+        public const string SIGNIN_STORAGE_PAGE = "/Pages/SignInStoragePage.xaml";
+        public const string SPOT_LIST_PAGE = "/Pages/SpotListPage.xaml";
+
 
         public const string POPUP_CLOSE = "POP_UP_CLOSE";
 

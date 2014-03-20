@@ -34,6 +34,8 @@ namespace PintheCloudWS
     {
         /*** Root static instance variable ***/
 
+        /*** Root static instance variable ***/
+
         // Azure
         private const string AZURE_MOBILE_SERVICE_ID = "MicrosoftAccount:2914cb486d0f9106050de9ad70564d53";
         private const string AZURE_MOBILE_SERVICE_TOKEN
@@ -41,19 +43,15 @@ namespace PintheCloudWS
 
         // App
         public static MobileServiceClient MobileService = null;
-        public static ResourceLoader ResourceLoader = null;
         public static ApplicationDataContainer ApplicationSettings = null;
-        public static IDictionary<string, object> ApplicationSession = null;
-
-        
+        public static ApplicationDataContainer ApplicationSessions = null;
+        public static ResourceLoader ResourceLoader = null;
 
         // Manager
         public static SpotManager SpotManager = null;
         public static Geolocator Geolocator = null;
         public static BlobStorageManager BlobStorageManager = null;
         public static LocalStorageManager LocalStorageManager = null;
-
-        public static TaskHelper TaskHelper = null;
 
         private static OneDriveManager OneDriveManager = null;
         private static DropboxManager DropBoxManager = null;
@@ -82,13 +80,12 @@ namespace PintheCloudWS
             );
             MobileServiceUser mobileServiceUser = new MobileServiceUser(App.AZURE_MOBILE_SERVICE_ID);
             mobileServiceUser.MobileServiceAuthenticationToken = App.AZURE_MOBILE_SERVICE_TOKEN;
-            MobileService.CurrentUser = mobileServiceUser;
-            ResourceLoader = new ResourceLoader();
             ApplicationSettings = ApplicationData.Current.LocalSettings;
-            ApplicationSession = SuspensionManager.SessionState;
+            ApplicationSessions = ApplicationData.Current.RoamingSettings;
+            ResourceLoader = new ResourceLoader();
 
             // Manager
-            SpotManager = new SpotManagerImplement();
+            SpotManager = new SpotManager();
             Geolocator = new Geolocator();
             BlobStorageManager = new BlobStorageManager();
             LocalStorageManager = new LocalStorageManager();
@@ -97,15 +94,14 @@ namespace PintheCloudWS
             DropBoxManager = new DropboxManager();
             GoogleDriveManger = new GoogleDriveManager();
 
+
             /////////////////////////////////////////////////////
             // This order will be displayed at every App Pages
             /////////////////////////////////////////////////////
             StorageHelper.AddStorageManager(OneDriveManager.GetStorageName(), OneDriveManager);
             StorageHelper.AddStorageManager(DropBoxManager.GetStorageName(), DropBoxManager);
             StorageHelper.AddStorageManager(GoogleDriveManger.GetStorageName(), GoogleDriveManger);
-
             Switcher.SetStorageToMainPlatform();
-            TaskHelper = new TaskHelper();
             AccountManager = new AccountManager();
         }
 

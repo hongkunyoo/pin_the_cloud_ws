@@ -75,7 +75,7 @@ namespace PintheCloudWS.Pages
             if (App.AccountManager.IsSignIn())
             {
                 if (NetworkInterface.GetIsNetworkAvailable())
-                    App.TaskHelper.AddTask(App.AccountManager.GetPtcId(), App.AccountManager.SignIn());
+                    TaskHelper.AddTask(App.AccountManager.GetPtcId(), App.AccountManager.SignIn());
                 this.Frame.Navigate(typeof(SpotListPage));
             }
             else

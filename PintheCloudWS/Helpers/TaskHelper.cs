@@ -9,43 +9,25 @@ namespace PintheCloudWS.Helpers
     public class TaskHelper
     {
         // Tasks
-        public IDictionary<string, Task> Tasks = new Dictionary<string, Task>();
-        public Dictionary<string, Task<bool>> SignInTasks = new Dictionary<string, Task<bool>>();
-        public Dictionary<string, Task> SignOutTasks = new Dictionary<string, Task>();
+        private static IDictionary<string, Task<bool>> Tasks = new Dictionary<string, Task<bool>>();
+        private static Dictionary<string, Task<bool>> SignInTasks = new Dictionary<string, Task<bool>>();
+        private static Dictionary<string, Task> SignOutTasks = new Dictionary<string, Task>();
 
 
-        public void AddTask(string name, Task task)
+        public static void AddTask(string name, Task<bool> task)
         {
-            Task existedTask = null;
-            if (!this.Tasks.TryGetValue(name, out existedTask))
-                this.Tasks.Add(name, task);
+            if (!Tasks.ContainsKey(name))
+                Tasks.Add(name, task);
         }
 
 
-        public async Task WaitTask(string name)
+        public static async Task<bool> WaitTask(string name)
         {
-            Task task = null;
-            if (this.Tasks.TryGetValue(name, out task))
+            if (Tasks.ContainsKey(name))
             {
-                await task;
-                this.Tasks.Remove(name);
-            }
-        }
-
-        public void AddSignInTask(string key, Task<bool> task)
-        {
-            if (!this.SignInTasks.ContainsKey(key))
-                this.SignInTasks.Add(key, task);
-        }
-
-
-        public async Task<bool> WaitSignInTask(string key)
-        {
-            if (this.SignInTasks.ContainsKey(key))
-            {
-                bool resut = await this.SignInTasks[key];
-                this.SignInTasks.Remove(key);
-                return resut;
+                bool result = await Tasks[name];
+                Tasks.Remove(name);
+                return result;
             }
             else
             {
@@ -56,19 +38,53 @@ namespace PintheCloudWS.Helpers
         }
 
 
-        public void AddSignOutTask(string key, Task task)
+        public static void AddSignInTask(string key, Task<bool> task)
         {
-            if (!this.SignOutTasks.ContainsKey(key))
-                this.SignOutTasks.Add(key, task);
+            if (!SignInTasks.ContainsKey(key))
+                SignInTasks.Add(key, task);
         }
 
 
-        public Task WaitSignOutTask(string key)
+        public static async Task<bool> WaitSignInTask(string key)
         {
-            if (this.SignOutTasks.ContainsKey(key))
+            if (SignInTasks.ContainsKey(key))
             {
-                Task task = this.SignOutTasks[key];
-                this.SignOutTasks.Remove(key);
+                bool resut = await SignInTasks[key];
+                SignInTasks.Remove(key);
+                return resut;
+            }
+            else
+            {
+                TaskCompletionSource<bool> tcs = new TaskCompletionSource<bool>();
+                tcs.SetResult(true);
+                return tcs.Task.Result;
+            }
+        }
+
+        public static async Task<bool> WaitForAllSignIn()
+        {
+            bool result = true;
+            using (var itr = SignInTasks.GetEnumerator())
+            {
+                while (itr.MoveNext())
+                    result &= await itr.Current.Value;
+            }
+            return result;
+        }
+
+        public static void AddSignOutTask(string key, Task task)
+        {
+            if (!SignOutTasks.ContainsKey(key))
+                SignOutTasks.Add(key, task);
+        }
+
+
+        public static Task WaitSignOutTask(string key)
+        {
+            if (SignOutTasks.ContainsKey(key))
+            {
+                Task task = SignOutTasks[key];
+                SignOutTasks.Remove(key);
                 return task;
             }
             else

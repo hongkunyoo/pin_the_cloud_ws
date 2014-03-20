@@ -290,8 +290,32 @@ namespace PintheCloudWS.Managers
             return true;
         }
 
+        public async Task<FileObject> Synchronize()
+        {
+            FileObject fileObject = await GetRootFolderAsync();
+            fileObject.FileList = await _GetChildAsync(fileObject);
+            return fileObject;
+        }
 
         #region Private Methods
+        private async Task<List<FileObject>> _GetChildAsync(FileObject fileObject)
+        {
+            if (FileObjectViewModel.FOLDER.Equals(fileObject.Type.ToString()))
+            {
+                List<FileObject> list = await this.GetFilesFromFolderAsync(fileObject.Id);
+                foreach (FileObject file in list)
+                {
+                    file.FileList = await _GetChildAsync(file);
+                }
+                return list;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         private async Task SetMimeTypeMapper()
         {
             StorageFile js = await (await Package.Current.InstalledLocation.GetFolderAsync("Assets")).GetFileAsync("mimeType.js");

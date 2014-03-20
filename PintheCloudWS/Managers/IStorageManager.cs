@@ -21,13 +21,13 @@ namespace PintheCloudWS.Managers
         string GetStorageName();
         string GetStorageImageUri();
         string GetStorageColorHexString();
-        Stack<FileObjectViewItem> GetFolderRootTree();
-        Stack<List<FileObject>> GetFoldersTree();
         Task<FileObject> GetRootFolderAsync();
         Task<List<FileObject>> GetRootFilesAsync();
         Task<FileObject> GetFileAsync(string fileId);
         Task<List<FileObject>> GetFilesFromFolderAsync(string folderId);
         Task<Stream> DownloadFileStreamAsync(string sourceFileId);
         Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream);
+        Task<FileObject> Synchronize();
+
     }
 }

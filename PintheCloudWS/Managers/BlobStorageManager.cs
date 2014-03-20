@@ -134,6 +134,7 @@ namespace PintheCloudWS.Managers
 
                 // Windows Phone 8
                 //return await blockBlob.OpenReadAsync();
+
                 var fStream = await blockBlob.OpenReadAsync();
                 var reader = new DataReader(fStream.GetInputStreamAt(0));
                 var bytes = new byte[fStream.Size];

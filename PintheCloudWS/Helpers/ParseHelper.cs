@@ -8,7 +8,6 @@ namespace PintheCloudWS.Helpers
 {
     public class ParseHelper
     {
-
         public enum Mode { DIRECTORY, FULL_PATH };
 
 

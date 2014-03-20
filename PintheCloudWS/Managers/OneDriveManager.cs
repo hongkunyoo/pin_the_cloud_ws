@@ -41,37 +41,32 @@ namespace PintheCloudWS.Managers
 
             // If it haven't registerd live client, register
             LiveConnectClient liveClient = await this.GetLiveConnectClientAsync();
-            if (liveClient != null)
+            if (liveClient == null) return false;
+            this.LiveClient = liveClient;
+
+            // Get id and name.
+            LiveOperationResult operationResult = await this.LiveClient.GetAsync("me");
+            string accountId = (string)operationResult.Result["id"];
+            string accountUserName = (string)operationResult.Result["name"];
+
+            // Register account
+            if (!await TaskHelper.WaitTask(App.AccountManager.GetPtcId())) return false;
+            StorageAccount storageAccount = App.AccountManager.GetPtcAccount().GetStorageAccountById(accountId);
+            if (storageAccount == null)
             {
-                this.LiveClient = liveClient;
-
-                // Get id and name.
-                LiveOperationResult operationResult = await this.LiveClient.GetAsync("me");
-                string accountId = (string)operationResult.Result["id"];
-                string accountUserName = (string)operationResult.Result["name"];
-
-                // Register account
-                StorageAccount storageAccount = App.AccountManager.GetPtcAccount().GetStorageAccountById(accountId);
-                if (storageAccount == null)
-                {
-                    storageAccount = new StorageAccount();
-                    storageAccount.Id = accountId;
-                    storageAccount.StorageName = this.GetStorageName();
-                    storageAccount.UserName = accountUserName;
-                    storageAccount.UsedSize = 0.0;
-                    await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(storageAccount);
-                }
-
-                this.CurrentAccount = storageAccount;
-
-                // Save sign in setting.
-                App.ApplicationSettings.Values[ONE_DRIVE_SIGN_IN_KEY] = true;
-                tcs.SetResult(true);
+                storageAccount = new StorageAccount();
+                storageAccount.Id = accountId;
+                storageAccount.StorageName = this.GetStorageName();
+                storageAccount.UserName = accountUserName;
+                storageAccount.UsedSize = 0.0;
+                await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(storageAccount);
             }
-            else
-            {
-                tcs.SetResult(false);
-            }
+
+            this.CurrentAccount = storageAccount;
+
+            // Save sign in setting.
+            App.ApplicationSettings.Values[ONE_DRIVE_SIGN_IN_KEY] = true;
+            tcs.SetResult(true);
             return tcs.Task.Result;
         }
 
@@ -263,6 +258,17 @@ namespace PintheCloudWS.Managers
             return true;
         }
 
+        // Summary:
+        //     Get the file meta information from the root to the node of the file tree.
+        //
+        // Returns:
+        //     Root FileObject of OneDrive.
+        public async Task<FileObject> Synchronize()
+        {
+            FileObject fileObject = await GetRootFolderAsync();
+            fileObject.FileList = await _GetChildAsync(fileObject);
+            return fileObject;
+        }
 
         #region Private Methods
         ///////////////////
@@ -333,7 +339,7 @@ namespace PintheCloudWS.Managers
         //      Children list of given FileObject.
         private async Task<List<FileObject>> _GetChildAsync(FileObject fileObject)
         {
-            if (FileObjectViewModel.FOLDER.Equals(fileObject.Type))
+            if (FileObjectViewModel.FOLDER.Equals(fileObject.Type.ToString()))
             {
                 List<FileObject> list = await this.GetFilesFromFolderAsync(fileObject.Id);
                 foreach (FileObject file in list)
@@ -347,20 +353,6 @@ namespace PintheCloudWS.Managers
                 return null;
             }
         }
-
-
-        // Summary:
-        //     Get the file meta information from the root to the node of the file tree.
-        //
-        // Returns:
-        //     Root FileObject of OneDrive.
-        private async Task<FileObject> Synchronize()
-        {
-            FileObject fileObject = await GetRootFolderAsync();
-            fileObject.FileList = await _GetChildAsync(fileObject);
-            return fileObject;
-        }
         #endregion
-
     }
 }
