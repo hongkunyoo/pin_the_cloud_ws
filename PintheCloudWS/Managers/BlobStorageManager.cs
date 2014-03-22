@@ -1,20 +1,24 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using PintheCloudWS.Helpers;
-using PintheCloudWS.Models;
-using PintheCloudWS.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
+using System.IO;
+using PintheCloudWS.Models;
+using PintheCloudWS.Utilities;
+using Windows.System;
+using System.Diagnostics;
+using PintheCloudWS.Helpers;
 
 namespace PintheCloudWS.Managers
 {
+    /// <summary>
+    /// BlobStorageManager is for sharing file through spot.
+    /// Clients will upload & download files using BlobStorageManager.
+    /// </summary>
     public class BlobStorageManager
     {
         # region variables
@@ -93,10 +97,8 @@ namespace PintheCloudWS.Managers
             try
             {
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
-                using (Stream s = await downloadFile.OpenStreamForWriteAsync())
-                {
-                    await blockBlob.DownloadToStreamAsync(s.AsOutputStream());
-                }
+
+                await blockBlob.DownloadToFileAsync(downloadFile);
                 return downloadFile;
             }
             catch (Exception ex)
@@ -130,17 +132,10 @@ namespace PintheCloudWS.Managers
         {
             try
             {
+                Stream downStream = new MemoryStream();
                 CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
-
-                // Windows Phone 8
-                //return await blockBlob.OpenReadAsync();
-
-                var fStream = await blockBlob.OpenReadAsync();
-                var reader = new DataReader(fStream.GetInputStreamAt(0));
-                var bytes = new byte[fStream.Size];
-                await reader.LoadAsync((uint)fStream.Size);
-                reader.ReadBytes(bytes);
-                return new MemoryStream(bytes);
+                await blockBlob.DownloadToStreamAsync(downStream.AsOutputStream());
+                return downStream;
             }
             catch
             {
@@ -301,5 +296,133 @@ namespace PintheCloudWS.Managers
             return list;
         }
         # endregion
+
+
+        # region Not Using Methods
+        /// <summary>
+        /// Deletes the file
+        /// </summary>
+        /// <param name="account">The account id of the spot</param>
+        /// <param name="spotId">The spot id</param>
+        /// <param name="sourcePath">The path to delete</param>
+        /// <returns>True if succeeded, false if not.</returns>
+        /*
+        public async Task<bool> DeleteFileAsync(string account, string spotId, string sourcePath)
+        {
+            return await this.DeleteFileAsync(account + "/" + spotId + "/" + sourcePath);
+        }
+         */
+        /// <summary>
+        /// Upload File to a given stream.
+        /// </summary>
+        /// <param name="account">The account id to upload</param>
+        /// <param name="spotId">The spot id to upload</param>
+        /// <param name="uploadfile">The file to upload</param>
+        /// <returns>The file id</returns>
+        /*
+        public async Task<string> UploadFileAsync(string account, string spotId, StorageFile uploadfile)
+        {
+            return await this._UploadFileAsyncById(account + "/" + spotId + "/" + MyEncoder.Decode(uploadfile.Name), uploadfile);
+        }*/
+        /// <summary>
+        /// Upload File to a given stream.
+        /// </summary>
+        /// <param name="account">The account id to upload</param>
+        /// <param name="spotId">The spot id to upload</param>
+        /// <param name="sourcePath">The path to upload</param>
+        /// <param name="uploadfile">The file to upload</param>
+        /// <returns>The file id</returns>
+        /*
+        public async Task<string> UploadFileAsync(string account, string spotId, string sourcePath, StorageFile uploadfile)
+        {
+            if ("".Equals(sourcePath))
+            {
+                return await this.UploadFileAsync(account, spotId, uploadfile);
+            }
+            else
+            {
+                sourcePath = ParseHelper.TrimSlash(sourcePath);
+                return await this._UploadFileAsyncById(account + "/" + spotId + "/" + sourcePath + "/" + MyEncoder.Decode(uploadfile.Name), uploadfile);
+            }
+            
+        }
+         * */
+        /// <summary>
+        /// Gets List of file meta information with directory.
+        /// </summary>
+        /// <param name="account">The account id of the spot</param>
+        /// <param name="spotId">The spot id</param>
+        /// /// <param name="sourcePath">The directory of which to get file list</param>
+        /// <returns>List of the FileObject containing file meta information</returns>
+        /*
+        public Task<List<FileObject>> GetFilesFromFolderAsync(string account, string spotId, string sourcePath)
+        {
+            sourcePath = ParseHelper.TrimSlash(sourcePath);
+            return this._GetFilesFromFolderByIdAsync(account + "/" + spotId + "/" + sourcePath);
+        }
+        */
+        /*
+        private async Task<string> _UploadFileThroughStreamAsync(string account, string id, Stream stream)
+        {
+            try
+            {
+                CloudBlockBlob blockBlob = container.GetBlockBlobReference(account+"/"+id);
+                using (Stream s = stream)
+                {
+                    await blockBlob.UploadFromStreamAsync(s);
+                }
+            }
+            catch
+            {
+                return null;
+            }
+            return account + id;
+        }
+        */
+        /*
+        private void _GetParentId(string fullPath, out string name, out string prefix, out string parentId)
+        {
+            if (fullPath.EndsWith("/"))
+                fullPath = fullPath.Substring(0, fullPath.Length - 1);
+            name = fullPath.Substring(fullPath.LastIndexOf("/") + 1, fullPath.Length - fullPath.LastIndexOf("/") - 1);
+            prefix = fullPath.Substring(0, fullPath.LastIndexOf("/") + 1);
+
+            string temp = fullPath.Substring(0, fullPath.LastIndexOf("/"));
+            parentId = temp.Substring(0, temp.LastIndexOf("/") + 1);
+
+            if (!parentId.Substring(0, parentId.LastIndexOf("/")).Contains("/"))
+            {
+
+                parentId = prefix;
+            }
+        }
+        */
+        /*
+        private FileObject _GetFileObjectFromBlob(CloudBlockBlob blob)
+        {
+            string id = blob.Name;
+            string name = ParseHelper.ParseName(id);
+
+            //this._GetParentId(id, out name, out prefix, out parentId);
+            
+            int size = (int)blob.Properties.Length;
+            string type;
+            string typeDetail = blob.Properties.ContentType;
+            if (name.Contains("."))
+            {
+                type = name.Substring(name.LastIndexOf(".") + 1, name.Length - name.LastIndexOf(".") - 1);
+            }
+            else
+            {
+                type = typeDetail;
+            }
+            
+            string createAt = blob.Properties.LastModified.ToString();
+            string updateAt = blob.Properties.LastModified.ToString();
+
+            return (new FileObject(id, name, parentId, size, type, typeDetail, createAt, updateAt));
+        }
+         */
+        #endregion
     }
 }

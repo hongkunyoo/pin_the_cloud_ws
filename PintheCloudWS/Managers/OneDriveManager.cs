@@ -1,20 +1,28 @@
 ﻿using Microsoft.Live;
-using PintheCloudWS.Helpers;
-using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using PintheCloudWS.Utilities;
-using PintheCloudWS.ViewModels;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml.Controls;
+using Windows.Storage;
+using System.IO;
+using Windows.System;
+using System.Windows;
+using PintheCloudWS.Pages;
+using System.Diagnostics;
+using PintheCloudWS.ViewModels;
+using PintheCloudWS.Helpers;
+using PintheCloudWS.Converters;
+using PintheCloudWS.Locale;
 
 namespace PintheCloudWS.Managers
 {
+    // Summary
+    //      Implementation of IStorageManager.
+    //      It helps to access OneDrive Storage.
     public class OneDriveManager : IStorageManager
     {
         #region Variables
@@ -26,8 +34,8 @@ namespace PintheCloudWS.Managers
         private const string ONE_DRIVE_IMAGE_URI = "/Assets/pajeon/at_here/png/navi_ico_skydrive.png";
         private const string ONE_DRIVE_COLOR_HEX_STRING = "2458A7";
 
-        private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();
-        private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
+        //private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();
+        //private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
 
         private LiveConnectClient LiveClient = null;
         private StorageAccount CurrentAccount = null;
@@ -51,7 +59,7 @@ namespace PintheCloudWS.Managers
 
             // Register account
             if (!await TaskHelper.WaitTask(App.AccountManager.GetPtcId())) return false;
-            StorageAccount storageAccount = App.AccountManager.GetPtcAccount().GetStorageAccountById(accountId);
+            StorageAccount storageAccount = await App.AccountManager.GetStorageAccountAsync(accountId);
             if (storageAccount == null)
             {
                 storageAccount = new StorageAccount();
@@ -59,13 +67,15 @@ namespace PintheCloudWS.Managers
                 storageAccount.StorageName = this.GetStorageName();
                 storageAccount.UserName = accountUserName;
                 storageAccount.UsedSize = 0.0;
-                await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(storageAccount);
+                await App.AccountManager.CreateStorageAccountAsync(storageAccount);
             }
 
             this.CurrentAccount = storageAccount;
 
             // Save sign in setting.
-            App.ApplicationSettings.Values[ONE_DRIVE_SIGN_IN_KEY] = true;
+            App.ApplicationSettings[ONE_DRIVE_SIGN_IN_KEY] = true;
+            App.ApplicationSettings.Save();
+            TaskHelper.AddTask(PtcPage.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
             tcs.SetResult(true);
             return tcs.Task.Result;
         }
@@ -74,7 +84,7 @@ namespace PintheCloudWS.Managers
         public bool IsSigningIn()
         {
             if (this.tcs != null)
-                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.ContainsKey(ONE_DRIVE_SIGN_IN_KEY);
+                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Contains(ONE_DRIVE_SIGN_IN_KEY);
             else
                 return false;
         }
@@ -91,9 +101,9 @@ namespace PintheCloudWS.Managers
         {
             LiveAuthClient liveAuthClient = new LiveAuthClient(LIVE_CLIENT_ID);
             liveAuthClient.Logout();
-            App.ApplicationSettings.Values.Remove(ONE_DRIVE_SIGN_IN_KEY);
-            this.FoldersTree.Clear();
-            this.FolderRootTree.Clear();
+            App.ApplicationSettings.Remove(ONE_DRIVE_SIGN_IN_KEY);
+            //this.FoldersTree.Clear();
+            //this.FolderRootTree.Clear();
             this.LiveClient = null;
             this.CurrentAccount = null;
         }
@@ -101,13 +111,13 @@ namespace PintheCloudWS.Managers
 
         public bool IsSignIn()
         {
-            return App.ApplicationSettings.Values.ContainsKey(ONE_DRIVE_SIGN_IN_KEY);
+            return App.ApplicationSettings.Contains(ONE_DRIVE_SIGN_IN_KEY);
         }
 
 
         public string GetStorageName()
         {
-            return App.ResourceLoader.GetString(ResourcesKeys.OneDrive);
+            return AppResources.OneDrive;
         }
 
 
@@ -123,21 +133,27 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Stack<FileObjectViewItem> GetFolderRootTree()
+        //public Stack<FileObjectViewItem> GetFolderRootTree()
+        //{
+        //    return this.FolderRootTree;
+        //}
+
+
+        //public Stack<List<FileObject>> GetFoldersTree()
+        //{
+        //    return this.FoldersTree;
+        //}
+
+
+        public async Task<StorageAccount> GetStorageAccountAsync()
         {
-            return this.FolderRootTree;
-        }
-
-
-        public Stack<List<FileObject>> GetFoldersTree()
-        {
-            return this.FoldersTree;
-        }
-
-
-        public StorageAccount GetStorageAccount()
-        {
-            return this.CurrentAccount;
+            TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
+            if (this.CurrentAccount == null)
+            {
+                await TaskHelper.WaitSignInTask(this.GetStorageName());
+            }
+            tcs.SetResult(this.CurrentAccount);
+            return tcs.Task.Result;
         }
 
 
@@ -237,18 +253,17 @@ namespace PintheCloudWS.Managers
         //     The StorageFolder where you downloaded folder.
         public async Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream)
         {
-            ProgressBar progressBar = new ProgressBar();
-            progressBar.Value = 0;
-            var progressHandler = new Progress<LiveOperationProgress>(
-                (progress) => { progressBar.Value = progress.ProgressPercentage; });
+            //ProgressBar progressBar = new ProgressBar();
+            //progressBar.Value = 0;
+            //var progressHandler = new Progress<LiveOperationProgress>(
+            //    (progress) => { progressBar.Value = progress.ProgressPercentage; });
 
             System.Threading.CancellationTokenSource ctsUpload = new System.Threading.CancellationTokenSource();
             try
             {
                 //LiveOperationResult result = await this.LiveClient
                 //    .UploadAsync(folderIdToStore, fileName, outstream, OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
-                LiveOperationResult result = await this.LiveClient
-                    .BackgroundUploadAsync(folderIdToStore, fileName, outstream.AsInputStream(), OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
+                LiveOperationResult result = await this.LiveClient.BackgroundUploadAsync(folderIdToStore, fileName, outstream.AsInputStream(), OverwriteOption.Overwrite);
             }
             catch
             {
@@ -353,6 +368,148 @@ namespace PintheCloudWS.Managers
                 return null;
             }
         }
+
+
+
+        #endregion
+
+        #region Not Using Methods
+        /////////////////////////////////////////////////////
+        // CAUTION: NOT STABLE VERSION. THERE MIGHT BE A BUG.
+        //
+        // Summary:
+        //     Download a folder by folder id.
+        //
+        // Parameters:
+        //  sourceFolderId:
+        //      The id of the folder you want to download.
+        //
+        // Returns:
+        //     The StorageFolder where you downloaded folder.
+        //public async Task<StorageFolder> DownloadFolderAsync(string sourceFolderId, StorageFolder folder)
+        //{
+        //    FileObject file = await this.GetFileAsync(sourceFolderId);
+        //    file.FileList = await this._GetChildAsync(file);
+
+        //    int index = folder.Path.IndexOf("Local");
+        //    string folderUriString = ((folder.Path.Substring(index + "Local".Length, folder.Path.Length - (index + "Local".Length))));
+        //    folderUriString = folderUriString.Replace("\\", "/");
+        //    foreach (FileObject f in file.FileList)
+        //    {
+        //        if ("folder".Equals(f.Type))
+        //        {
+        //            StorageFolder innerFolder = await folder.CreateFolderAsync(MyEncoder.Encode(f.Name));
+        //            await this.DownloadFolderAsync(f.Id, innerFolder);
+        //        }
+        //        else
+        //        {
+        //            await this.DownloadFileAsync(f.Id, new Uri(folderUriString + "/" + f.Name, UriKind.Relative));
+        //        }
+        //    }
+
+        //    return folder;
+        //}
+        // Summary:
+        //      Model mapping method
+        //
+        // Returns:
+        //      FileObject from a dictionary.
+
+        //private FileObject _GetData(IDictionary<string, object> dic)
+        //{
+        //    string id = (string)(dic["id"] ?? "");
+        //    string name = (string)(dic["name"] ?? "");
+        //    string parent_id = (string)(dic["parent_id"] ?? "/");
+        //    int size = (int)dic["size"];
+        //    string type = id.Split('.').First();
+        //    string typeDetail = name.Split('.').Last();
+        //    string createAt = (string)dic["created_time"] ?? DateTime.Now.ToString();
+        //    string updateAt = (string)dic["updated_time"] ?? DateTime.Now.ToString();
+
+        //    return new FileObject(id, name, parent_id, size, type, typeDetail, createAt, updateAt);
+        //}
+
+        // Summary:
+        //     Download a file by file id.
+        //
+        // Parameters:
+        //  sourceFileId:
+        //      The id of the file you want to download.
+        //
+        //  destinationUri:
+        //      The local destination of the downloaded file as an Uri format.
+        //
+        // Returns:
+        //     The downloaded file.
+        //public async Task<StorageFile> DownloadFileAsync(string sourceFileId, Uri destinationUri)
+        //{
+
+        //    ProgressBar progressBar = new ProgressBar();
+        //    progressBar.Value = 0;
+        //    var progressHandler = new Progress<LiveOperationProgress>(
+        //        (progress) => { progressBar.Value = progress.ProgressPercentage; });
+
+        //    System.Threading.CancellationTokenSource ctsDownload = new System.Threading.CancellationTokenSource();
+
+        //    try
+        //    {
+        //        LiveOperationResult result = await this.LiveClient.BackgroundDownloadAsync(sourceFileId + "/content", destinationUri, ctsDownload.Token, progressHandler);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        System.Diagnostics.Debug.WriteLine(ex.ToString());
+        //        return null;
+        //    }
+        //    return await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appdata:///local/" + destinationUri));
+        //}
+
+
+        // Summary:
+        //     Upload files by StorageFile.
+        //
+        // Parameters:
+        //  sourceFolderId:
+        //      The id of the place you want to upload.
+        //
+        //  file:
+        //      The file you want to upload.
+        //
+        // Returns:
+        //     The StorageFolder where you downloaded folder.
+        //public async Task<bool> UploadFileAsync(string folderIdToStore, StorageFile file)
+        //{
+        //    ProgressBar progressBar = new ProgressBar();
+        //    progressBar.Value = 0;
+        //    var progressHandler = new Progress<LiveOperationProgress>(
+        //        (progress) => { progressBar.Value = progress.ProgressPercentage; });
+
+        //    System.Threading.CancellationTokenSource ctsUpload = new System.Threading.CancellationTokenSource();
+        //    try
+        //    {
+        //        Stream input = await file.OpenStreamForReadAsync();
+        //        LiveOperationResult result = await this.LiveClient
+        //            .UploadAsync(folderIdToStore, "plzdo.pdf", input, OverwriteOption.Overwrite, ctsUpload.Token, progressHandler);
+        //    }
+        //    catch (System.Threading.Tasks.TaskCanceledException ex)
+        //    {
+        //        ctsUpload.Cancel();
+        //        System.Diagnostics.Debug.WriteLine("taskcancel : " + ex.ToString());
+        //        return false;
+        //    }
+        //    catch (LiveConnectException exception)
+        //    {
+        //        ctsUpload.Cancel();
+        //        System.Diagnostics.Debug.WriteLine("LiveConnection : " + exception.ToString());
+        //        return false;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        ctsUpload.Cancel();
+        //        System.Diagnostics.Debug.WriteLine("exception : " + e.ToString());
+        //        return false;
+        //    }
+        //    return true;
+        //}
         #endregion
     }
 }

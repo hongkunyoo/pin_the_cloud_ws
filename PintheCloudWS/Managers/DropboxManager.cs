@@ -1,7 +1,7 @@
-﻿using DropNetRT;
-using DropNetRT.Models;
+﻿using PintheCloudWS.Converters;
 using PintheCloudWS.Helpers;
-using PintheCloudWS.Locale;
+using PintheCloudWS.Models;
+using PintheCloudWS.Pages;
 using PintheCloudWS.Models;
 using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
@@ -12,6 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Storage;
+using DropNetRT.Models;
+using DropNetRT;
+using PintheCloudWS.Locale;
+using Windows.Storage.Streams;
 
 namespace PintheCloudWS.Managers
 {
@@ -20,7 +25,7 @@ namespace PintheCloudWS.Managers
         #region Variables
         private const string DROPBOX_CLIENT_KEY = "gxjfureco8noyle";
         private const string DROPBOX_CLIENT_SECRET = "iskekcebjky6vbm";
-        public const string DROPBOX_AUTH_URI = "http://www.pinthecloud.com/index.html";
+        public const string DROPBOX_AUTH_URI = "http://www.pinthecloud.com";
 
         private const string DROPBOX_USER_KEY = "DROPBOX_USER_KEY";
         private const string DROPBOX_SIGN_IN_KEY = "DROPBOX_SIGN_IN_KEY";
@@ -37,9 +42,12 @@ namespace PintheCloudWS.Managers
         #endregion
 
 
-        private Task<StorageAccount> GetMyAccountAsync()
+        private async Task<StorageAccount> GetMyAccountAsync()
         {
-            TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
+            //TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
+            AccountInfo info = await this._client.AccountInfo();
+            StorageAccount account = new StorageAccount(info.Uid.ToString(), StorageAccount.StorageAccountType.DROPBOX, info.DisplayName, 0.0);
+            return account;
             //this._client.AccountInfoAsync((info) =>
             //{
             //    tcs.SetResult(new StorageAccount(info.uid.ToString(), StorageAccount.StorageAccountType.DROPBOX, info.display_name, 0.0));
@@ -47,11 +55,10 @@ namespace PintheCloudWS.Managers
             //{
             //    tcs.SetException(new Exception("Account Info Get Failed"));
             //});
-            return tcs.Task;
         }
 
 
-        public Task<bool> SignIn()
+        public async Task<bool> SignIn()
         {
             // Get dropbox _client.
             this.tcs = new TaskCompletionSource<bool>();
@@ -60,27 +67,35 @@ namespace PintheCloudWS.Managers
             // If dropbox user exists, get it.
             // Otherwise, get from user.
             UserLogin dropboxUser = null;
-            if (App.ApplicationSettings.Values.ContainsKey(DROPBOX_USER_KEY))
-                dropboxUser = (UserLogin)App.ApplicationSettings.Values[DROPBOX_USER_KEY];
+            if (App.ApplicationSettings.Contains(DROPBOX_USER_KEY))
+                dropboxUser = (UserLogin)App.ApplicationSettings[DROPBOX_USER_KEY];
             if (dropboxUser != null)
             {
-                this._client.UserLogin = dropboxUser;
+                this._client.SetUserToken(dropboxUser);
+                //this._client.UserLogin = dropboxUser;
                 //this.CurrentAccount = await this.GetMyAccountAsync();
-                //this._client.AccountInfoAsync((info) =>
-                //{
-                //    //tcs.SetResult(new Account(info.uid.ToString(), Account.StorageAccountType.DROPBOX, info.display_name, 0.0, AccountType.NORMAL_ACCOUNT_TYPE));
-                //    this.CurrentAccount = new StorageAccount(info.uid.ToString(), StorageAccount.StorageAccountType.DROPBOX, info.display_name, 0.0);
-                //    tcs.SetResult(true);
-                //}, (fail) =>
-                //{
-                //    //tcs.SetException(new Exception("Account Info Get Failed"));
-                //    this.CurrentAccount = null;
-                //    tcs.SetResult(false);
-                //});
-
+                await this.GetMyAccountAsync();
             }
             else
             {
+                UserLogin userLogin = await this._client.GetRequestToken();
+                string authUri = this._client.BuildAuthorizeUrl(userLogin, DROPBOX_AUTH_URI);
+                DropboxWebBrowserTask webBrowser = new DropboxWebBrowserTask(authUri);
+                await webBrowser.ShowAsync();
+
+                UserLogin accesToken = await this._client.GetAccessToken();
+                this._client.UserLogin = accesToken;
+                this.CurrentAccount = await this.GetMyAccountAsync();
+                StorageAccount account = await App.AccountManager.GetStorageAccountAsync(this.CurrentAccount.Id);
+                if (account == null)
+                {
+                    await App.AccountManager.CreateStorageAccountAsync(this.CurrentAccount);
+                }
+
+                App.ApplicationSettings[DROPBOX_SIGN_IN_KEY] = true;
+                App.ApplicationSettings[DROPBOX_USER_KEY] = accesToken;
+                App.ApplicationSettings.Save();
+
                // this._client.GetTokenAsync(async (userLogin) =>
                // {
                //     string authUri = this._client.BuildAuthorizeUrl(DROPBOX_AUTH_URI);
@@ -96,14 +111,16 @@ namespace PintheCloudWS.Managers
 
                //         // Save dropbox user got and sign in setting.
                //         this.CurrentAccount = await this.GetMyAccountAsync();
-               //         StorageAccount account = App.AccountManager.GetPtcAccount().GetStorageAccountById(this.CurrentAccount.Id);
+               //         StorageAccount account = await App.AccountManager.GetStorageAccountAsync(this.CurrentAccount.Id);
                //         if (account == null)
                //         {
-               //             await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(this.CurrentAccount);
+               //             await App.AccountManager.CreateStorageAccountAsync(this.CurrentAccount);
                //         }
 
-               //         App.ApplicationSettings.Values[DROPBOX_SIGN_IN_KEY] = true;
-               //         App.ApplicationSettings.Values[DROPBOX_USER_KEY] = user;
+               //         App.ApplicationSettings[DROPBOX_SIGN_IN_KEY] = true;
+               //         App.ApplicationSettings[DROPBOX_USER_KEY] = user;
+               //         App.ApplicationSettings.Save();
+               //         TaskHelper.AddTask(PtcPage.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
                //         tcs.SetResult(true);
                //     },
                //     (error) =>
@@ -114,24 +131,25 @@ namespace PintheCloudWS.Managers
                // },
                //(error) =>
                //{
-               //    var keys = error.Data.Keys;
-               //    for (var i = 0; i < keys.Count; i++)
-               //    {
-               //        Debug.WriteLine(error.Data[i]);
-               //    }
-               //    Debug.WriteLine(error.Message);
-               //    Debug.WriteLine(error.StackTrace);
+               //    //var keys = error.Data.Keys;
+               //    //for (var i = 0; i < keys.Count; i++ )
+               //    //{
+               //    //    Debug.WriteLine(error.Data[i]);
+               //    //}
+               //    //Debug.WriteLine(error.Message);
+               //    //Debug.WriteLine(error.StackTrace);
                //    tcs.SetResult(false);
                //});
             }
-            return tcs.Task;
+            TaskHelper.AddTask(PtcPage.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
+            return true;
         }
 
 
         public bool IsSigningIn()
         {
             if (this.tcs != null)
-                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.ContainsKey(DROPBOX_SIGN_IN_KEY);
+                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Contains(DROPBOX_SIGN_IN_KEY);
             else
                 return false;
         }
@@ -146,8 +164,8 @@ namespace PintheCloudWS.Managers
         // Remove user and record
         public void SignOut()
         {
-            App.ApplicationSettings.Values.Remove(DROPBOX_USER_KEY);
-            App.ApplicationSettings.Values.Remove(DROPBOX_SIGN_IN_KEY);
+            App.ApplicationSettings.Remove(DROPBOX_USER_KEY);
+            App.ApplicationSettings.Remove(DROPBOX_SIGN_IN_KEY);
             this.FoldersTree.Clear();
             this.FolderRootTree.Clear();
             this._client = null;
@@ -157,13 +175,13 @@ namespace PintheCloudWS.Managers
 
         public bool IsSignIn()
         {
-            return App.ApplicationSettings.Values.ContainsKey(DROPBOX_SIGN_IN_KEY);
+            return App.ApplicationSettings.Contains(DROPBOX_SIGN_IN_KEY);
         }
 
 
         public string GetStorageName()
         {
-            return App.ResourceLoader.GetString(ResourcesKeys.Dropbox);
+            return AppResources.Dropbox;
         }
 
 
@@ -179,21 +197,27 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Stack<FileObjectViewItem> GetFolderRootTree()
+        //public Stack<FileObjectViewItem> GetFolderRootTree()
+        //{
+        //    return this.FolderRootTree;
+        //}
+
+
+        //public Stack<List<FileObject>> GetFoldersTree()
+        //{
+        //    return this.FoldersTree;
+        //}
+
+
+        public async Task<StorageAccount> GetStorageAccountAsync()
         {
-            return this.FolderRootTree;
-        }
-
-
-        public Stack<List<FileObject>> GetFoldersTree()
-        {
-            return this.FoldersTree;
-        }
-
-
-        public StorageAccount GetStorageAccount()
-        {
-            return this.CurrentAccount;
+            TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
+            if (this.CurrentAccount == null)
+            {
+                await TaskHelper.WaitSignInTask(this.GetStorageName());
+            }
+            tcs.SetResult(this.CurrentAccount);
+            return tcs.Task.Result;
         }
 
 
@@ -208,13 +232,13 @@ namespace PintheCloudWS.Managers
         public async Task<FileObject> GetFileAsync(string fileId)
         {
             //MetaData metaTask = await this._client.GetMetaDataTask(fileId);
-            MetaData metaTask = null;
+            MetaData metaTask = await this._client.GetMetaData(fileId);
             return ConvertToFileObjectHelper.ConvertToFileObject(metaTask);
         }
         public async Task<List<FileObject>> GetFilesFromFolderAsync(string folderId)
         {
             //MetaData metaTask = await this._client.GetMetaDataTask(folderId);
-            MetaData metaTask = null;
+            MetaData metaTask = await this._client.GetMetaData(folderId);
             List<FileObject> list = new List<FileObject>();
 
             if (metaTask.Contents == null) return list;
@@ -226,9 +250,10 @@ namespace PintheCloudWS.Managers
 
             return list;
         }
-        public Task<Stream> DownloadFileStreamAsync(string sourceFileId)
+        public async Task<Stream> DownloadFileStreamAsync(string sourceFileId)
         {
             TaskCompletionSource<Stream> tcs = new TaskCompletionSource<Stream>();
+            MemoryStream ms = new MemoryStream(await this._client.GetFile(sourceFileId));
             //this._client.GetFileAsync(sourceFileId, new Action<IRestResponse>((response) =>
             //{
             //    MemoryStream stream = new MemoryStream(response.RawBytes);
@@ -239,12 +264,21 @@ namespace PintheCloudWS.Managers
             //    throw new ShareException(sourceFileId, ShareException.ShareType.DOWNLOAD);
             //}));
 
-            return tcs.Task;
+            return ms;
         }
         public async Task<bool> UploadFileStreamAsync(string folderIdToStore, string fileName, Stream outstream)
         {
             try
             {
+                MemoryStream ms = new MemoryStream();
+                byte[] buffer = new byte[102400];
+                int count = 0;
+                while((count = outstream.Read(buffer,0,buffer.Length)) != 0)
+                {
+                    ms.Write(buffer,0,count);
+                }
+                //MetaData d = await _client.UploadFileTask(folderIdToStore, fileName, CreateStream(outstream).ToArray());
+                MetaData meta = await this._client.Upload(folderIdToStore, fileName, ms.ToArray());
                 //MetaData d = await this._client.UploadFileTask(folderIdToStore, fileName, outstream);
                 return true;
             }
@@ -290,8 +324,8 @@ namespace PintheCloudWS.Managers
                 {
                     output.Write(buffer, 0, count);
                 }
-                //input.Close();
-                //output.Close();
+                input.Dispose();
+                output.Dispose();
                 return true;
             }
             catch
@@ -299,6 +333,61 @@ namespace PintheCloudWS.Managers
                 throw new Exception("Create Streaming Failed");
             }
         }
+        #endregion
+
+        #region Not Using Methods
+        //public FileObject ConvertToFileObject(MetaData metaTask)
+        //{
+        //    FileObject file = new FileObject();
+
+        //    file.Name = metaTask.Name;
+        //    file.CreateAt = metaTask.ModifiedDate.ToString(); //14/02/2014 15:48:13
+        //    file.UpdateAt = metaTask.ModifiedDate.ToString(); //14/02/2014 15:48:13
+        //    file.Id = metaTask.Path; // Full path
+        //    file.ParentId = metaTask.Path;
+        //    //file.Size = Convert.ToInt32(metaTask.Size);
+        //    //file.Size = metaTask.bytes <- int
+        //    //file.Size = metaTask.Size <- string
+        //    file.SizeUnit = "GB";
+        //    file.ThumnailType = "";
+        //    file.Type = ""; // Is_Dir = true | false
+        //    file.TypeDetail = metaTask.Extension; // .png
+        //    file.UpdateAt = metaTask.ModifiedDate.ToString();
+
+        //    return file;
+        //}
+
+
+        //public async Task<StorageFile> DownloadFileAsync(string sourceFileId, StorageFile targetFile)
+        //{
+        //    TaskCompletionSource<StorageFile> tcs = new TaskCompletionSource<StorageFile>();
+        //    Stream output = await targetFile.OpenStreamForWriteAsync();
+
+        //    _client.GetFileAsync(sourceFileId, new Action<IRestResponse>((response) =>
+        //    {
+        //        MemoryStream input = new MemoryStream(response.RawBytes);
+        //        this._Streaming(input, output);
+        //        tcs.SetResult(targetFile);
+        //    }), new Action<DropNet.Exceptions.DropboxException>((ex) =>
+        //    {
+        //        tcs.SetException(new Exception("failed"));
+        //    }));
+
+        //    return await tcs.Task;
+        //}
+
+        //public async Task<bool> UploadFileAsync(string folderIdToStore, StorageFile file)
+        //{
+        //    try
+        //    {
+        //        MetaData d = await _client.UploadFileTask(folderIdToStore, file.Name, await file.OpenStreamForReadAsync());
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        return false;
+        //    }
+        //}
         #endregion
     }
 }

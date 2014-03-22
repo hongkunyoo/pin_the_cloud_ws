@@ -1,11 +1,18 @@
 ﻿using Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2.Responses;
+using Google.Apis.Download;
 using Google.Apis.Drive.v2;
 using Google.Apis.Drive.v2.Data;
 using Google.Apis.Services;
+using Google.Apis.Upload;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using PintheCloudWS.Converters;
 using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
+using PintheCloudWS.Pages;
+using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -81,16 +88,18 @@ namespace PintheCloudWS.Managers
             // Add application settings before work for good UX
             try
             {
-                //credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                //    new ClientSecrets
+                Uri clientSecretsUri = new Uri("urn:ietf:wg:oauth:2.0:oobhttp://localhost");
+                //new ClientSecrets
                 //    {
                 //        ClientId = GOOGLE_DRIVE_CLIENT_ID,
                 //        ClientSecret = GOOGLE_DRIVE_CLIENT_SECRET
-                //    },
-                //    new[] { DriveService.Scope.Drive },
-                //    this._GetUserSession(),
-                //    CancellationToken.None
-                //);
+                //    }
+                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    clientSecretsUri,
+                    new[] { DriveService.Scope.Drive },
+                    this._GetUserSession(),
+                    CancellationToken.None
+                );
 
                 this.service = new DriveService(new BaseClientService.Initializer()
                 {
@@ -105,23 +114,20 @@ namespace PintheCloudWS.Managers
                 string id = about.PermissionId;
 
                 // Register account
-                StorageAccount account = App.AccountManager.GetPtcAccount().GetStorageAccountById(id);
+                StorageAccount account = await App.AccountManager.GetStorageAccountAsync(id);
                 if (account == null)
                 {
                     account = new StorageAccount(id, StorageAccount.StorageAccountType.GOOGLE_DRIVE, name, 0.0);
-                    await App.AccountManager.GetPtcAccount().CreateStorageAccountAsync(account);
+                    await App.AccountManager.CreateStorageAccountAsync(account);
                 }
                 this.CurrentAccount = account;
 
                 // Save sign in setting.
-                App.ApplicationSettings.Values[GOOGLE_DRIVE_SIGN_IN_KEY] = true;
+                App.ApplicationSettings[GOOGLE_DRIVE_SIGN_IN_KEY] = true;
+                App.ApplicationSettings.Save();
+                TaskHelper.AddTask(PtcPage.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
                 tcs.SetResult(true);
             }
-            //catch (Microsoft.Phone.Controls.WebBrowserNavigationException ex)
-            //{
-            //    Debug.WriteLine(ex.ToString());
-            //    tcs.SetResult(false);
-            //}
             catch (Google.GoogleApiException e)
             {
                 Debug.WriteLine(e.ToString());
@@ -131,6 +137,12 @@ namespace PintheCloudWS.Managers
             {
                 tcs.SetResult(false);
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                tcs.SetResult(false);
+            }
+            
             return tcs.Task.Result;
         }
 
@@ -138,7 +150,7 @@ namespace PintheCloudWS.Managers
         public bool IsSigningIn()
         {
             if (this.tcs != null)
-                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_SIGN_IN_KEY);
+                return !this.tcs.Task.IsCompleted && !App.ApplicationSettings.Contains(GOOGLE_DRIVE_SIGN_IN_KEY);
             else
                 return false;
 
@@ -148,8 +160,8 @@ namespace PintheCloudWS.Managers
         // Remove user and record
         public void SignOut()
         {
-            App.ApplicationSettings.Values.Remove(GOOGLE_DRIVE_USER_KEY);
-            App.ApplicationSettings.Values.Remove(GOOGLE_DRIVE_SIGN_IN_KEY);
+            App.ApplicationSettings.Remove(GOOGLE_DRIVE_USER_KEY);
+            App.ApplicationSettings.Remove(GOOGLE_DRIVE_SIGN_IN_KEY);
             this.FoldersTree.Clear();
             this.FolderRootTree.Clear();
             this.CurrentAccount = null;
@@ -164,13 +176,13 @@ namespace PintheCloudWS.Managers
 
         public bool IsSignIn()
         {
-            return App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_SIGN_IN_KEY);
+            return App.ApplicationSettings.Contains(GOOGLE_DRIVE_SIGN_IN_KEY);
         }
 
 
         public string GetStorageName()
         {
-            return App.ResourceLoader.GetString(ResourcesKeys.GoogleDrive);
+            return AppResources.GoogleDrive;
         }
 
 
@@ -186,21 +198,27 @@ namespace PintheCloudWS.Managers
         }
 
 
-        public Stack<FileObjectViewItem> GetFolderRootTree()
+        //public Stack<FileObjectViewItem> GetFolderRootTree()
+        //{
+        //    return this.FolderRootTree;
+        //}
+
+
+        //public Stack<List<FileObject>> GetFoldersTree()
+        //{
+        //    return this.FoldersTree;
+        //}
+
+
+        public async Task<StorageAccount> GetStorageAccountAsync()
         {
-            return this.FolderRootTree;
-        }
-
-
-        public Stack<List<FileObject>> GetFoldersTree()
-        {
-            return this.FoldersTree;
-        }
-
-
-        public StorageAccount GetStorageAccount()
-        {
-            return this.CurrentAccount;
+            TaskCompletionSource<StorageAccount> tcs = new TaskCompletionSource<StorageAccount>();
+            if (this.CurrentAccount == null)
+            {
+                await TaskHelper.WaitSignInTask(this.GetStorageName());
+            }
+            tcs.SetResult(this.CurrentAccount);
+            return tcs.Task.Result;
         }
 
 
@@ -211,7 +229,7 @@ namespace PintheCloudWS.Managers
             About about = await aboutResource.Get().ExecuteAsync();
             rootFile.Id = about.RootFolderId;
             this.rootFodlerId = about.RootFolderId;
-            rootFile.Name = "/";
+            rootFile.Name = "";
             return rootFile;
         }
 
@@ -327,9 +345,9 @@ namespace PintheCloudWS.Managers
 
         private string _GetUserSession()
         {
-            if (App.ApplicationSettings.Values.ContainsKey(GOOGLE_DRIVE_USER_KEY))
+            if (App.ApplicationSettings.Contains(GOOGLE_DRIVE_USER_KEY))
             {
-                return (string)App.ApplicationSettings.Values[GOOGLE_DRIVE_USER_KEY];
+                return (string)App.ApplicationSettings[GOOGLE_DRIVE_USER_KEY];
             }
             else
             {
@@ -340,7 +358,8 @@ namespace PintheCloudWS.Managers
                               .Select(s => s[random.Next(s.Length)])
                               .ToArray()
                 );
-                App.ApplicationSettings.Values[GOOGLE_DRIVE_USER_KEY] = result;
+                App.ApplicationSettings[GOOGLE_DRIVE_USER_KEY] = result;
+                App.ApplicationSettings.Save();
                 return result;
             }
         }
@@ -397,6 +416,85 @@ namespace PintheCloudWS.Managers
         {
             return !string.Empty.Equals(file.DownloadUrl);
         }
+        #endregion
+
+        #region Test Methods
+        private void PrintFile(Google.Apis.Drive.v2.Data.File file)
+        {
+            Debug.WriteLine(">>>>>>>>>>Title : " + file.Title);
+            Debug.WriteLine("DownloadUrl : " + file.DownloadUrl);
+            Debug.WriteLine("FileSize : " + file.FileSize);
+            Debug.WriteLine("ExplicitlyTrashed : " + file.ExplicitlyTrashed);
+            Debug.WriteLine("FileExtension : " + file.FileExtension);
+            Debug.WriteLine("IconLink : " + file.IconLink);
+            Debug.WriteLine("Id : " + file.Id);
+            Debug.WriteLine("MimeType : " + file.MimeType);
+            Debug.WriteLine("ModifiedDate : " + file.ModifiedDate);
+            Debug.WriteLine("ThumbnailLink : " + file.ThumbnailLink);
+            Debug.WriteLine("ExportLinks : " + file.ExportLinks);
+
+            if (file.ExportLinks != null)
+            {
+                Debug.WriteLine("----ExportLinks----");
+                ICollection<string> keys = file.ExportLinks.Keys;
+                foreach (string key in keys)
+                {
+                    Debug.WriteLine(key + " : " + file.ExportLinks[key]);
+                }
+            }
+
+            Debug.WriteLine("----OwerNames----");
+            foreach (string n in file.OwnerNames)
+            {
+                Debug.WriteLine("ownersName : " + n);
+                Debug.WriteLine("--------------");
+            }
+            Debug.WriteLine("----Onwers----");
+            foreach (User u in file.Owners)
+            {
+                Debug.WriteLine("DisplayName : " + u.DisplayName);
+                Debug.WriteLine("IsAuthenticatedUser : " + u.IsAuthenticatedUser);
+                Debug.WriteLine("Kind : " + u.Kind);
+                Debug.WriteLine("PermissionId : " + u.PermissionId);
+                Debug.WriteLine("Picture : " + u.Picture);
+                Debug.WriteLine("ToString : " + u.ToString());
+                Debug.WriteLine("---------------------------");
+            }
+            Debug.WriteLine("----Parents----");
+            foreach (ParentReference pr in file.Parents)
+            {
+                Debug.WriteLine("Id : " + pr.Id);
+                Debug.WriteLine("IsRoot : " + pr.IsRoot);
+                Debug.WriteLine("Kind : " + pr.Kind);
+                Debug.WriteLine("ParentLink : " + pr.ParentLink);
+                Debug.WriteLine("SelfLink : " + pr.SelfLink);
+                Debug.WriteLine("ToString : " + pr.ToString());
+                Debug.WriteLine("---------------------------");
+            }
+            Debug.WriteLine("Thumbnail : " + file.Thumbnail);
+            Debug.WriteLine("=====================================================");
+        }
+        #endregion
+
+        #region Not Using Methods
+        //private async Task DeleteFile(string fileId)
+        //{
+        //    await service.Files.Delete(fileId).ExecuteAsync();
+        //}
+        //public async Task<Stream> DownloadFileStreamAsync2(string downloadUrl)
+        //{
+        //    var downloader = new MediaDownloader(this.service);
+        //    MemoryStream ms = new MemoryStream();
+        //    var progress = await downloader.DownloadAsync(downloadUrl, ms);
+        //    if (progress.Status == DownloadStatus.Completed)
+        //    {
+        //        return ms;
+        //    }
+        //    else
+        //    {
+        //        return null;
+        //    }
+        //}
         #endregion
     }
 }

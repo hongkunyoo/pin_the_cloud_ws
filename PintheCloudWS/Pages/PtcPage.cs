@@ -18,14 +18,19 @@ namespace PintheCloudWS.Pages
     public partial class PtcPage : Page
     {
         protected const string PREV_PAGE_KEY = "PREV_PAGE";
-        protected const string PLATFORM_KEY = "PLATFORM_KEY";
+        protected const string PIVOT_KEY = "PIVOT_KEY";
 
         protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
-        protected const string FILE_OBJECT_VIEW_MODEL_KEY = "FILE_OBJECT_VIEW_MODEL_KEY";
+        protected const string PICK_FILE_OBJECT_VIEW_MODEL_KEY = "PICK_FILE_OBJECT_VIEW_MODEL_KEY";
+        protected const string PIN_FILE_OBJECT_VIEW_MODEL_KEY = "PIN_FILE_OBJECT_VIEW_MODEL_KEY";
 
         protected const string SELECTED_FILE_KEY = "SELECTED_FILE_KEY";
 
         protected const string NULL_PASSWORD = "null";
+
+        public const double STATUS_BAR_HEIGHT = 32.0;
+
+        public const string STORAGE_EXPLORER_SYNC = "STORAGE_EXPLORER_SYNC";
 
         private NavigationHelper navigationHelper;
 

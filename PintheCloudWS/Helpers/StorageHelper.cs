@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace PintheCloudWS.Helpers
 {
-    public class StorageHelper
+    public static class StorageHelper
     {
         private static List<IStorageManager> list = new List<IStorageManager>();
         private static Dictionary<string, IStorageManager> map = new Dictionary<string, IStorageManager>();
-        private static string DEFAULT_STORAGE = App.ResourceLoader.GetString(ResourcesKeys.OneDrive);
+        private static string DEFAULT_STORAGE = AppResources.OneDrive;
 
         public static void AddStorageManager(string key, IStorageManager value)
         {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI;
 using Windows.UI.Xaml.Data;
@@ -13,7 +15,7 @@ namespace PintheCloudWS.Converters
     {
         // Implement Convert
         public Dictionary<string, Brush> _brushCache = new Dictionary<string, Brush>();
-        public object Convert(object value, Type targetType, object parameter, string language)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var colorStr = ((string)value).ToLower();
 
@@ -27,7 +29,7 @@ namespace PintheCloudWS.Converters
         }
 
 
-        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotSupportedException();
         }

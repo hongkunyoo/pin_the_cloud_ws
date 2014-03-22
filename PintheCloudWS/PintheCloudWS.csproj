@@ -114,6 +114,7 @@
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
     <Compile Include="Converters\ColorHexStringToBrushConverter.cs" />
+    <Compile Include="Converters\StringToFontWeightConverter.cs" />
     <Compile Include="Converters\StringToSpotNameInitialUriConverter.cs" />
     <Compile Include="Converters\StringToThumnailUriConverter.cs" />
     <Compile Include="Helpers\AESHelper.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Helpers\StorageHelper.cs" />
     <Compile Include="Helpers\Switcher.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
+    <Compile Include="Locale\AppResources.cs" />
     <Compile Include="Locale\ResourcesKeys.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\BlobStorageManager.cs" />
@@ -167,8 +169,12 @@
       <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DropboxWebBrowserResult.cs" />
+    <Compile Include="Utilities\DropboxWebBrowserTask.cs" />
+    <Compile Include="Utilities\FileObjectDataContext.cs" />
     <Compile Include="Utilities\ShareException.cs" />
     <Compile Include="Utilities\StorageExplorer.cs" />
+    <Compile Include="Utilities\WSApplicationSettings.cs" />
     <Compile Include="ViewModels\CloudModeViewItem.cs" />
     <Compile Include="ViewModels\CloudModeViewModel.cs" />
     <Compile Include="ViewModels\FileObjectViewItem.cs" />
@@ -323,22 +329,22 @@
       <HintPath>..\packages\DropNetRT.1.0\lib\portable-win+net45+sl40+wp71\DropNetRT.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis">
-      <HintPath>..\packages\Google.Apis.1.8.0-rc\lib\netcore45\Google.Apis.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.1.8.1\lib\netcore45\Google.Apis.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Auth">
-      <HintPath>..\packages\Google.Apis.Auth.1.8.0-rc\lib\netcore45\Google.Apis.Auth.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.Auth.1.8.1\lib\netcore45\Google.Apis.Auth.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Auth.PlatformServices">
-      <HintPath>..\packages\Google.Apis.Auth.1.8.0-rc\lib\netcore45\Google.Apis.Auth.PlatformServices.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.Auth.1.8.1\lib\netcore45\Google.Apis.Auth.PlatformServices.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Core">
-      <HintPath>..\packages\Google.Apis.Core.1.8.0-rc\lib\portable-net4+sl4+wp71+win8\Google.Apis.Core.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.Core.1.8.1\lib\portable-net4+sl4+wp71+win8\Google.Apis.Core.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.Drive.v2">
-      <HintPath>..\packages\Google.Apis.Drive.v2.1.8.0.1130-rc\lib\portable-net4+sl4+wp71+win8\Google.Apis.Drive.v2.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.Drive.v2.1.8.1.1160\lib\portable-net4+sl4+wp71+win8\Google.Apis.Drive.v2.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis.PlatformServices">
-      <HintPath>..\packages\Google.Apis.1.8.0-rc\lib\netcore45\Google.Apis.PlatformServices.dll</HintPath>
+      <HintPath>..\packages\Google.Apis.1.8.1\lib\netcore45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Edm.Portable">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\portable-net40+sl5+wp8+win8\Microsoft.Data.Edm.Portable.dll</HintPath>

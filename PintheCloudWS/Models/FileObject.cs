@@ -1,17 +1,26 @@
 ﻿using Newtonsoft.Json;
 using PintheCloudWS.Helpers;
 using PintheCloudWS.Managers;
+using PintheCloudWS.Utilities;
+using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Linq;
+using PintheCloudWS.Models;
+using PintheCloudWS;
 
 namespace PintheCloudWS.Models
 {
+    /// <summary>
+    /// Model Class for storing file meta information from each kind of storages.
+    /// Every files will be handled by this object to provide a abstraction.
+    /// </summary>
     public class FileObject
     {
         #region Variables
@@ -60,9 +69,7 @@ namespace PintheCloudWS.Models
         /// The child list of the folder.
         /// </summary>
         public ProfileObject Owner { get; set; }
-
         public string SpotId { get; set; }
-
         public List<FileObject> FileList { get; set; }
         #endregion
 
@@ -145,8 +152,9 @@ namespace PintheCloudWS.Models
             Debug.WriteLine("DownloadUrl : " + file.DownloadUrl);
             Debug.WriteLine("MimeType : " + file.MimeType);
 
-            Debug.WriteLine("----child-----");
+            Debug.WriteLine("----child START-----");
             PrintFileList(file.FileList);
+            Debug.WriteLine("----child END-----");
         }
 
         public static void PrintFileList(List<FileObject> list)
@@ -158,6 +166,71 @@ namespace PintheCloudWS.Models
             }
         }
         #endregion
+
+
+        public static void ConvertToFileObjectSQL(List<FileObjectSQL> list, FileObject fo, string parentId)
+        {
+            if (list == null) System.Diagnostics.Debugger.Break();
+            FileObjectSQL fos = new FileObjectSQL();
+            fos.Id = fo.Id;
+            fos.Name = fo.Name;
+            fos.Size = fo.Size;
+            fos.Type = fo.Type;
+            fos.Extension = fo.Extension;
+            fos.UpdateAt = fo.UpdateAt;
+            fos.Thumbnail = fo.Thumbnail;
+            fos.DownloadUrl = fo.DownloadUrl;
+            fos.MimeType = fo.MimeType;
+            fos.ParentId = parentId;
+            if (fo.Owner != null)
+            {
+                fos.ProfileId = fo.Owner.Id;
+                fos.ProfileEmail = fo.Owner.Email;
+                fos.ProfilePhoneNumber = fo.Owner.PhoneNumber;
+                fos.ProfileName = fo.Owner.Name;
+            }
+            fos.SpotId = fo.SpotId;
+            list.Add(fos);
+            if (fo.FileList != null)
+            {
+                for (var i = 0; i < fo.FileList.Count; i++)
+                {
+                    ConvertToFileObjectSQL(list, fo.FileList[i], fo.Id);
+                }
+            }
+        }
+        //public static int count = 0;
+        public static FileObject ConvertToFileObject(FileObjectDataContext db, FileObjectSQL fos)
+        {
+            //count++;
+            //if (count == 100) System.Diagnostics.Debugger.Break();
+
+            FileObject fo = new FileObject(fos.Id, fos.Name, fos.Size, fos.Type, fos.Extension, fos.UpdateAt, fos.Thumbnail, fos.DownloadUrl, fos.MimeType);
+            fo.SpotId = fos.SpotId;
+            if (fos.ProfileName != null && fos.ProfileId != null && fos.ProfileEmail != null && fos.ProfilePhoneNumber != null)
+            {
+                fo.Owner = new ProfileObject();
+                fo.Owner.Id = fos.ProfileId;
+                fo.Owner.Email = fos.ProfileEmail;
+                fo.Owner.Name = fos.ProfileName;
+                fo.Owner.PhoneNumber = fos.ProfilePhoneNumber;
+            }
+
+            fo.FileList = GetChildList(db, fos.Id);
+            return fo;
+        }
+        public static List<FileObject> GetChildList(FileObjectDataContext db, string ParentId)
+        {
+            var dbList = from FileObjectSQL fos in db.FileItems where fos.ParentId == ParentId select fos;
+            List<FileObjectSQL> sqlList = dbList.ToList<FileObjectSQL>();
+            List<FileObject> list = new List<FileObject>();
+            for (var i = 0; i < sqlList.Count; i++)
+            {
+                list.Add(ConvertToFileObject(db, sqlList[i]));
+            }
+            return list;
+        }
+
     }
 
     #region Mobile Service Object

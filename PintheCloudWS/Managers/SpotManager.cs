@@ -1,8 +1,13 @@
 ﻿using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json.Linq;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Models;
+using PintheCloudWS.Pages;
+using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;

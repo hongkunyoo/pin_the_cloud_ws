@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PintheCloudWS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PintheCloudWS.Helpers
 {
-    public class TaskHelper
+    public static class TaskHelper
     {
         // Tasks
         private static IDictionary<string, Task<bool>> Tasks = new Dictionary<string, Task<bool>>();

@@ -1,4 +1,5 @@
-﻿using PintheCloudWS.Managers;
+﻿using PintheCloudWS;
+using PintheCloudWS.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PintheCloudWS.Helpers
 {
-    public class Switcher
+    public static class Switcher
     {
         private static IStorageManager CurrentManager = null;
         private static string MAIN_PLATFORM_TYPE_KEY = "MAIN_PLATFORM_TYPE_KEY";
@@ -24,18 +25,28 @@ namespace PintheCloudWS.Helpers
 
         public static void SetMainPlatform(string key)
         {
-            App.ApplicationSettings.Values[MAIN_PLATFORM_TYPE_KEY] = key;
+            App.ApplicationSettings[MAIN_PLATFORM_TYPE_KEY] = key;
+            App.ApplicationSettings.Save();
         }
         public static IStorageManager GetMainStorage()
         {
-            return StorageHelper.GetStorageManager(MAIN_PLATFORM_TYPE_KEY);
+            IStorageManager retStorage = StorageHelper.GetStorageManager(MAIN_PLATFORM_TYPE_KEY);
+            if (!retStorage.IsSignIn())
+            {
+                List<IStorageManager> list = StorageHelper.GetStorageList();
+                for (var i = 0; i < list.Count; i++)
+                {
+                    if (list[i].IsSignIn()) return list[i];
+                }
+            }
+            return retStorage;
         }
 
         public static void SetStorageToMainPlatform()
         {
-            if (App.ApplicationSettings.Values.ContainsKey(MAIN_PLATFORM_TYPE_KEY))
+            if (App.ApplicationSettings.Contains(MAIN_PLATFORM_TYPE_KEY))
             {
-                SetStorageTo((string)App.ApplicationSettings.Values[MAIN_PLATFORM_TYPE_KEY]);
+                SetStorageTo((string)App.ApplicationSettings[MAIN_PLATFORM_TYPE_KEY]);
             }
             else
             {
@@ -45,6 +56,10 @@ namespace PintheCloudWS.Helpers
         public static int GetCurrentIndex()
         {
             return StorageHelper.GetStorageList().IndexOf(CurrentManager);
+        }
+        public static int GetStorageIndex(string key)
+        {
+            return StorageHelper.GetStorageList().IndexOf(StorageHelper.GetStorageManager(key));
         }
     }
 }
