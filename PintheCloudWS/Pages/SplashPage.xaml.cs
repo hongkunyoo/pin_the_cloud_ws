@@ -61,15 +61,15 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
 
             // Check nick name at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
+            if (!App.ApplicationSettings.Contains(StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
             {
-                App.ApplicationSettings.Values[StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = App.ResourceLoader.GetString(ResourcesKeys.AtHere);
+                App.ApplicationSettings[StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = AppResources.AtHere;
             }
 
             // Check location access consent at frist login.
-            if (!App.ApplicationSettings.Values.ContainsKey(StorageAccount.LOCATION_ACCESS_CONSENT_KEY))
+            if (!App.ApplicationSettings.Contains(StorageAccount.LOCATION_ACCESS_CONSENT_KEY))
             {
-                App.ApplicationSettings.Values[StorageAccount.LOCATION_ACCESS_CONSENT_KEY] = false;
+                App.ApplicationSettings[StorageAccount.LOCATION_ACCESS_CONSENT_KEY] = false;
             }
 
             if (App.AccountManager.IsSignIn())

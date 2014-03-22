@@ -83,27 +83,27 @@ namespace PintheCloudWS.ViewModels
                     if ((size / gbUnit) >= 1)  // GB
                     {
                         fileObjectViewItem.Size = (Math.Round((size / gbUnit) * 10.0) / 10.0).ToString().Replace(',', '.');
-                        fileObjectViewItem.SizeUnit = App.ResourceLoader.GetString(ResourcesKeys.GB);
+                        fileObjectViewItem.SizeUnit = AppResources.GB;
                     }
                     else if ((size / mbUnit) >= 1)  // MB
                     {
                         fileObjectViewItem.Size = (Math.Round((size / mbUnit) * 10.0) / 10.0).ToString().Replace(',', '.');
-                        fileObjectViewItem.SizeUnit = App.ResourceLoader.GetString(ResourcesKeys.MB);
+                        fileObjectViewItem.SizeUnit = AppResources.MB;
                     }
                     else if ((size / kbUnit) >= 1)  // KB
                     {
                         fileObjectViewItem.Size = (Math.Round(size / kbUnit)).ToString().Replace(',', '.');
-                        fileObjectViewItem.SizeUnit = App.ResourceLoader.GetString(ResourcesKeys.KB);
+                        fileObjectViewItem.SizeUnit = AppResources.KB;
                     }
                     else if ((size / kbUnit) < 1)  // Bytes
                     {
                         fileObjectViewItem.Size = size.ToString().Replace(',', '.');
-                        fileObjectViewItem.SizeUnit = App.ResourceLoader.GetString(ResourcesKeys.Bytes);
+                        fileObjectViewItem.SizeUnit = AppResources.Bytes;
                     }
                     else if (fileObject.Type == FileObject.FileObjectType.GOOGLE_DOC) // Google Doc
                     {
                         fileObjectViewItem.Size = String.Empty;
-                        fileObjectViewItem.SizeUnit = App.ResourceLoader.GetString(ResourcesKeys.GoogleDoc);
+                        fileObjectViewItem.SizeUnit = AppResources.GoogleDoc;
                     }
                 }
 

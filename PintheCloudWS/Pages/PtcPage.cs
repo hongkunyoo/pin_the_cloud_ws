@@ -137,7 +137,7 @@ namespace PintheCloudWS.Pages
 
             // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
             messageDialog.Commands.Add(new UICommand(
-                App.ResourceLoader.GetString(ResourcesKeys.OK),
+                AppResources.OK,
                 new UICommandInvokedHandler((command) => { })));
 
             // Set the command that will be invoked by default

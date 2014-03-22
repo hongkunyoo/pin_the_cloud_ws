@@ -16,12 +16,12 @@ namespace PintheCloudWS.Converters
         public const string LIGHT = "light";
 
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, string culture)
         {
             return GetFontWeightFromString((string)value);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
             throw new NotSupportedException();
         }

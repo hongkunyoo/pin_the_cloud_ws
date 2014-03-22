@@ -110,7 +110,7 @@ namespace PintheCloudWS.Pages
             }
             else
             {
-                base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.NoFileInSpotMessage));
+                base.ShowMessageDialog(AppResources.NoFileInSpotMessage);
             }
 
             // Hide Progress Indicator

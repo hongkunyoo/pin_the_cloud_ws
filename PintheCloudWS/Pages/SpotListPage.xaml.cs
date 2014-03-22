@@ -71,7 +71,7 @@ namespace PintheCloudWS.Pages
             // Remove Splash Page from Back Stack
             if(this.Frame.BackStack.Count > 0)
                 this.Frame.BackStack.RemoveAt(this.Frame.BackStack.Count - 1);
-            this.SetSpotGridView(App.ResourceLoader.GetString(ResourcesKeys.Loading));
+            this.SetSpotGridView(AppResources.Loading);
         }
 
 
@@ -131,7 +131,7 @@ namespace PintheCloudWS.Pages
             }
             else
             {
-                base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.InternetUnavailableMessage));
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
             }
         }
 
@@ -149,7 +149,7 @@ namespace PintheCloudWS.Pages
                 {
                     // If there is near spots, Clear and Add spots to list
                     // Otherwise, Show none message.
-                    List<Spot> spots = await App.SpotManager.GetNearSpotViewItemsAsync(currentGeoposition);
+                    List<SpotObject> spots = await App.SpotManager.GetNearSpotListAsync(currentGeoposition);
 
                     if (spots != null)
                     {
@@ -164,17 +164,17 @@ namespace PintheCloudWS.Pages
                         else  // No near spots
                         {
                             this.NearSpotViewModel.IsDataLoaded = true;
-                            base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.NoNearSpotMessage));
+                            base.ShowMessageDialog(AppResources.NoNearSpotMessage);
                         }
                     }
                     else
                     {
-                        base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.BadLoadingSpotMessage));
+                        base.ShowMessageDialog(AppResources.BadLoadingSpotMessage);
                     }
                 }
                 else  // GPS works bad
                 {
-                    base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.BadLocationServiceMessage));
+                    base.ShowMessageDialog(AppResources.BadLocationServiceMessage);
                 }
             }
             catch (UnauthorizedAccessException)

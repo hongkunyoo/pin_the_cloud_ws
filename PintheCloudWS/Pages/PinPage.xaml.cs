@@ -3,6 +3,7 @@ using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Models;
+using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -93,151 +94,206 @@ namespace PintheCloudWS.Pages
 
             IStorageManager iStorageManager = Switcher.GetCurrentStorage();
             this.FileObjectViewModel.IsDataLoaded = false;
-            this.SetPinFileList(iStorageManager, App.ResourceLoader.GetString(ResourcesKeys.Loading), false);
+            this.SetPinFileList(iStorageManager, AppResources.Loading, false);
         }
 
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             IStorageManager iStorageManager = Switcher.GetCurrentStorage();
-            if (iStorageManager.GetFolderRootTree().Count > 1)
-                this.TreeUp(iStorageManager);
+            if (StorageExplorer.GetCurrentTree() != null)
+                this.TreeUp();
         }
 
         #endregion
 
         #region
 
-        private void TreeUp(IStorageManager iStorageManager)
+        private void TreeUp()
         {
+            // If message is visible, set collapsed.
+            if (uiPinFileMessage.Visibility == Visibility.Visible)
+                uiPinFileMessage.Visibility = Visibility.Collapsed;
+
             // Clear trees.
-            iStorageManager.GetFolderRootTree().Pop();
-            iStorageManager.GetFoldersTree().Pop();
-            this.SelectedFile.Clear();
+            this.PinSelectedFileList.Clear();
+            this.PinFileAppBarButton.IsEnabled = false;
 
             // Set previous files to list.
-            this.FileObjectViewModel.SetItems(iStorageManager.GetFoldersTree().First(), true);
-            this.SetCurrentPath(iStorageManager);
+            List<FileObject> fileList = StorageExplorer.TreeUp();
+            if (fileList == null) return;
+            fileObjects = fileList;
+            this.PinFileObjectViewModel.SetItems(fileObjects, true);
+            uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
         }
 
 
-        protected void SetPinFileList(IStorageManager iStorageManager, string message, bool load)
+        private void SetPinPivot(string message)
         {
             // If it wasn't already signed in, show signin button.
             // Otherwise, load files
+            IStorageManager iStorageManager = Switcher.GetCurrentStorage();
             if (!iStorageManager.IsSignIn())  // wasn't signed in.
             {
-                iStorageManager.GetFolderRootTree().Clear();
-                iStorageManager.GetFoldersTree().Clear();
-                this.SelectedFile.Clear();
+                this.PinSelectedFileList.Clear();
+                this.PinFileAppBarButton.IsEnabled = false;
+
+                uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                uiPinFileSignInPanel.Visibility = Visibility.Visible;
             }
             else  // already signed in.
             {
+                uiPinFileListGrid.Visibility = Visibility.Visible;
+                uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
+
                 if (NetworkInterface.GetIsNetworkAvailable())
                 {
-                    if (this.FileObjectViewModel.IsDataLoaded)
-                    {
-                        Stack<FileObjectViewItem> folderRootStack = iStorageManager.GetFolderRootTree();
-                        if (folderRootStack.Count > 0)
-                            this.SetPinFileListAsync(iStorageManager, message, folderRootStack.First(), load);
-                        else
-                            this.SetPinFileListAsync(iStorageManager, message, null, true);
-                    }
+                    if (!this.PinFileObjectViewModel.IsDataLoaded)
+                        this.SetPinFileListAsync(iStorageManager, message, null);
                 }
                 else
                 {
-                    base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.InternetUnavailableMessage));
+                    base.SetListUnableAndShowMessage(uiPinFileList, uiPinFileMessage, AppResources.InternetUnavailableMessage);
                 }
             }
         }
 
 
-        private async void SetPinFileListAsync(IStorageManager iStorageManager,string message, FileObjectViewItem folder, bool load)
+        private async void SetPinFileListAsync(IStorageManager iStorageManager, string message, FileObjectViewItem folder)
         {
-            // Set Mutex true and Show Process Indicator
-            this.FileObjectViewModel.IsDataLoaded = true;
-            base.SetProgressRing(uiFileListProgressRing, true);
+            // Set Mutex true and Show Process Indicator            
+            base.SetListUnableAndShowMessage(uiPinFileList, uiPinFileMessage, message);
+            base.SetProgressIndicator(true);
+
+            // Clear selected file and set pin button false.
+            this.PinSelectedFileList.Clear();
+            base.Dispatcher.BeginInvoke(() =>
+            {
+                this.PinFileAppBarButton.IsEnabled = false;
+            });
 
             // Wait task
-            await App.TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
-            await App.TaskHelper.WaitSignOutTask(iStorageManager.GetStorageName());
+            //await TaskHelper.WaitTask(STORAGE_EXPLORER_SYNC);
+            await TaskHelper.WaitSignOutTask(iStorageManager.GetStorageName());
 
             // If it wasn't signed out, set list.
             // Othersie, show sign in grid.
-            if (iStorageManager.GetStorageAccount() != null)  // Wasn't signed out.
+            if (await iStorageManager.GetStorageAccountAsync() == null)  // Wasn't signed out.
             {
-                // If it has to load, load new files.
-                // Otherwise, set existing files to list.
-                List<FileObject> fileObjects = new List<FileObject>();
-                if (load)  // Load from server
+                base.Dispatcher.BeginInvoke(() =>
                 {
-                    // If folder null, set root.
-                    if (folder == null)
-                    {
-                        iStorageManager.GetFolderRootTree().Clear();
-                        iStorageManager.GetFoldersTree().Clear();
+                    uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                    uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                });
 
-                        FileObject rootFolder = await iStorageManager.GetRootFolderAsync();
-                        folder = new FileObjectViewItem();
-                        folder.Id = rootFolder.Id;
-                    }
-
-                    // Get files and push to stack tree.
-                    fileObjects = await iStorageManager.GetFilesFromFolderAsync(folder.Id);
-                    if (!message.Equals(App.ResourceLoader.GetString(ResourcesKeys.Refrshing)))
-                    {
-                        iStorageManager.GetFoldersTree().Push(fileObjects);
-                        if (!iStorageManager.GetFolderRootTree().Contains(folder))
-                            iStorageManager.GetFolderRootTree().Push(folder);
-                    }
-                }
-                else  // Set existed file to list
-                {
-                    fileObjects = iStorageManager.GetFoldersTree().First();
-                }
-
-
-                // If didn't change cloud mode while loading, set it to list.
-                if (iStorageManager.GetStorageName().Equals(iStorageManager.GetStorageName()))
-                {
-                    // Set file list visible and current path.
-                    await base.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                    {
-                        this.SetCurrentPath(iStorageManager);
-                        this.FileObjectViewModel.SetItems(fileObjects, true);
-                    });
-
-                    // If there exists file, show it.
-                    // Otherwise, show no file message.
-                    if (fileObjects.Count > 0)
-                    {
-                        // Set List
-                    }
-                    else
-                    {
-                        base.ShowMessageDialog(App.ResourceLoader.GetString(ResourcesKeys.NoFileInFolderMessage));
-                    }
-                }
+                base.SetProgressIndicator(false);
+                return;
             }
-            else  // Was signed out.
+
+            // Get files and push to stack tree.
+            Debug.WriteLine("waiting sync : " + STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            bool result = await TaskHelper.WaitTask(STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            Debug.WriteLine("finished sync : " + STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            //fileObjects = null;
+            if (!result) return;
+            if (folder == null)
             {
-                // Show Sign Button
+                fileObjects = StorageExplorer.GetFilesFromRootFolder();
+            }
+            else
+            {
+                if (folder == null) System.Diagnostics.Debugger.Break();
+                fileObjects = StorageExplorer.GetTreeForFolder(this.GetCloudStorageFileObjectById(folder.Id));
+            }
+
+
+            //////////////////////////////////////////////////////////////////////////
+            // TODO : Check Logical Error
+            //////////////////////////////////////////////////////////////////////////
+            if (fileObjects == null) System.Diagnostics.Debugger.Break();
+
+
+            // If didn't change cloud mode while loading, set it to list.
+            // Set file list visible and current path.
+            base.Dispatcher.BeginInvoke(() =>
+            {
+                this.PinFileObjectViewModel.IsDataLoaded = true;
+                uiPinFileList.Visibility = Visibility.Visible;
+                uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
+                this.PinFileObjectViewModel.SetItems(fileObjects, true);
+            });
+
+            // If there exists file, show it.
+            // Otherwise, show no file message.
+            if (fileObjects.Count > 0)
+            {
+                base.Dispatcher.BeginInvoke(() =>
+                {
+                    uiPinFileMessage.Visibility = Visibility.Collapsed;
+                });
+            }
+            else
+            {
+                base.Dispatcher.BeginInvoke(() =>
+                {
+                    uiPinFileMessage.Text = AppResources.NoFileInFolderMessage;
+                });
             }
 
             // Set Mutex false and Hide Process Indicator
-            base.SetProgressRing(uiFileListProgressRing, false);
+            base.SetProgressIndicator(false);
         }
 
-        private void SetCurrentPath(IStorageManager iStorageManager)
-        {
-            FileObjectViewItem[] array = iStorageManager.GetFolderRootTree().Reverse<FileObjectViewItem>().ToArray<FileObjectViewItem>();
-            uiPinFileCurrentPathText.Text = String.Empty;
-            foreach (FileObjectViewItem f in array)
-                uiPinFileCurrentPathText.Text = uiPinFileCurrentPathText.Text + f.Name + "/";
-        }
+        //private void SetCurrentPath(IStorageManager iStorageManager)
+        //{
+        //    FileObjectViewItem[] array = iStorageManager.GetFolderRootTree().Reverse<FileObjectViewItem>().ToArray<FileObjectViewItem>();
+        //    uiPinFileCurrentPathText.Text = String.Empty;
+        //    foreach (FileObjectViewItem f in array)
+        //        uiPinFileCurrentPathText.Text = uiPinFileCurrentPathText.Text + f.Name + "/";
+        //}
 
-        private void uiPinFileSignInButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void uiPinFileSignInButton_Click(object sender, RoutedEventArgs e)
         {
-        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+            // If Internet available, Set pin list with root folder file list.
+            // Otherwise, show internet bad message
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                // Show Loading message and save is login true for pivot moving action while sign in.
+                base.SetListUnableAndShowMessage(uiPinFileList, uiPinFileMessage, AppResources.DoingSignIn);
+                base.Dispatcher.BeginInvoke(() =>
+                {
+                    uiPinFileListGrid.Visibility = Visibility.Visible;
+                    uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
+                });
+
+                // Sign in and await that task.
+                IStorageManager iStorageManager = Switcher.GetCurrentStorage();
+                if (!iStorageManager.IsSigningIn())
+                    TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());
+                bool result = await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
+
+                // If sign in success, set list.
+                // Otherwise, show bad sign in message box.
+                base.SetProgressIndicator(true);
+                if (result)
+                {
+                    this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
+                }
+                else
+                {
+                    base.Dispatcher.BeginInvoke(() =>
+                    {
+                        MessageBox.Show(AppResources.BadSignInMessage, AppResources.BadSignInCaption, MessageBoxButton.OK);
+                        uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                        uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                    });
+                }
+
+                base.SetProgressIndicator(false);
+            }
+            else
+            {
+                MessageBox.Show(AppResources.InternetUnavailableMessage, AppResources.InternetUnavailableCaption, MessageBoxButton.OK);
+            }
         }
 
         #endregion

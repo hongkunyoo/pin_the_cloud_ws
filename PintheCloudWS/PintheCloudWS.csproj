@@ -162,6 +162,9 @@
     <Compile Include="Pages\SpotListPage.xaml.cs">
       <DependentUpon>SpotListPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Popups\DropBoxSignInPopup.xaml.cs">
+      <DependentUpon>DropBoxSignInPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Popups\NewSpotPopup.xaml.cs">
       <DependentUpon>NewSpotPopup.xaml</DependentUpon>
     </Compile>
@@ -169,11 +172,14 @@
       <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
     <Compile Include="Utilities\DropboxWebBrowserResult.cs" />
     <Compile Include="Utilities\DropboxWebBrowserTask.cs" />
     <Compile Include="Utilities\FileObjectDataContext.cs" />
     <Compile Include="Utilities\ShareException.cs" />
     <Compile Include="Utilities\StorageExplorer.cs" />
+    <Compile Include="Utilities\WSApplicationSessions.cs" />
     <Compile Include="Utilities\WSApplicationSettings.cs" />
     <Compile Include="ViewModels\CloudModeViewItem.cs" />
     <Compile Include="ViewModels\CloudModeViewModel.cs" />
@@ -312,6 +318,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\SpotListPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\DropBoxSignInPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -41,7 +41,7 @@ namespace PintheCloudWS.Converters
 
 
 
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, string culture)
         {
             string initial = ((string)value).ToLower();
             if (initial.Equals("a"))
@@ -101,7 +101,7 @@ namespace PintheCloudWS.Converters
         }
 
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, string culture)
         {
             throw new NotSupportedException();
         }

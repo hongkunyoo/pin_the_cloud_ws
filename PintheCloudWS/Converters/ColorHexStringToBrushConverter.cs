@@ -15,7 +15,7 @@ namespace PintheCloudWS.Converters
     {
         // Implement Convert
         public Dictionary<string, Brush> _brushCache = new Dictionary<string, Brush>();
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, string str)
         {
             var colorStr = ((string)value).ToLower();
 
@@ -29,7 +29,7 @@ namespace PintheCloudWS.Converters
         }
 
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter,string str)
         {
             throw new NotSupportedException();
         }

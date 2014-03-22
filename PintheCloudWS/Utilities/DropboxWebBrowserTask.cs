@@ -1,4 +1,4 @@
-﻿using Microsoft.Phone.Tasks;
+﻿using PintheCloudWS.Helpers;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Pages;
 using PintheCloudWS.Popups;
@@ -15,10 +15,11 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace PintheCloudWS.Utilities
 {
-    public class DropboxWebBrowserTask : ChooserBase<DropboxWebBrowserResult>
+    public class DropboxWebBrowserTask
     {
         public string Uri { get; set; }
         private UserControl _this;
+        private TaskCompletionSource<DropboxWebBrowserResult> tcs;
 
 
         public DropboxWebBrowserTask()
@@ -39,17 +40,16 @@ namespace PintheCloudWS.Utilities
         }
 
 
-        public override void Show()
+        public void Show()
         {
-            base.Show();
-
             Popup popup = new Popup();
             popup.Child = new DropBoxSignInPopup(popup, this.Uri);
             popup.Visibility = Visibility.Visible;
             popup.IsOpen = true;
             popup.Closed += (sender, args) =>
             {
-                this.FireCompleted(this, new DropboxWebBrowserResult(), null);
+                //this.FireCompleted(this, new DropboxWebBrowserResult(), null);
+                tcs.SetResult(new DropboxWebBrowserResult());
             };
 
             EventHelper.AddEventHandler(EventHelper.POPUP_CLOSE, () =>
@@ -61,14 +61,14 @@ namespace PintheCloudWS.Utilities
 
         public Task<DropboxWebBrowserResult> ShowAsync()
         {
-            TaskCompletionSource<DropboxWebBrowserResult> tcs = new TaskCompletionSource<DropboxWebBrowserResult>();
-            this.Completed += (sender, e) =>
-            {
-                if (e.Error != null)
-                    tcs.SetException(e.Error);
-                else
-                    tcs.SetResult(e);
-            };
+            tcs = new TaskCompletionSource<DropboxWebBrowserResult>();
+            //this.Completed += (sender, e) =>
+            //{
+            //    if (e.Error != null)
+            //        tcs.SetException(e.Error);
+            //    else
+            //        tcs.SetResult(e);
+            //};
             this.Show();
             return tcs.Task;
         }

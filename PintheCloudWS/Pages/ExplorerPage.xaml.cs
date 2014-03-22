@@ -35,8 +35,8 @@ namespace PintheCloudWS.Pages
 
         private List<Explorer> ExplorerList = new List<Explorer>
         {
-            new Explorer() { Title = App.ResourceLoader.GetString(ResourcesKeys.Pick), ClassType = typeof(PickPage) },
-            new Explorer() { Title = App.ResourceLoader.GetString(ResourcesKeys.Pin), ClassType = typeof(PinPage) },
+            new Explorer() { Title = AppResources.Pick, ClassType = typeof(PickPage) },
+            new Explorer() { Title = AppResources.Pin, ClassType = typeof(PinPage) },
         };
 
 
@@ -115,7 +115,7 @@ namespace PintheCloudWS.Pages
             if (uiExplorerList.SelectedItem != null)
             {
                 ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
-                App.ApplicationSession[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
+                App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
 
                 Explorer explorer = selectedListBoxItem.Content as Explorer;
                 this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
@@ -190,9 +190,9 @@ namespace PintheCloudWS.Pages
             // Starting scenario is the first or based upon a previous selection.
             int startingScenarioIndex = -1;
 
-            if (App.ApplicationSession.ContainsKey(SELECTED_EXPLORER_INDEX_KEY))
+            if (App.ApplicationSessions.Contains(SELECTED_EXPLORER_INDEX_KEY))
             {
-                int selectedScenarioIndex = Convert.ToInt32(App.ApplicationSession[SELECTED_EXPLORER_INDEX_KEY]);
+                int selectedScenarioIndex = Convert.ToInt32(App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY]);
                 startingScenarioIndex = selectedScenarioIndex;
             }
             uiExplorerList.SelectedIndex = startingScenarioIndex != -1 ? startingScenarioIndex : 0;
