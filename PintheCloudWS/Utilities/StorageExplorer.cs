@@ -4,6 +4,7 @@ using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,55 +19,7 @@ namespace PintheCloudWS.Utilities
         private static string SYNC_KEYS = "SYNC_KEYS";
         private static string ROOT_ID = "ROOT_ID";
 
-        /*
-        public async static bool SynchronizeAll()
-        {
-            if (App.ApplicationSettings.Contains("0"))
-            {
-                ////////////////////////////////////////////
-                // TODO : Retrieve Data from DATABASE;
-                ////////////////////////////////////////////
-                return true;
-            }
-            else
-            {
-                try
-                {
-                    using (var itr = StorageHelper.GetStorageEnumerator())
-                    {
-                        while (itr.MoveNext())
-                        {
-                            if (itr.Current.IsSignIn())
-                            {
-                                if (await TaskHelper.WaitSignInTask(itr.Current.GetStorageName()))
-                                {
-                                    FileObject rootFolder = await itr.Current.Synchronize();
-                                    DictionaryRoot.Add(itr.Current.GetStorageName(), rootFolder);
-
-                                    Stack<FileObject> stack = new Stack<FileObject>();
-                                    stack.Push(rootFolder);
-                                    DictionaryTree.Add(itr.Current.GetStorageName(),stack);
-                                }
-                            }
-                        }
-                    }
-
-                    ////////////////////////////////////////////
-                    // TODO : SAVE Data to DATABASE;
-                    ////////////////////////////////////////////
-
-                    //App.ApplicationSettings[SQL_DATABASE_SET] = true;
-                    System.Diagnostics.Debug.WriteLine("Sychronizing Finished!!");
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            
-        }
-        */
+     
         public async static Task<bool> Synchronize(string key)
         {
             IStorageManager Storage = StorageHelper.GetStorageManager(key);
@@ -78,14 +31,15 @@ namespace PintheCloudWS.Utilities
                 System.Diagnostics.Debug.WriteLine("Fetching From SQL");
                 try
                 {
-                    using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
+                    var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
+                    using (var db = new SQLite.SQLiteConnection(dbpath))
                     {
-                        if (!db.DatabaseExists())
-                        {
-                            App.ApplicationSettings.Remove(SYNC_KEYS + key);
-                            return await Synchronize(key);
-                        }
-                        var rootDB = from FileObjectSQL fos in db.FileItems where fos.ParentId.Equals(ROOT_ID) select fos;
+                        // Create the tables if they don't exist
+                        db.DropTable<FileObjectSQL>();
+                        db.CreateTable<FileObjectSQL>();
+                        db.Commit();
+
+                        var rootDB = from fos in db.Table<FileObjectSQL>() where fos.ParentId.Equals(ROOT_ID) select fos;
 
                         List<FileObjectSQL> getsqlList = rootDB.ToList<FileObjectSQL>();
 
@@ -108,7 +62,44 @@ namespace PintheCloudWS.Utilities
                             DictionaryTree.Remove(key);
                         }
                         DictionaryTree.Add(key, stack);
+
+                        //db.Dispose();
+                        //db.Close();
                     }
+
+
+
+                    //using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
+                    //{
+                    //    if (!db.DatabaseExists())
+                    //    {
+                    //        App.ApplicationSettings.Remove(SYNC_KEYS + key);
+                    //        return await Synchronize(key);
+                    //    }
+                    //    var rootDB = from FileObjectSQL fos in db.FileItems where fos.ParentId.Equals(ROOT_ID) select fos;
+
+                    //    List<FileObjectSQL> getsqlList = rootDB.ToList<FileObjectSQL>();
+
+                    //    if (getsqlList.Count != 1) System.Diagnostics.Debugger.Break();
+
+                    //    FileObjectSQL rootFos = getsqlList.First<FileObjectSQL>();
+
+                    //    FileObject rootFolder = FileObject.ConvertToFileObject(db, rootFos);
+
+                    //    if (DictionaryRoot.ContainsKey(key))
+                    //    {
+                    //        DictionaryRoot.Remove(key);
+                    //    }
+                    //    DictionaryRoot.Add(key, rootFolder);
+
+                    //    Stack<FileObject> stack = new Stack<FileObject>();
+                    //    stack.Push(rootFolder);
+                    //    if (DictionaryTree.ContainsKey(key))
+                    //    {
+                    //        DictionaryTree.Remove(key);
+                    //    }
+                    //    DictionaryTree.Add(key, stack);
+                    //}
                     return true;
                 }
                 catch (Exception e)
@@ -144,13 +135,14 @@ namespace PintheCloudWS.Utilities
                     ////////////////////////////////////////////
                     try
                     {
-                        using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
+
+                        var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
+                        using (var db = new SQLite.SQLiteConnection(dbpath))
                         {
-                            if (db.DatabaseExists())
-                            {
-                                db.DeleteDatabase();
-                            }
-                            db.CreateDatabase();
+                            // Create the tables if they don't exist
+                            db.DropTable<FileObjectSQL>();
+                            db.CreateTable<FileObjectSQL>();
+                            db.Commit();
 
 
                             List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
@@ -159,11 +151,31 @@ namespace PintheCloudWS.Utilities
 
                             for (var i = 0; i < sqlList.Count; i++)
                             {
-                                db.FileItems.InsertOnSubmit(sqlList[i]);
+                                db.Insert(sqlList[i]);
                             }
+                            db.Commit();
 
-                            db.SubmitChanges();
                         }
+                        //using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
+                        //{
+                        //    if (db.DatabaseExists())
+                        //    {
+                        //        db.DeleteDatabase();
+                        //    }
+                        //    db.CreateDatabase();
+
+
+                        //    List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
+
+                        //    FileObject.ConvertToFileObjectSQL(sqlList, rootFolder, ROOT_ID);
+
+                        //    for (var i = 0; i < sqlList.Count; i++)
+                        //    {
+                        //        db.FileItems.InsertOnSubmit(sqlList[i]);
+                        //    }
+
+                        //    db.SubmitChanges();
+                        //}
                     }
                     catch (Exception e)
                     {

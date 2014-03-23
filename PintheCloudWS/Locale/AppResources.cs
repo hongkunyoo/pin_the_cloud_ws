@@ -210,6 +210,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("InternetUnavailableCaption");
             }
         }
+        public static string DoingSignIn
+        {
+            get
+            {
+                return ResourceLoader.GetString("DoingSignIn");
+            }
+        }
 
     }
 }

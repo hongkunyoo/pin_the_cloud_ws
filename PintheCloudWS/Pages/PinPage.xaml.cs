@@ -94,7 +94,7 @@ namespace PintheCloudWS.Pages
 
             IStorageManager iStorageManager = Switcher.GetCurrentStorage();
             this.FileObjectViewModel.IsDataLoaded = false;
-            this.SetPinFileList(iStorageManager, AppResources.Loading, false);
+            this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
         }
 
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

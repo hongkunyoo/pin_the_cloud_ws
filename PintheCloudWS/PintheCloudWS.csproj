@@ -126,7 +126,6 @@
     <Compile Include="Helpers\Switcher.cs" />
     <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Locale\AppResources.cs" />
-    <Compile Include="Locale\ResourcesKeys.cs" />
     <Compile Include="Managers\AccountManager.cs" />
     <Compile Include="Managers\BlobStorageManager.cs" />
     <Compile Include="Managers\DropboxManager.cs" />
