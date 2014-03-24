@@ -82,7 +82,15 @@ namespace PintheCloudWS.Helpers
         public static FileObject ConvertToFileObject(MetaData meta)
         {
             string Name = meta.Name;
-            string UpdateAt = meta.ModifiedDate.ToString(); //14/02/2014 15:48:13
+            string UpdateAt = null;
+            try
+            {
+                UpdateAt = meta.ModifiedDate.ToString(); //14/02/2014 15:48:13
+            }
+            catch
+            {
+                UpdateAt = DateTime.Now.ToString();
+            }
             string Id = meta.Path; // Full path
             string ParentId = meta.Path;
             double Size = meta.Bytes * 1.0;

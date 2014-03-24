@@ -88,14 +88,14 @@ namespace PintheCloudWS.Managers
             // Add application settings before work for good UX
             try
             {
-                Uri clientSecretsUri = new Uri("urn:ietf:wg:oauth:2.0:oobhttp://localhost");
+                //Uri clientSecretsUri = new Uri("/Utilities/google_secret.json",UriKind.Relative);
                 //new ClientSecrets
                 //    {
                 //        ClientId = GOOGLE_DRIVE_CLIENT_ID,
                 //        ClientSecret = GOOGLE_DRIVE_CLIENT_SECRET
                 //    }
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    clientSecretsUri,
+                    new Uri("ms-appx:///Assets/client_secret.json"),
                     new[] { DriveService.Scope.Drive },
                     this._GetUserSession(),
                     CancellationToken.None
@@ -131,16 +131,19 @@ namespace PintheCloudWS.Managers
             catch (Google.GoogleApiException e)
             {
                 Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debugger.Break();
                 tcs.SetResult(false);
             }
             catch (System.Threading.Tasks.TaskCanceledException)
             {
                 tcs.SetResult(false);
+                System.Diagnostics.Debugger.Break();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 tcs.SetResult(false);
+                System.Diagnostics.Debugger.Break();
             }
             
             return tcs.Task.Result;

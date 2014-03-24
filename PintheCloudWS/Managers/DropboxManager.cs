@@ -25,7 +25,7 @@ namespace PintheCloudWS.Managers
         #region Variables
         private const string DROPBOX_CLIENT_KEY = "gxjfureco8noyle";
         private const string DROPBOX_CLIENT_SECRET = "iskekcebjky6vbm";
-        public const string DROPBOX_AUTH_URI = "http://www.pinthecloud.com";
+        public const string DROPBOX_AUTH_URI = "http://www.pinthecloud.com/index.html";
 
         private const string DROPBOX_USER_KEY = "DROPBOX_USER_KEY";
         private const string DROPBOX_SIGN_IN_KEY = "DROPBOX_SIGN_IN_KEY";
@@ -68,7 +68,11 @@ namespace PintheCloudWS.Managers
             // Otherwise, get from user.
             UserLogin dropboxUser = null;
             if (App.ApplicationSettings.Contains(DROPBOX_USER_KEY))
-                dropboxUser = (UserLogin)App.ApplicationSettings[DROPBOX_USER_KEY];
+            {
+                //dropboxUser = (UserLogin)App.ApplicationSettings[DROPBOX_USER_KEY];
+                dropboxUser = RestoreDropBoxUserKey();
+            }
+                
             if (dropboxUser != null)
             {
                 this._client.SetUserToken(dropboxUser);
@@ -93,7 +97,8 @@ namespace PintheCloudWS.Managers
                 }
 
                 App.ApplicationSettings[DROPBOX_SIGN_IN_KEY] = true;
-                App.ApplicationSettings[DROPBOX_USER_KEY] = accesToken;
+                SaveToDropBoxUserKey(accesToken);
+                //App.ApplicationSettings[DROPBOX_USER_KEY] = accesToken;
                 App.ApplicationSettings.Save();
 
                // this._client.GetTokenAsync(async (userLogin) =>
@@ -145,7 +150,21 @@ namespace PintheCloudWS.Managers
             return true;
         }
 
+        private string key1 = "key1_fordropbox";
+        private string key2 = "key2_fordropbox";
+        private void SaveToDropBoxUserKey(UserLogin userlogin)
+        {
+            App.ApplicationSettings[key1] = userlogin.Token;
+            App.ApplicationSettings[key2] = userlogin.Secret;
+        }
 
+        private UserLogin RestoreDropBoxUserKey()
+        {
+            UserLogin user =  new UserLogin();
+            user.Token = (string)App.ApplicationSettings[key1];
+            user.Secret = (string)App.ApplicationSettings[key2];
+            return user;
+        }
         public bool IsSigningIn()
         {
             if (this.tcs != null)
