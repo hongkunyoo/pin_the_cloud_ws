@@ -126,7 +126,6 @@ namespace PintheCloudWS.Pages
             });
         }
 
-
         protected async void ShowMessageDialog(string message)
         {
             // Create the message dialog and set its content

@@ -219,9 +219,11 @@
     <Content Include="Assets\pajeon\pick\screenshot\pick_view.png" />
     <Content Include="Assets\pajeon\pin\png\back.png" />
     <Content Include="Assets\pajeon\pin\png\dropdown.png" />
+    <Content Include="Assets\pajeon\pin\png\general_bar_upload.png" />
     <Content Include="Assets\pajeon\pin\png\ico_dropbox.png" />
     <Content Include="Assets\pajeon\pin\png\ico_googledrive.png" />
     <Content Include="Assets\pajeon\pin\png\ico_onedrive.png" />
+    <Content Include="Assets\pajeon\pin\png\loading01.png" />
     <Content Include="Assets\pajeon\pin\png\sign_in.png" />
     <Content Include="Assets\pajeon\pin\screenshot\pin.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_logo.png" />

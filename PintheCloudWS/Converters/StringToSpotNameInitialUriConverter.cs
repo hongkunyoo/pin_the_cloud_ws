@@ -11,33 +11,34 @@ namespace PintheCloudWS.Converters
     public class StringToSpotNameInitialUriConverter : IValueConverter
     {
         // Instances
-        private const string A_URI = "/Assets/pajeon/at_here/png/pin_label_001.png";
-        private const string B_URI = "/Assets/pajeon/at_here/png/pin_label_002.png";
-        private const string C_URI = "/Assets/pajeon/at_here/png/pin_label_003.png";
-        private const string D_URI = "/Assets/pajeon/at_here/png/pin_label_004.png";
-        private const string E_URI = "/Assets/pajeon/at_here/png/pin_label_005.png";
-        private const string F_URI = "/Assets/pajeon/at_here/png/pin_label_006.png";
-        private const string G_URI = "/Assets/pajeon/at_here/png/pin_label_007.png";
-        private const string H_URI = "/Assets/pajeon/at_here/png/pin_label_008.png";
-        private const string I_URI = "/Assets/pajeon/at_here/png/pin_label_009.png";
-        private const string J_URI = "/Assets/pajeon/at_here/png/pin_label_010.png";
-        private const string K_URI = "/Assets/pajeon/at_here/png/pin_label_011.png";
-        private const string L_URI = "/Assets/pajeon/at_here/png/pin_label_012.png";
-        private const string M_URI = "/Assets/pajeon/at_here/png/pin_label_013.png";
-        private const string N_URI = "/Assets/pajeon/at_here/png/pin_label_014.png";
-        private const string O_URI = "/Assets/pajeon/at_here/png/pin_label_015.png";
-        private const string P_URI = "/Assets/pajeon/at_here/png/pin_label_016.png";
-        private const string Q_URI = "/Assets/pajeon/at_here/png/pin_label_017.png";
-        private const string R_URI = "/Assets/pajeon/at_here/png/pin_label_018.png";
-        private const string S_URI = "/Assets/pajeon/at_here/png/pin_label_019.png";
-        private const string T_URI = "/Assets/pajeon/at_here/png/pin_label_020.png";
-        private const string U_URI = "/Assets/pajeon/at_here/png/pin_label_021.png";
-        private const string V_URI = "/Assets/pajeon/at_here/png/pin_label_022.png";
-        private const string W_URI = "/Assets/pajeon/at_here/png/pin_label_023.png";
-        private const string X_URI = "/Assets/pajeon/at_here/png/pin_label_024.png";
-        private const string Y_URI = "/Assets/pajeon/at_here/png/pin_label_025.png";
-        private const string Z_URI = "/Assets/pajeon/at_here/png/pin_label_026.png";
-        private const string SPECIAL_URI = "/Assets/pajeon/at_here/png/pin_label_027.png";
+
+        private const string A_URI = "/Assets/pajeon/spot_list/png/spot_label_a.png";
+        private const string B_URI = "/Assets/pajeon/spot_list/png/spot_label_b.png";
+        private const string C_URI = "/Assets/pajeon/spot_list/png/spot_label_c.png";
+        private const string D_URI = "/Assets/pajeon/spot_list/png/spot_label_d.png";
+        private const string E_URI = "/Assets/pajeon/spot_list/png/spot_label_e.png";
+        private const string F_URI = "/Assets/pajeon/spot_list/png/spot_label_f.png";
+        private const string G_URI = "/Assets/pajeon/spot_list/png/spot_label_g.png";
+        private const string H_URI = "/Assets/pajeon/spot_list/png/spot_label_h.png";
+        private const string I_URI = "/Assets/pajeon/spot_list/png/spot_label_i.png";
+        private const string J_URI = "/Assets/pajeon/spot_list/png/spot_label_j.png";
+        private const string K_URI = "/Assets/pajeon/spot_list/png/spot_label_k.png";
+        private const string L_URI = "/Assets/pajeon/spot_list/png/spot_label_l.png";
+        private const string M_URI = "/Assets/pajeon/spot_list/png/spot_label_m.png";
+        private const string N_URI = "/Assets/pajeon/spot_list/png/spot_label_n.png";
+        private const string O_URI = "/Assets/pajeon/spot_list/png/spot_label_o.png";
+        private const string P_URI = "/Assets/pajeon/spot_list/png/spot_label_p.png";
+        private const string Q_URI = "/Assets/pajeon/spot_list/png/spot_label_q.png";
+        private const string R_URI = "/Assets/pajeon/spot_list/png/spot_label_r.png";
+        private const string S_URI = "/Assets/pajeon/spot_list/png/spot_label_s.png";
+        private const string T_URI = "/Assets/pajeon/spot_list/png/spot_label_t.png";
+        private const string U_URI = "/Assets/pajeon/spot_list/png/spot_label_u.png";
+        private const string V_URI = "/Assets/pajeon/spot_list/png/spot_label_v.png";
+        private const string W_URI = "/Assets/pajeon/spot_list/png/spot_label_w.png";
+        private const string X_URI = "/Assets/pajeon/spot_list/png/spot_label_x.png";
+        private const string Y_URI = "/Assets/pajeon/spot_list/png/spot_label_y.png";
+        private const string Z_URI = "/Assets/pajeon/spot_list/png/spot_label_z.png";
+        private const string SPECIAL_URI = "/Assets/pajeon/spot_list/png/spot_label_special.png";
 
 
 

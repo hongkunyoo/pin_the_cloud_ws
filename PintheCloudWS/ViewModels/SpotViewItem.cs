@@ -65,6 +65,8 @@ namespace PintheCloudWS.ViewModels
                 handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+
+
         public SpotViewItem(SpotObject spot)
         {
             this.SpotName = spot.SpotName;
@@ -78,6 +80,8 @@ namespace PintheCloudWS.ViewModels
             this.SpotPassword = spot.Password;
             this.CreateAt = spot.CreateAt;
         }
+
+
         public SpotViewItem()
         {
 

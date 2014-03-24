@@ -44,7 +44,6 @@ namespace PintheCloudWS.ViewModels
                 // Set new spot view item
                 SpotViewItem spotViewItem = new SpotViewItem(spot);
 
-
                 if (spot.IsPrivate)
                     spotViewItem.IsPrivateImage = FileObjectViewModel.IS_PRIVATE_IMAGE_URI;
                 else
