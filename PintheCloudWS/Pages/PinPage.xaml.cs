@@ -76,6 +76,8 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
             SpotViewItem spotViewItem = e.Parameter as SpotViewItem;
             this.CurrentSpot = App.SpotManager.GetSpotObject(spotViewItem.SpotId);
+
+            // TODO Wait signin and change cloud mode combobox name
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

@@ -15,6 +15,25 @@
         <x:String x:Key="AppName">My Application</x:String>
     </local:PtcPage.Resources>
 
+		<local:PtcPage.BottomAppBar>
+		<AppBar Foreground="#FF878E8E" Background="#FF404041" BorderBrush="{x:Null}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Orientation="Horizontal"/>
+				<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal">
+					<AppBarButton x:Name="uiPinFileAppBarButton" Label="pin" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CustomAppBarButtonStyle}">
+						<AppBarButton.Icon>
+							<BitmapIcon UriSource="ms-appx:///Assets/pajeon/pick/png/general_bar_new.png"/>
+						</AppBarButton.Icon>
+					</AppBarButton>
+				</StackPanel>
+			</Grid>
+		</AppBar>
+	</local:PtcPage.BottomAppBar>
+
     <!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
@@ -25,81 +44,94 @@
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
-    <Grid x:Name="uiContentGrid">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="610*"/>
-			<ColumnDefinition Width="476*"/>
-		</Grid.ColumnDefinitions>
-		<Grid x:Name="uiFileGrid" Background="White">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="145"/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<Grid>
-				<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-				<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
-					<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
-				</Button>
-			</Grid>
-			<ProgressRing x:Name="uiFileListProgressRing" HorizontalAlignment="Center" Grid.Row="1" Width="150" Height="150"/>
-			<Grid Grid.Row="1">
-				<TextBlock x:Name="uiPickFileListMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" FontFamily="Segoe WP" Foreground="Black" Margin="73,38,0,0"/>
-				<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiFileListView_ItemClick">
-					<ListView.Resources>
-						<DataTemplate x:Key="uiFileListViewItemTemplate">
-							<Grid>
-								<Grid Margin="50,0,80,0">
-									<Grid.RowDefinitions>
-										<RowDefinition/>
-										<RowDefinition Height="1"/>
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition/>
-										<ColumnDefinition Width="104"/>
-									</Grid.ColumnDefinitions>
-									<StackPanel Orientation="Horizontal">
-										<Image Source="{Binding ThumnailType, Converter={StaticResource StringToThumnailUriConverter}}" Stretch="None" Margin="9,7,14,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-										<StackPanel Margin="0,22,0,0">
-											<TextBlock x:Name="uiFileName" Text="{Binding Name}" Margin="0,0,0,14" Foreground="#FF404041" FontSize="22" FontFamily="Segoe WP" TextTrimming="CharacterEllipsis"/>
-											<StackPanel Orientation="Horizontal">
-												<TextBlock x:Name="uiSize" Text="{Binding Size}" TextWrapping="Wrap" FontSize="18" Foreground="#FF919FA6" />
-												<TextBlock x:Name="uiSizeUnit" TextWrapping="Wrap" Text="{Binding SizeUnit}" FontSize="18" Foreground="#FF919FA6"/>
-											</StackPanel>
-										</StackPanel>
-									</StackPanel>
-									<Grid Grid.Column="1">
-										<Button x:Name="uiFileDownloadButton" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}" Click="uiFileDownloadButton_Click">
-											<Image Source="/Assets/pajeon/pick/png/download.png" Stretch="None"/>
-										</Button>
-									</Grid>
-									<Grid Grid.ColumnSpan="2" Grid.Row="1" Background="#FFA6B6BE"/>
-								</Grid>
-							</Grid>
-						</DataTemplate>
-					</ListView.Resources>
-					<ListView.ItemTemplate>
-						<StaticResource ResourceKey="uiFileListViewItemTemplate"/>
-					</ListView.ItemTemplate>
-					<ListView.ItemContainerStyle>
-						<StaticResource ResourceKey="PickFileListViewItemContainerStyle"/>
-					</ListView.ItemContainerStyle>
-				</ListView>
-			</Grid>
-		</Grid>
-		<Grid x:Name="uiHistoryGrid" Grid.Column="1" Background="#FFF2F4F6">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="142"/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<Grid>
-				<TextBlock x:Uid="History" TextWrapping="Wrap" Margin="47,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-			</Grid>
-			<Grid Grid.Row="1"/>
-		</Grid>
+    <Grid x:Name="uiLayoutRoot">
 		<!--
         This grid acts as a root panel for the page that defines two rows:
         * Row 0 contains the back button and page title
         * Row 1 contains the rest of the page layout
     -->
+		<ProgressBar x:Name="uiProgressIndicator" VerticalAlignment="Top" IsIndeterminate="True"/>
+	<!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+		<Grid x:Name="uiContentGrid">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="610*"/>
+				<ColumnDefinition Width="476*"/>
+			</Grid.ColumnDefinitions>
+			<Grid x:Name="uiFileGrid" Background="White">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="145"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid>
+					<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
+					<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
+						<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
+					</Button>
+				</Grid>
+				<ProgressRing x:Name="uiFileListProgressRing" HorizontalAlignment="Center" Grid.Row="1" Width="150" Height="150"/>
+				<Grid Grid.Row="1">
+					<TextBlock x:Name="uiPickFileListMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" FontFamily="Segoe WP" Foreground="Black" Margin="73,38,0,0"/>
+					<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiFileListView_ItemClick">
+						<ListView.Resources>
+							<DataTemplate x:Key="uiFileListViewItemTemplate">
+								<Grid>
+									<Grid Margin="50,0,80,0">
+										<Grid.RowDefinitions>
+											<RowDefinition/>
+											<RowDefinition Height="1"/>
+										</Grid.RowDefinitions>
+										<Grid.ColumnDefinitions>
+											<ColumnDefinition/>
+											<ColumnDefinition Width="104"/>
+										</Grid.ColumnDefinitions>
+										<StackPanel Orientation="Horizontal">
+											<Image Source="{Binding ThumnailType, Converter={StaticResource StringToThumnailUriConverter}}" Stretch="None" Margin="9,7,14,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+											<StackPanel Margin="0,22,0,0">
+												<TextBlock x:Name="uiFileName" Text="{Binding Name}" Margin="0,0,0,14" Foreground="#FF404041" FontSize="22" FontFamily="Segoe WP" TextTrimming="CharacterEllipsis"/>
+												<StackPanel Orientation="Horizontal">
+													<TextBlock x:Name="uiSize" Text="{Binding Size}" TextWrapping="Wrap" FontSize="18" Foreground="#FF919FA6" />
+													<TextBlock x:Name="uiSizeUnit" TextWrapping="Wrap" Text="{Binding SizeUnit}" FontSize="18" Foreground="#FF919FA6"/>
+												</StackPanel>
+											</StackPanel>
+										</StackPanel>
+										<Grid Grid.Column="1">
+											<Button x:Name="uiFileDownloadButton" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}" Click="uiFileDownloadButton_Click">
+												<Image Source="/Assets/pajeon/pick/png/download.png" Stretch="None"/>
+											</Button>
+										</Grid>
+										<Grid Grid.ColumnSpan="2" Grid.Row="1" Background="#FFA6B6BE"/>
+									</Grid>
+								</Grid>
+							</DataTemplate>
+						</ListView.Resources>
+						<ListView.ItemTemplate>
+							<StaticResource ResourceKey="uiFileListViewItemTemplate"/>
+						</ListView.ItemTemplate>
+						<ListView.ItemContainerStyle>
+							<StaticResource ResourceKey="PickFileListViewItemContainerStyle"/>
+						</ListView.ItemContainerStyle>
+					</ListView>
+				</Grid>
+			</Grid>
+			<Grid x:Name="uiHistoryGrid" Grid.Column="1" Background="#FFF2F4F6">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="142"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				<Grid>
+					<TextBlock x:Uid="History" TextWrapping="Wrap" Margin="47,66,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
+				</Grid>
+				<Grid Grid.Row="1"/>
+			</Grid>
+			<!--
+        This grid acts as a root panel for the page that defines two rows:
+        * Row 0 contains the back button and page title
+        * Row 1 contains the rest of the page layout
+    -->
+		</Grid>
 	</Grid>
 </local:PtcPage>

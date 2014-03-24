@@ -44,9 +44,7 @@ namespace PintheCloudWS
 
         // App
         public static MobileServiceClient MobileService = null;
-        //public static ApplicationDataContainer ApplicationSettings = null;
         public static WSApplicationSessions ApplicationSessions = null;
-        //public static ResourceLoader ResourceLoader = null;
         public static WSApplicationSettings ApplicationSettings = null;
 
 
@@ -83,10 +81,8 @@ namespace PintheCloudWS
             );
             MobileServiceUser mobileServiceUser = new MobileServiceUser(App.AZURE_MOBILE_SERVICE_ID);
             mobileServiceUser.MobileServiceAuthenticationToken = App.AZURE_MOBILE_SERVICE_TOKEN;
-            //ApplicationSettings = ApplicationData.Current.LocalSettings;
             ApplicationSessions = new WSApplicationSessions();
             ApplicationSettings = new WSApplicationSettings();
-            //ResourceLoader = new ResourceLoader();
 
             // Manager
             SpotManager = new SpotManager();

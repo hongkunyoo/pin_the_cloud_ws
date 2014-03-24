@@ -114,9 +114,8 @@ namespace PintheCloudWS.Pages
         {
             if (uiExplorerList.SelectedItem != null)
             {
-                ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
                 App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
-
+                ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
                 Explorer explorer = selectedListBoxItem.Content as Explorer;
                 this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
             }

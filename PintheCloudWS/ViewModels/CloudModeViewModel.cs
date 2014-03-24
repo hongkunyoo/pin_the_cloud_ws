@@ -22,7 +22,7 @@ namespace PintheCloudWS.ViewModels
             {
                 while (itr.MoveNext())
                     this.Items.Add(new CloudModeViewItem(itr.Current.GetStorageName(),
-                        itr.Current.GetStorageImageUri(), itr.Current.GetStorageColorHexString(), String.Empty));
+                        itr.Current.GetStorageImageUri(), itr.Current.GetStorageColorHexString(), AppResources.Empty));
             }
         }
 

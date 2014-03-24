@@ -36,7 +36,7 @@ namespace PintheCloudWS.Managers
         private const string GOOGLE_DRIVE_USER_KEY = "GOOGLE_DRIVE_USER_KEY";
         private const string GOOGLE_DRIVE_SIGN_IN_KEY = "GOOGLE_DRIVE_SIGN_IN_KEY";
 
-        private const string GOOGLE_DRIVE_IMAGE_URI = "/Assets/pajeon/at_here/png/navi_ico_googledrive.png";
+        private const string GOOGLE_DRIVE_IMAGE_URI = "/Assets/pajeon/pin/png/ico_googledrive.png";
         private const string GOOGLE_DRIVE_COLOR_HEX_STRING = "F1AE1D";
 
         private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();

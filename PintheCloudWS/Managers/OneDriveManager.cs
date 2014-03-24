@@ -31,7 +31,7 @@ namespace PintheCloudWS.Managers
         private const string LIVE_CLIENT_ID = "0000000044110129";
         private const string ONE_DRIVE_SIGN_IN_KEY = "ONE_DRIVE_SIGN_IN_KEY";
 
-        private const string ONE_DRIVE_IMAGE_URI = "/Assets/pajeon/at_here/png/navi_ico_skydrive.png";
+        private const string ONE_DRIVE_IMAGE_URI = "/Assets/pajeon/pin/png/ico_onedrive.png";
         private const string ONE_DRIVE_COLOR_HEX_STRING = "2458A7";
 
         //private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();

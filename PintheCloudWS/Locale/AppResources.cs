@@ -179,6 +179,12 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("DoingSignIn");
             }
         }
-
+        public static string Empty
+        {
+            get
+            {
+                return ResourceLoader.GetString("Empty");
+            }
+        }
     }
 }

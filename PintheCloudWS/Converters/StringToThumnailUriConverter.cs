@@ -11,7 +11,7 @@ namespace PintheCloudWS.Converters
     {
         // Instances
         private const string FOLDER_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_folder.png";
-        private const string DOC_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_folder.png";
+        private const string DOC_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_doc.png";
         private const string ETC_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_etc.png";
         private const string HWP_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_hwp.png";
         private const string IMG_IMAGE_PATH = "/Assets/pajeon/pick/png/icon_file_image.png";

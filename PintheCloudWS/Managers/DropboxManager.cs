@@ -30,7 +30,7 @@ namespace PintheCloudWS.Managers
         private const string DROPBOX_USER_KEY = "DROPBOX_USER_KEY";
         private const string DROPBOX_SIGN_IN_KEY = "DROPBOX_SIGN_IN_KEY";
 
-        private const string DROPBOX_IMAGE_URI = "/Assets/pajeon/at_here/png/navi_ico_dropbox.png";
+        private const string DROPBOX_IMAGE_URI = "/Assets/pajeon/pin/png/ico_dropbox.png";
         private const string DROPBOX_COLOR_HEX_STRING = "26A4DD";
 
         private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();

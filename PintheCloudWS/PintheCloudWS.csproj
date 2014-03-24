@@ -204,6 +204,7 @@
     <Content Include="Assets\pajeon\pick\png\checkbox.png" />
     <Content Include="Assets\pajeon\pick\png\checkbox_p.png" />
     <Content Include="Assets\pajeon\pick\png\download.png" />
+    <Content Include="Assets\pajeon\pick\png\general_bar_new.png" />
     <Content Include="Assets\pajeon\pick\png\icon_file_doc.png" />
     <Content Include="Assets\pajeon\pick\png\icon_file_etc.png" />
     <Content Include="Assets\pajeon\pick\png\icon_file_folder.png" />
