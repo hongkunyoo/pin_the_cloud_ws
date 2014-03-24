@@ -7,6 +7,7 @@ using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -32,9 +33,14 @@ namespace PintheCloudWS.Pages
     public sealed partial class PinPage : PtcPage
     {
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+
         private CloudModeViewModel CloudModeViewModel = new CloudModeViewModel();
-        private FileObjectViewModel FileObjectViewModel = new FileObjectViewModel();
-        public List<FileObjectViewItem> SelectedFile = new List<FileObjectViewItem>();
+
+        private FileObjectViewModel PinFileObjectViewModel = new FileObjectViewModel();
+        private List<FileObjectViewItem> PinSelectedFileList = new List<FileObjectViewItem>();
+
+        private List<FileObject> CurrentFileObjectList = new List<FileObject>();
+
 
 
         /// <summary>
@@ -85,16 +91,14 @@ namespace PintheCloudWS.Pages
             CloudModeViewItem cloudModeViewItem = uiCloudModeComboBox.SelectedItem as CloudModeViewItem;
 
             if (Switcher.GetCurrentStorage().GetStorageName().Equals(cloudModeViewItem.CloudName)) return;
-
             if (Switcher.GetCurrentStorage().IsSigningIn()) return;
-
             Switcher.SetStorageTo(cloudModeViewItem.CloudName);
 
             // If it is not in current cloud mode, change it.
-
+            uiPinFileCurrentPath.Text = "";
             IStorageManager iStorageManager = Switcher.GetCurrentStorage();
-            this.FileObjectViewModel.IsDataLoaded = false;
-            this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
+            this.PinFileObjectViewModel.IsDataLoaded = false;
+            this.SetPinPivot(AppResources.Loading);
         }
 
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -108,21 +112,24 @@ namespace PintheCloudWS.Pages
 
         #region
 
-        private void TreeUp()
+        private async void TreeUp()
         {
+            if (!await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName())) return;
+
             // If message is visible, set collapsed.
-            if (uiPinFileMessage.Visibility == Visibility.Visible)
+            if (uiPinFileMessage.Visibility == Visibility.Visible && !uiPinFileMessage.Text.Equals(AppResources.Refrshing))
                 uiPinFileMessage.Visibility = Visibility.Collapsed;
 
             // Clear trees.
-            this.PinSelectedFileList.Clear();
             this.PinFileAppBarButton.IsEnabled = false;
+            this.PinSelectedFileList.Clear();
 
             // Set previous files to list.
             List<FileObject> fileList = StorageExplorer.TreeUp();
             if (fileList == null) return;
-            fileObjects = fileList;
-            this.PinFileObjectViewModel.SetItems(fileObjects, true);
+
+            this.CurrentFileObjectList = fileList;
+            this.PinFileObjectViewModel.SetItems(this.CurrentFileObjectList, true);
             uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
         }
 
@@ -190,26 +197,26 @@ namespace PintheCloudWS.Pages
             }
 
             // Get files and push to stack tree.
-            Debug.WriteLine("waiting sync : " + STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
-            bool result = await TaskHelper.WaitTask(STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
-            Debug.WriteLine("finished sync : " + STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            Debug.WriteLine("waiting sync : " + TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            bool result = await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            Debug.WriteLine("finished sync : " + TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
             //fileObjects = null;
             if (!result) return;
             if (folder == null)
             {
-                fileObjects = StorageExplorer.GetFilesFromRootFolder();
+                this.CurrentFileObjectList = StorageExplorer.GetFilesFromRootFolder();
             }
             else
             {
                 if (folder == null) System.Diagnostics.Debugger.Break();
-                fileObjects = StorageExplorer.GetTreeForFolder(this.GetCloudStorageFileObjectById(folder.Id));
+                this.CurrentFileObjectList = StorageExplorer.GetTreeForFolder(this.GetCloudStorageFileObjectById(folder.Id));
             }
 
 
             //////////////////////////////////////////////////////////////////////////
             // TODO : Check Logical Error
             //////////////////////////////////////////////////////////////////////////
-            if (fileObjects == null) System.Diagnostics.Debugger.Break();
+            if (this.CurrentFileObjectList == null) System.Diagnostics.Debugger.Break();
 
 
             // If didn't change cloud mode while loading, set it to list.
@@ -224,7 +231,7 @@ namespace PintheCloudWS.Pages
 
             // If there exists file, show it.
             // Otherwise, show no file message.
-            if (fileObjects.Count > 0)
+            if (this.CurrentFileObjectList.Count > 0)
             {
                 base.Dispatcher.BeginInvoke(() =>
                 {

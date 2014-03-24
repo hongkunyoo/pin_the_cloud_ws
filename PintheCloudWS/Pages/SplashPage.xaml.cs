@@ -72,15 +72,24 @@ namespace PintheCloudWS.Pages
                 App.ApplicationSettings[StorageAccount.LOCATION_ACCESS_CONSENT_KEY] = false;
             }
 
+
             if (App.AccountManager.IsSignIn())
             {
                 if (NetworkInterface.GetIsNetworkAvailable())
+                {
                     TaskHelper.AddTask(App.AccountManager.GetPtcId(), App.AccountManager.SignIn());
+                    using (var itr = StorageHelper.GetStorageEnumerator())
+                    {
+                        while (itr.MoveNext())
+                            if (itr.Current.IsSignIn())
+                                TaskHelper.AddSignInTask(itr.Current.GetStorageName(), itr.Current.SignIn());
+                    }
+                }
                 this.Frame.Navigate(typeof(SpotListPage));
             }
             else
             {
-                // Go to profile page
+                this.Frame.Navigate(typeof(SpotListPage));
             }
         }
 
