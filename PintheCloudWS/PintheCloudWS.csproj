@@ -260,6 +260,7 @@
     <Content Include="Assets\pajeon\spot_list\png\spot_label_y.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_z.png" />
     <Content Include="Fonts\LiveSymbol.ttf" />
+    <Content Include="Assets\client_secret.json" />
     <None Include="Package.StoreAssociation.xml" />
     <PRIResource Include="Locale\en-US\Resources.resw" />
     <None Include="Assets\pajeon\flyout\guide\1_ flyout_new_guide.pdf" />

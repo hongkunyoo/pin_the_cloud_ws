@@ -41,6 +41,11 @@ namespace PintheCloudWS.Popups
             uiWebBrowser.Margin = new Thickness(0, PtcPage.STATUS_BAR_HEIGHT, 0, 0);
             //uiWebBrowser.IsScriptEnabled = true;
             uiWebBrowser.Navigate(new Uri(uri, UriKind.RelativeOrAbsolute));
+            uiWebBrowser.ScriptNotify += (sender, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+                System.Diagnostics.Debug.WriteLine(e.Value);
+            };
         }
 
 
@@ -58,6 +63,12 @@ namespace PintheCloudWS.Popups
         private void uiWebBrowser_NavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationCompletedEventArgs args)
         {
         	// TODO: Add event handler implementation here.
+            System.Diagnostics.Debug.WriteLine("Here");
+            if (args.Uri.ToString().StartsWith("http://")
+                && args.Uri.ToString().Contains(DropboxManager.DROPBOX_AUTH_URI))
+            {
+                this.Popup.IsOpen = false;
+            }
         }
     }
 }
