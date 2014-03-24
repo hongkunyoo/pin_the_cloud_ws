@@ -1,4 +1,4 @@
-﻿<local:PtcPage
+﻿<Page
     x:Name="pageRoot"
     x:Class="PintheCloudWS.Pages.PinPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
@@ -10,10 +10,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <local:PtcPage.Resources>
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
-        <x:String x:Key="AppName">My Application</x:String>
-    </local:PtcPage.Resources>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -115,4 +111,4 @@
 
         <!-- Back button and page title -->
     </Grid>
-</local:PtcPage>
+</Page>

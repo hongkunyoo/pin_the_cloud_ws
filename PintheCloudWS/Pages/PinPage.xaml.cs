@@ -121,7 +121,8 @@ namespace PintheCloudWS.Pages
                 uiPinFileMessage.Visibility = Visibility.Collapsed;
 
             // Clear trees.
-            this.PinFileAppBarButton.IsEnabled = false;
+            //this.PinFileAppBarButton.IsEnabled = false;
+            
             this.PinSelectedFileList.Clear();
 
             // Set previous files to list.
@@ -142,7 +143,7 @@ namespace PintheCloudWS.Pages
             if (!iStorageManager.IsSignIn())  // wasn't signed in.
             {
                 this.PinSelectedFileList.Clear();
-                this.PinFileAppBarButton.IsEnabled = false;
+                //this.PinFileAppBarButton.IsEnabled = false;
 
                 uiPinFileListGrid.Visibility = Visibility.Collapsed;
                 uiPinFileSignInPanel.Visibility = Visibility.Visible;
@@ -169,15 +170,20 @@ namespace PintheCloudWS.Pages
         {
             // Set Mutex true and Show Process Indicator            
             base.SetListUnableAndShowMessage(uiPinFileList, uiPinFileMessage, message);
-            base.SetProgressIndicator(true);
+            //base.SetProgressIndicator(true);
+
+            base.SetProgressRing(uiFileListProgressRing, true);
 
             // Clear selected file and set pin button false.
             this.PinSelectedFileList.Clear();
-            base.Dispatcher.BeginInvoke(() =>
+            //base.Dispatcher.BeginInvoke(() =>
+            //{
+            //    this.PinFileAppBarButton.IsEnabled = false;
+            //});
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 this.PinFileAppBarButton.IsEnabled = false;
             });
-
             // Wait task
             //await TaskHelper.WaitTask(STORAGE_EXPLORER_SYNC);
             await TaskHelper.WaitSignOutTask(iStorageManager.GetStorageName());
@@ -186,13 +192,19 @@ namespace PintheCloudWS.Pages
             // Othersie, show sign in grid.
             if (await iStorageManager.GetStorageAccountAsync() == null)  // Wasn't signed out.
             {
-                base.Dispatcher.BeginInvoke(() =>
+                //base.Dispatcher.BeginInvoke(() =>
+                //{
+                //    uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                //    uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                //});
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     uiPinFileListGrid.Visibility = Visibility.Collapsed;
                     uiPinFileSignInPanel.Visibility = Visibility.Visible;
                 });
 
-                base.SetProgressIndicator(false);
+                //base.SetProgressIndicator(false);
+                base.SetProgressRing(uiFileListProgressRing, false);
                 return;
             }
 
@@ -221,7 +233,14 @@ namespace PintheCloudWS.Pages
 
             // If didn't change cloud mode while loading, set it to list.
             // Set file list visible and current path.
-            base.Dispatcher.BeginInvoke(() =>
+            //base.Dispatcher.BeginInvoke(() =>
+            //{
+            //    this.PinFileObjectViewModel.IsDataLoaded = true;
+            //    uiPinFileList.Visibility = Visibility.Visible;
+            //    uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
+            //    this.PinFileObjectViewModel.SetItems(fileObjects, true);
+            //});
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 this.PinFileObjectViewModel.IsDataLoaded = true;
                 uiPinFileList.Visibility = Visibility.Visible;
@@ -233,21 +252,30 @@ namespace PintheCloudWS.Pages
             // Otherwise, show no file message.
             if (this.CurrentFileObjectList.Count > 0)
             {
-                base.Dispatcher.BeginInvoke(() =>
+                //base.Dispatcher.BeginInvoke(() =>
+                //{
+                //    uiPinFileMessage.Visibility = Visibility.Collapsed;
+                //});
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     uiPinFileMessage.Visibility = Visibility.Collapsed;
                 });
             }
             else
             {
-                base.Dispatcher.BeginInvoke(() =>
+                //base.Dispatcher.BeginInvoke(() =>
+                //{
+                //    uiPinFileMessage.Text = AppResources.NoFileInFolderMessage;
+                //});
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     uiPinFileMessage.Text = AppResources.NoFileInFolderMessage;
                 });
             }
 
             // Set Mutex false and Hide Process Indicator
-            base.SetProgressIndicator(false);
+            //base.SetProgressIndicator(false);
+            base.SetProgressRing(uiFileListProgressRing, true);
         }
 
         //private void SetCurrentPath(IStorageManager iStorageManager)
@@ -266,7 +294,12 @@ namespace PintheCloudWS.Pages
             {
                 // Show Loading message and save is login true for pivot moving action while sign in.
                 base.SetListUnableAndShowMessage(uiPinFileList, uiPinFileMessage, AppResources.DoingSignIn);
-                base.Dispatcher.BeginInvoke(() =>
+                //base.Dispatcher.BeginInvoke(() =>
+                //{
+                //    uiPinFileListGrid.Visibility = Visibility.Visible;
+                //    uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
+                //});
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     uiPinFileListGrid.Visibility = Visibility.Visible;
                     uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
@@ -280,26 +313,34 @@ namespace PintheCloudWS.Pages
 
                 // If sign in success, set list.
                 // Otherwise, show bad sign in message box.
-                base.SetProgressIndicator(true);
+                //base.SetProgressIndicator(true);
+                base.SetProgressRing(uiFileListProgressRing, true);
                 if (result)
                 {
                     this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
                 }
                 else
                 {
-                    base.Dispatcher.BeginInvoke(() =>
+                    //base.Dispatcher.BeginInvoke(() =>
+                    //{
+                    //    MessageBox.Show(AppResources.BadSignInMessage, AppResources.BadSignInCaption, MessageBoxButton.OK);
+                    //    uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                    //    uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                    //});
+                    await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        MessageBox.Show(AppResources.BadSignInMessage, AppResources.BadSignInCaption, MessageBoxButton.OK);
                         uiPinFileListGrid.Visibility = Visibility.Collapsed;
                         uiPinFileSignInPanel.Visibility = Visibility.Visible;
                     });
                 }
 
-                base.SetProgressIndicator(false);
+                //base.SetProgressIndicator(false);
+                base.SetProgressRing(uiFileListProgressRing, false);
             }
             else
             {
-                MessageBox.Show(AppResources.InternetUnavailableMessage, AppResources.InternetUnavailableCaption, MessageBoxButton.OK);
+                //MessageBox.Show(AppResources.InternetUnavailableMessage, AppResources.InternetUnavailableCaption, MessageBoxButton.OK);
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
             }
         }
 
