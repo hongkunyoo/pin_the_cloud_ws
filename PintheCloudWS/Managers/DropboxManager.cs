@@ -141,7 +141,7 @@ namespace PintheCloudWS.Managers
                //    tcs.SetResult(false);
                //});
             }
-            TaskHelper.AddTask(TaskHelper.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
+            TaskHelper.AddTask(StorageExplorer.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
             return true;
         }
 

@@ -123,31 +123,43 @@ namespace PintheCloudWS.Managers
         }
         public async Task<PtcAccount> GetPtcAccountAsync()
         {
+            // TODO : Reset after presentation
+
+            //TaskCompletionSource<PtcAccount> tcs = new TaskCompletionSource<PtcAccount>();
+            //if (this.myAccount == null)
+            //{
+            //    if (App.ApplicationSettings.Contains(PTCACCOUNT_ID))
+            //    {
+            //        PtcAccount account = await this.GetPtcAccountAsync((string)App.ApplicationSettings[PTCACCOUNT_ID]);
+            //        if (account == null)
+            //        {
+            //            tcs.SetResult(null);
+            //            return tcs.Task.Result;
+            //        }
+            //        tcs.SetResult(account);
+            //        return tcs.Task.Result;
+            //    }
+            //    else
+            //    {
+            //        tcs.SetResult(null);
+            //        return tcs.Task.Result;
+            //    }
+            //}
+            //else
+            //{
+            //    tcs.SetResult(this.myAccount);
+            //    return tcs.Task.Result;
+            //}
+
             TaskCompletionSource<PtcAccount> tcs = new TaskCompletionSource<PtcAccount>();
-            if (this.myAccount == null)
-            {
-                if (App.ApplicationSettings.Contains(PTCACCOUNT_ID))
-                {
-                    PtcAccount account = await this.GetPtcAccountAsync((string)App.ApplicationSettings[PTCACCOUNT_ID]);
-                    if (account == null)
-                    {
-                        tcs.SetResult(null);
-                        return tcs.Task.Result;
-                    }
-                    tcs.SetResult(account);
-                    return tcs.Task.Result;
-                }
-                else
-                {
-                    tcs.SetResult(null);
-                    return tcs.Task.Result;
-                }
-            }
-            else
-            {
-                tcs.SetResult(this.myAccount);
-                return tcs.Task.Result;
-            }
+            PtcAccount account = new PtcAccount();
+            account.Email = App.AccountManager.GetPtcId();
+            account.AccountType = new StorageAccountType();
+            account.Name = "User Name";
+            account.PhoneNumber = "010-3795-8626";
+            account.UsedSize = 10.0;
+            tcs.SetResult(account);
+            return tcs.Task.Result;
         }
 
         /*

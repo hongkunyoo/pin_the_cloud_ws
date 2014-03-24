@@ -94,6 +94,7 @@ namespace PintheCloudWS.Pages
 
             if (Switcher.GetCurrentStorage().GetStorageName().Equals(cloudModeViewItem.CloudName)) return;
             if (Switcher.GetCurrentStorage().IsSigningIn()) return;
+
             Switcher.SetStorageTo(cloudModeViewItem.CloudName);
 
             // If it is not in current cloud mode, change it.
@@ -116,7 +117,7 @@ namespace PintheCloudWS.Pages
 
         private async void TreeUp()
         {
-            if (!await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName())) return;
+            if (!await TaskHelper.WaitTask(StorageExplorer.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName())) return;
 
             // If message is visible, set collapsed.
             if (uiPinFileMessage.Visibility == Visibility.Visible && !uiPinFileMessage.Text.Equals(AppResources.Refrshing))
@@ -209,9 +210,9 @@ namespace PintheCloudWS.Pages
             }
 
             // Get files and push to stack tree.
-            Debug.WriteLine("waiting sync : " + TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
-            bool result = await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
-            Debug.WriteLine("finished sync : " + TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            Debug.WriteLine("waiting sync : " + StorageExplorer.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            bool result = await TaskHelper.WaitTask(StorageExplorer.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+            Debug.WriteLine("finished sync : " + StorageExplorer.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
             //fileObjects = null;
             if (!result) return;
             if (folder == null)
@@ -260,7 +261,9 @@ namespace PintheCloudWS.Pages
 
             // Set Mutex false and Hide Process Indicator
             //base.SetProgressIndicator(false);
-            base.SetProgressRing(uiFileListProgressRing, true);
+            base.SetProgressRing(uiFileListProgressRing, false);
+
+            FileObject.PrintFileList(CurrentFileObjectList);
         }
 
 
@@ -297,10 +300,11 @@ namespace PintheCloudWS.Pages
 
                 // Sign in and await that task.
                 IStorageManager iStorageManager = Switcher.GetCurrentStorage();
+                
                 if (!iStorageManager.IsSigningIn())
                     TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());
                 bool result = await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
-
+                
                 // If sign in success, set list.
                 // Otherwise, show bad sign in message box.
                 //base.SetProgressIndicator(true);

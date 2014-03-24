@@ -10,6 +10,7 @@ namespace PintheCloudWS.Utilities
     public class WSApplicationSettings
     {
         private ApplicationDataContainer _ApplicationSettings = ApplicationData.Current.LocalSettings;
+        
 
         public ICollection<string> Keys
         {
@@ -38,10 +39,10 @@ namespace PintheCloudWS.Utilities
             }
         }
 
-        public void Add(string key, object value)
-        {
-            _ApplicationSettings.Values.Add(key, value);
-        }
+        //public void Add(string key, object value)
+        //{
+        //    _ApplicationSettings.Values.Add(key, value);
+        //}
         public bool Contains(string key)
         {
             return _ApplicationSettings.Values.ContainsKey(key);

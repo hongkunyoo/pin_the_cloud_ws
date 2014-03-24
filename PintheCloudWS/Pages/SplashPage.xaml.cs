@@ -44,7 +44,6 @@ namespace PintheCloudWS.Pages
             this.InitializeComponent();
         }
 
-
         #region NavigationHelper 등록
 
         /// 이 섹션에서 제공되는 메서드는 NavigationHelper에서
@@ -73,6 +72,8 @@ namespace PintheCloudWS.Pages
             }
 
 
+            SettingsForPresentation();
+
             if (App.AccountManager.IsSignIn())
             {
                 if (NetworkInterface.GetIsNetworkAvailable())
@@ -97,6 +98,14 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             this.NavigationHelper.OnNavigatedFrom(e);
+        }
+
+        /// <summary>
+        /// This Method is for the presentation. It should be Deleted after the presentation
+        /// </summary>
+        private void SettingsForPresentation()
+        {
+            App.AccountManager.SavePtcId("HELLO", "password");
         }
 
         #endregion

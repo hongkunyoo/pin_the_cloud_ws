@@ -75,7 +75,7 @@ namespace PintheCloudWS.Managers
             // Save sign in setting.
             App.ApplicationSettings[ONE_DRIVE_SIGN_IN_KEY] = true;
             App.ApplicationSettings.Save();
-            TaskHelper.AddTask(TaskHelper.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
+            TaskHelper.AddTask(StorageExplorer.STORAGE_EXPLORER_SYNC + this.GetStorageName(), StorageExplorer.Synchronize(this.GetStorageName()));
             tcs.SetResult(true);
             return tcs.Task.Result;
         }
@@ -292,30 +292,34 @@ namespace PintheCloudWS.Managers
 
         private async Task<LiveConnectClient> GetLiveConnectClientAsync()
         {
-            LiveAuthClient liveAuthClient = new LiveAuthClient(LIVE_CLIENT_ID);
+            LiveAuthClient liveAuthClient = new LiveAuthClient();
+            //LiveAuthClient liveAuthClient = new LiveAuthClient("http://www.pinthecloud.com/");
             string[] scopes = new[] { "wl.basic", "wl.signin", "wl.offline_access", "wl.skydrive", "wl.skydrive_update", "wl.contacts_skydrive" };
             LiveLoginResult liveLoginResult = null;
 
-            // Get Current live connection session
             try
             {
                 liveLoginResult = await liveAuthClient.InitializeAsync(scopes);
             }
-            catch (LiveAuthException)
+            catch (Exception ex)
             {
+                Debug.WriteLine(ex.ToString());
+                System.Diagnostics.Debugger.Break();
                 return null;
             }
 
-            // If session doesn't exist, get new one.
-            // Otherwise, get the session.
+            //If session doesn't exist, get new one.
+            //Otherwise, get the session.
             if (liveLoginResult.Status != LiveConnectSessionStatus.Connected)
             {
                 try
                 {
                     liveLoginResult = await liveAuthClient.LoginAsync(scopes);
                 }
-                catch (LiveAuthException)
+                catch (Exception ex)
                 {
+                    Debug.WriteLine(ex.ToString());
+                    System.Diagnostics.Debugger.Break();
                     return null;
                 }
             }

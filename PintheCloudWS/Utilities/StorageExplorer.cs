@@ -16,6 +16,7 @@ namespace PintheCloudWS.Utilities
         private static Dictionary<string, FileObject> DictionaryRoot = new Dictionary<string, FileObject>();
         private static Dictionary<string, Stack<FileObject>> DictionaryTree = new Dictionary<string, Stack<FileObject>>();
         //private static Dictionary<string, string> DictionaryKey = new Dictionary<string, string>();
+        public static string STORAGE_EXPLORER_SYNC = "STORAGE_EXPLORER_SYNC";
         private static string SYNC_KEYS = "SYNC_KEYS";
         private static string ROOT_ID = "ROOT_ID";
 
@@ -26,7 +27,7 @@ namespace PintheCloudWS.Utilities
             bool result = await TaskHelper.WaitSignInTask(Storage.GetStorageName());
             if (result == false) return false;
             // Fetching from SQL
-            if (App.ApplicationSettings.Contains(SYNC_KEYS + key))
+            if (false && App.ApplicationSettings.Contains(SYNC_KEYS + key))
             {
                 System.Diagnostics.Debug.WriteLine("Fetching From SQL");
                 try
@@ -133,57 +134,57 @@ namespace PintheCloudWS.Utilities
                     ////////////////////////////////////////////
                     // Saving to SQL job
                     ////////////////////////////////////////////
-                    try
-                    {
-
-                        var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
-                        using (var db = new SQLite.SQLiteConnection(dbpath))
-                        {
-                            // Create the tables if they don't exist
-                            db.DropTable<FileObjectSQL>();
-                            db.CreateTable<FileObjectSQL>();
-                            db.Commit();
-
-
-                            List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
-
-                            FileObject.ConvertToFileObjectSQL(sqlList, rootFolder, ROOT_ID);
-
-                            for (var i = 0; i < sqlList.Count; i++)
-                            {
-                                db.Insert(sqlList[i]);
-                            }
-                            db.Commit();
-
-                        }
-                        //using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
-                        //{
-                        //    if (db.DatabaseExists())
-                        //    {
-                        //        db.DeleteDatabase();
-                        //    }
-                        //    db.CreateDatabase();
+                    //try
+                    //{
+                    //    var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
+                    //    System.Diagnostics.Debug.WriteLine(dbpath);
+                    //    using (var db = new SQLite.SQLiteConnection("Data Source=database.db"))
+                    //    {
+                    //        // Create the tables if they don't exist
+                    //        db.DropTable<FileObjectSQL>();
+                    //        db.CreateTable<FileObjectSQL>();
+                    //        db.Commit();
 
 
-                        //    List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
+                    //        List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
 
-                        //    FileObject.ConvertToFileObjectSQL(sqlList, rootFolder, ROOT_ID);
+                    //        FileObject.ConvertToFileObjectSQL(sqlList, rootFolder, ROOT_ID);
 
-                        //    for (var i = 0; i < sqlList.Count; i++)
-                        //    {
-                        //        db.FileItems.InsertOnSubmit(sqlList[i]);
-                        //    }
+                    //        for (var i = 0; i < sqlList.Count; i++)
+                    //        {
+                    //            db.Insert(sqlList[i]);
+                    //        }
+                    //        db.Commit();
 
-                        //    db.SubmitChanges();
-                        //}
-                    }
-                    catch (Exception e)
-                    {
-                        System.Diagnostics.Debug.WriteLine(e.ToString());
-                        System.Diagnostics.Debugger.Break();
-                    }
+                    //    }
+                    //    using (FileObjectDataContext db = new FileObjectDataContext("isostore:/" + key + "_db.sdf"))
+                    //    {
+                    //        if (db.DatabaseExists())
+                    //        {
+                    //            db.DeleteDatabase();
+                    //        }
+                    //        db.CreateDatabase();
 
-                    App.ApplicationSettings.Add(SYNC_KEYS + key, true);
+
+                    //        List<FileObjectSQL> sqlList = new List<FileObjectSQL>();
+
+                    //        FileObject.ConvertToFileObjectSQL(sqlList, rootFolder, ROOT_ID);
+
+                    //        for (var i = 0; i < sqlList.Count; i++)
+                    //        {
+                    //            db.FileItems.InsertOnSubmit(sqlList[i]);
+                    //        }
+
+                    //        db.SubmitChanges();
+                    //    }
+                    //}
+                    //catch (Exception e)
+                    //{
+                    //    System.Diagnostics.Debug.WriteLine(e.ToString());
+                    //    System.Diagnostics.Debugger.Break();
+                    //}
+
+                    App.ApplicationSettings[SYNC_KEYS + key] = true;
                     App.ApplicationSettings.Save();
                     return true;
                 }
