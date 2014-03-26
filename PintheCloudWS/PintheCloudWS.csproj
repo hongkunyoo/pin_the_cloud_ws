@@ -199,6 +199,9 @@
     <Content Include="Assets\pajeon\flyout\png\make.png" />
     <Content Include="Assets\pajeon\flyout\screenshot\flyout_new.png" />
     <Content Include="Assets\pajeon\flyout\screenshot\flyout_new_private.png" />
+    <Content Include="Assets\pajeon\icon_splash\appicon.png" />
+    <Content Include="Assets\pajeon\icon_splash\appicon_wide.png" />
+    <Content Include="Assets\pajeon\icon_splash\splash.png" />
     <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_guide.png" />
     <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_inactivated_guide.png" />
     <Content Include="Assets\pajeon\pick\png\checkbox.png" />
