@@ -194,6 +194,9 @@
     <Content Include="Assets\pajeon\flyout\screenshot\flyout_new.png" />
     <Content Include="Assets\pajeon\flyout\screenshot\flyout_new_private.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon.png" />
+    <Content Include="Assets\pajeon\icon_splash\appicon150.png" />
+    <Content Include="Assets\pajeon\icon_splash\appicon30.png" />
+    <Content Include="Assets\pajeon\icon_splash\appicon50.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon_wide.png" />
     <Content Include="Assets\pajeon\icon_splash\splash.png" />
     <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_guide.png" />
@@ -286,9 +289,6 @@
     <None Include="PintheCloudWS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Logo.scale-100.png" />
-    <Content Include="Assets\SmallLogo.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
     <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Common\ReadMe.txt" />
   </ItemGroup>

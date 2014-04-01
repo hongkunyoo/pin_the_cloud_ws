@@ -4,7 +4,7 @@
   <Properties>
     <DisplayName>At Here</DisplayName>
     <PublisherDisplayName>Seungmin</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Assets\pajeon\icon_splash\appicon50.png</Logo>
   </Properties>
   <Prerequisites>
     <OSMinVersion>6.3.0</OSMinVersion>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="PintheCloudWS.App">
-      <m2:VisualElements DisplayName="At Here" Square150x150Logo="Assets\Logo.png" Square30x30Logo="Assets\SmallLogo.png" Description="At Here helps you direct share information with people around you." ForegroundText="light" BackgroundColor="#00A4BF">
+      <m2:VisualElements DisplayName="At Here" Square150x150Logo="Assets\pajeon\icon_splash\appicon150.png" Square30x30Logo="Assets\pajeon\icon_splash\appicon30.png" Description="At Here helps you direct share information with people around you." ForegroundText="light" BackgroundColor="#00A4BF">
         <m2:DefaultTile Square310x310Logo="Assets\pajeon\icon_splash\appicon.png" Wide310x150Logo="Assets\pajeon\icon_splash\appicon_wide.png" ShortName="At Here">
           <m2:ShowNameOnTiles>
             <m2:ShowOn Tile="square150x150Logo" />
