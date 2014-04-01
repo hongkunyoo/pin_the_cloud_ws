@@ -1,5 +1,4 @@
 ﻿using PintheCloudWS.Models;
-using SQLite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,35 +25,35 @@ namespace PintheCloudWS.Utilities
     public class FileObjectSQL
     {
         //[Column(IsPrimaryKey = true, IsDbGenerated = false, DbType = "NVarChar(50) NOT NULL", CanBeNull = false, AutoSync = AutoSync.Default)]
-        [PrimaryKey, Column("Id")]
+        //[PrimaryKey, Column("Id")]
         public string Id { get; set; }
-        [SQLite.Column("Name")]
+        //[SQLite.Column("Name")]
         public string Name { get; set; }
-        [Column("Size")]
+        //[Column("Size")]
         public double Size { get; set; }
-        [Column("Type")]
+        //[Column("Type")]
         public PintheCloudWS.Models.FileObject.FileObjectType Type { get; set; }
-        [Column("Extension")]
+        //[Column("Extension")]
         public string Extension { get; set; }
-        [Column("Update")]
+        //[Column("Update")]
         public string UpdateAt { get; set; }
-        [Column("Thumbnail")]
+        //[Column("Thumbnail")]
         public string Thumbnail { get; set; }
-        [Column("DownloadUrl")]
+        //[Column("DownloadUrl")]
         public string DownloadUrl { get; set; }
-        [Column("MimeType")]
+        //[Column("MimeType")]
         public string MimeType { get; set; }
-        [Column("ProfileId")]
+        //[Column("ProfileId")]
         public string ProfileId { get; set; }
-        [Column("ProfileEmail")]
+        //[Column("ProfileEmail")]
         public string ProfileEmail { get; set; }
-        [Column("ProfilePhoneNumber")]
+        //[Column("ProfilePhoneNumber")]
         public string ProfilePhoneNumber { get; set; }
-        [Column("ProfileName")]
+        //[Column("ProfileName")]
         public string ProfileName { get; set; }
-        [Column("SpotId")]
+        //[Column("SpotId")]
         public string SpotId { get; set; }
-        [Column("ParentId")]
+        //[Column("ParentId")]
         public string ParentId { get; set; }
     }
 }

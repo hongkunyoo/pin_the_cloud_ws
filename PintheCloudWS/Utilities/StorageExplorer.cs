@@ -32,41 +32,41 @@ namespace PintheCloudWS.Utilities
                 System.Diagnostics.Debug.WriteLine("Fetching From SQL");
                 try
                 {
-                    var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
-                    using (var db = new SQLite.SQLiteConnection(dbpath))
-                    {
-                        // Create the tables if they don't exist
-                        db.DropTable<FileObjectSQL>();
-                        db.CreateTable<FileObjectSQL>();
-                        db.Commit();
+                    //var dbpath = Path.Combine(Windows.Storage.ApplicationData.Current.LocalFolder.Path, key + "data.db3");
+                    //using (var db = new SQLite.SQLiteConnection(dbpath))
+                    //{
+                    //    // Create the tables if they don't exist
+                    //    db.DropTable<FileObjectSQL>();
+                    //    db.CreateTable<FileObjectSQL>();
+                    //    db.Commit();
 
-                        var rootDB = from fos in db.Table<FileObjectSQL>() where fos.ParentId.Equals(ROOT_ID) select fos;
+                    //    var rootDB = from fos in db.Table<FileObjectSQL>() where fos.ParentId.Equals(ROOT_ID) select fos;
 
-                        List<FileObjectSQL> getsqlList = rootDB.ToList<FileObjectSQL>();
+                    //    List<FileObjectSQL> getsqlList = rootDB.ToList<FileObjectSQL>();
 
-                        if (getsqlList.Count != 1) System.Diagnostics.Debugger.Break();
+                    //    if (getsqlList.Count != 1) System.Diagnostics.Debugger.Break();
 
-                        FileObjectSQL rootFos = getsqlList.First<FileObjectSQL>();
+                    //    FileObjectSQL rootFos = getsqlList.First<FileObjectSQL>();
 
-                        FileObject rootFolder = FileObject.ConvertToFileObject(db, rootFos);
+                    //    FileObject rootFolder = FileObject.ConvertToFileObject(db, rootFos);
 
-                        if (DictionaryRoot.ContainsKey(key))
-                        {
-                            DictionaryRoot.Remove(key);
-                        }
-                        DictionaryRoot.Add(key, rootFolder);
+                    //    if (DictionaryRoot.ContainsKey(key))
+                    //    {
+                    //        DictionaryRoot.Remove(key);
+                    //    }
+                    //    DictionaryRoot.Add(key, rootFolder);
 
-                        Stack<FileObject> stack = new Stack<FileObject>();
-                        stack.Push(rootFolder);
-                        if (DictionaryTree.ContainsKey(key))
-                        {
-                            DictionaryTree.Remove(key);
-                        }
-                        DictionaryTree.Add(key, stack);
+                    //    Stack<FileObject> stack = new Stack<FileObject>();
+                    //    stack.Push(rootFolder);
+                    //    if (DictionaryTree.ContainsKey(key))
+                    //    {
+                    //        DictionaryTree.Remove(key);
+                    //    }
+                    //    DictionaryTree.Add(key, stack);
 
-                        //db.Dispose();
-                        //db.Close();
-                    }
+                    //    //db.Dispose();
+                    //    //db.Close();
+                    //}
 
 
 

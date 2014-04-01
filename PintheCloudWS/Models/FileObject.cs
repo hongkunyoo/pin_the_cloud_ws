@@ -200,7 +200,7 @@ namespace PintheCloudWS.Models
             }
         }
         //public static int count = 0;
-        public static FileObject ConvertToFileObject(SQLite.SQLiteConnection db, FileObjectSQL fos)
+        public static FileObject ConvertToFileObject(object db, FileObjectSQL fos)
         {
             //count++;
             //if (count == 100) System.Diagnostics.Debugger.Break();
@@ -219,16 +219,17 @@ namespace PintheCloudWS.Models
             fo.FileList = GetChildList(db, fos.Id);
             return fo;
         }
-        public static List<FileObject> GetChildList(SQLite.SQLiteConnection db, string ParentId)
+        public static List<FileObject> GetChildList(object db, string ParentId)
         {
-            var dbList = from fos in db.Table<FileObjectSQL>() where fos.ParentId == ParentId select fos;
-            List<FileObjectSQL> sqlList = dbList.ToList<FileObjectSQL>();
-            List<FileObject> list = new List<FileObject>();
-            for (var i = 0; i < sqlList.Count; i++)
-            {
-                list.Add(ConvertToFileObject(db, sqlList[i]));
-            }
-            return list;
+            //var dbList = from fos in db.Table<FileObjectSQL>() where fos.ParentId == ParentId select fos;
+            //List<FileObjectSQL> sqlList = dbList.ToList<FileObjectSQL>();
+            //List<FileObject> list = new List<FileObject>();
+            //for (var i = 0; i < sqlList.Count; i++)
+            //{
+            //    list.Add(ConvertToFileObject(db, sqlList[i]));
+            //}
+            //return list;
+            return null;
         }
 
     }

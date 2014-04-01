@@ -169,12 +169,6 @@
       <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLite.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Include="SQLiteAsync.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="Utilities\DropboxWebBrowserResult.cs" />
     <Compile Include="Utilities\DropboxWebBrowserTask.cs" />
     <Compile Include="Utilities\FileObjectDataContext.cs" />
