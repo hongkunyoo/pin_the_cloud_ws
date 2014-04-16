@@ -44,9 +44,14 @@
         		AutomationProperties.Name="Back"
         		AutomationProperties.AutomationId="BackButton"
         		AutomationProperties.ItemType="Navigation Button" HorizontalAlignment="Center"/>
-        	<Button x:Name="uiSettingButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiSettingButton_Click" Margin="0,0,0,31" BorderThickness="0" Padding="0">
-        		<Image Source="ms-appx:///Assets/pajeon/spot_list/png/bar_setting.png" Stretch="None"/>
-        	</Button>
+        	<StackPanel VerticalAlignment="Bottom" Margin="0,0,0,31">
+        		<Button x:Name="uiRefreshButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiRefreshButton_Click" BorderThickness="0" Padding="0" Margin="0,0,0,31">
+        			<Image Source="ms-appx:///Assets/pajeon/spot_list/png/general_bar_refresh.png" Stretch="None"/>
+        		</Button>
+        		<Button x:Name="uiSettingButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiSettingButton_Click" BorderThickness="0" Padding="0">
+        			<Image Source="ms-appx:///Assets/pajeon/spot_list/png/bar_setting.png" Stretch="None"/>
+        		</Button>
+        	</StackPanel>
         </Grid>
         <Grid x:Name="uiExplorerBarGrid" Grid.Column="1" Background="#FFE9EDF0" Opacity="0.8">
         	<Grid.RowDefinitions>

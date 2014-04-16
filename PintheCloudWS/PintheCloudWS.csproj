@@ -231,6 +231,7 @@
     <Content Include="Assets\pajeon\pin\screenshot\pin.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_logo.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_setting.png" />
+    <Content Include="Assets\pajeon\spot_list\png\general_bar_refresh.png" />
     <Content Include="Assets\pajeon\spot_list\png\general_transparent.png" />
     <Content Include="Assets\pajeon\spot_list\png\spotlist_lock.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_a.png" />

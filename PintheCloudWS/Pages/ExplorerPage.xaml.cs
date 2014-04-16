@@ -1,5 +1,6 @@
 ﻿using PintheCloudWS.Common;
 using PintheCloudWS.Converters;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.ViewModels;
 using System;
@@ -119,6 +120,13 @@ namespace PintheCloudWS.Pages
                 Explorer explorer = selectedListBoxItem.Content as Explorer;
                 this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
             }
+        }
+
+        private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
+            Explorer explorer = selectedListBoxItem.Content as Explorer;
+            this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
         }
 
         #endregion

@@ -115,6 +115,13 @@ namespace PintheCloudWS.Pages
             this.Frame.Navigate(typeof(SettingsPage));
         }
 
+        private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            this.NearSpotViewModel.IsDataLoaded = false;
+            this.SetSpotGridView(AppResources.Refrshing);
+        }
+
+
         #endregion
 
 
@@ -189,7 +196,6 @@ namespace PintheCloudWS.Pages
             // Hide progress indicator
             base.SetProgressRing(uiSpotListProgressRing, false);
         }
-
 
 
         #endregion
