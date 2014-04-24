@@ -32,7 +32,7 @@ namespace PintheCloudWS.Pages
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         
         private Frame HiddenFrame = null;
-        private SpotViewItem SpotViewItem = null;
+        private SpotViewItem CurrentSpotViewItem = null;
 
         private List<Explorer> ExplorerList = new List<Explorer>
         {
@@ -87,11 +87,13 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.NavigationHelper.OnNavigatedTo(e);
-            this.SpotViewItem = e.Parameter as SpotViewItem;
 
-            uiSpotNameText.Text = this.SpotViewItem.SpotName;
-            uiAccountNameText.Text = this.SpotViewItem.AccountName;
+            // Get Parameter
+            this.CurrentSpotViewItem = e.Parameter as SpotViewItem;
 
+            // Set this explorer page.
+            uiSpotNameText.Text = this.CurrentSpotViewItem.SpotName;
+            uiAccountNameText.Text = this.CurrentSpotViewItem.AccountName;
             this.PopulateExplorerList();
         }
 
@@ -105,12 +107,6 @@ namespace PintheCloudWS.Pages
 
         #region UI Methods
 
-        private void uiSettingButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            this.Frame.Navigate(typeof(SettingsPage));
-        }
-
-
         private void uiExplorerList_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
         {
             if (uiExplorerList.SelectedItem != null)
@@ -118,7 +114,7 @@ namespace PintheCloudWS.Pages
                 App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
                 ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
                 Explorer explorer = selectedListBoxItem.Content as Explorer;
-                this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
+                this.LoadExplorer(explorer.ClassType, this.CurrentSpotViewItem);
             }
         }
 
@@ -126,7 +122,7 @@ namespace PintheCloudWS.Pages
         {
             ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
             Explorer explorer = selectedListBoxItem.Content as Explorer;
-            this.LoadExplorer(explorer.ClassType, this.SpotViewItem);
+            this.LoadExplorer(explorer.ClassType, this.CurrentSpotViewItem);
         }
 
         #endregion

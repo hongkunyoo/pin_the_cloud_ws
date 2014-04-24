@@ -16,13 +16,16 @@ namespace PintheCloudWS.ViewModels
         // Instances
         public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox.png";
         public const string CHECK_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox_p.png";
+
+        public const string DOWNLOAD_IMAGE_URI = "/Assets/pajeon/pick/png/download.png.mtc";
+
         public const string TRANSPARENT_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_transparent.png";
 
         public const string DELETE_IMAGE_URI = "/Assets/pajeon/at_here/png/upload_list_delete.png";
         public const string IS_PRIVATE_IMAGE_URI = "/Assets/pajeon/spot_list/png/spotlist_lock.png";
 
         public const string ING_IMAGE_URI = "/Assets/pajeon/at_here/130319_png/loading01.png";
-        public const string FAIL_IMAGE_URI = "/Assets/pajeon/at_here/png/general_fail.png";
+        public const string FAIL_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_fail.png";
 
         public const string FOLDER = "FOLDER";
 
@@ -32,6 +35,7 @@ namespace PintheCloudWS.ViewModels
         // Mutex
         public bool IsDataLoaded { get; set; }
         public bool IsDataLoading { get; set; }
+
 
         public FileObjectViewModel()
         {
@@ -113,10 +117,12 @@ namespace PintheCloudWS.ViewModels
                         fileObjectViewItem.SelectFileImage = TRANSPARENT_IMAGE_URI;
                     else
                         fileObjectViewItem.SelectFileImage = CHECK_NOT_IMAGE_URI;
+                    fileObjectViewItem.SelectFileImagePress = false;
                 }
                 else
                 {
-                    fileObjectViewItem.SelectFileImage = TRANSPARENT_IMAGE_URI;
+                    fileObjectViewItem.SelectFileImage = DOWNLOAD_IMAGE_URI;
+                    fileObjectViewItem.SelectFileImagePress = true;
                 }
 
                 this.Items.Add(fileObjectViewItem);

@@ -144,6 +144,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("BadLoadingSpotMessage");
             }
         }
+        public static string BadLoadingFileMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("BadLoadingFileMessage");
+            }
+        }
         public static string BadLocationServiceMessage
         {
             get

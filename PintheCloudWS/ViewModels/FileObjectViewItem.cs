@@ -34,22 +34,21 @@ namespace PintheCloudWS.ViewModels
             }
         }
 
-
-        public FileObjectViewItem()
+        private bool selectFileImagePress;
+        public bool SelectFileImagePress
         {
-        }
-
-
-        // Deep copy
-        public FileObjectViewItem(FileObjectViewItem fileObjectViewItem)
-        {
-            this.Id = fileObjectViewItem.Id;
-            this.Name = fileObjectViewItem.Name;
-            this.Size = fileObjectViewItem.Size;
-            this.SizeUnit = fileObjectViewItem.SizeUnit;
-            this.ThumnailType = fileObjectViewItem.ThumnailType;
-            this.SelectFileImage = fileObjectViewItem.SelectFileImage;
-            this.DownloadUrl = fileObjectViewItem.DownloadUrl;
+            get
+            {
+                return selectFileImagePress;
+            }
+            set
+            {
+                if (selectFileImagePress != value)
+                {
+                    selectFileImagePress = value;
+                    NotifyPropertyChanged("SelectFileImagePress");
+                }
+            }
         }
 
 

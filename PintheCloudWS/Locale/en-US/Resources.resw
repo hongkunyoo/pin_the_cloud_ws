@@ -120,6 +120,9 @@
   <data name="AtHere" xml:space="preserve">
     <value>At Here</value>
   </data>
+  <data name="BadLoadingFileMessage" xml:space="preserve">
+    <value>Loading files met error. Please try it again.</value>
+  </data>
   <data name="BadLoadingSpotMessage" xml:space="preserve">
     <value>Location Spot met error. Please try it again.</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="PrivateMode/Text" xml:space="preserve">
     <value>Private Mode</value>
+  </data>
+  <data name="Refresh/Text" xml:space="preserve">
+    <value>refresh</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
     <value>Refreshing...</value>

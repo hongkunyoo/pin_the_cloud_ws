@@ -14,6 +14,25 @@
         <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
         <x:String x:Key="AppName">My Application</x:String>
     </local:PtcPage.Resources>
+	<local:PtcPage.BottomAppBar>
+		<AppBar Height="88" BorderBrush="{x:Null}">
+			<Grid Background="#FFCED6DC" Opacity="0.9">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Orientation="Horizontal"/>
+				<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,64,0" HorizontalAlignment="Right">
+					<StackPanel VerticalAlignment="Center">
+						<Button x:Name="uiRefreshButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiRefreshButton_Click" BorderThickness="0" Padding="0" Margin="0,0,0,3">
+							<Image Source="ms-appx:///Assets/pajeon/spot_list/png/refresh.png" Stretch="None"/>
+						</Button>
+						<TextBlock x:Uid="Refresh" TextWrapping="Wrap" Foreground="Black" HorizontalAlignment="Center" FontSize="18.667"/>
+					</StackPanel>
+				</StackPanel>
+			</Grid>
+		</AppBar>
+	</local:PtcPage.BottomAppBar>
 
     <!--
         This grid acts as a root panel for the page that defines two rows:
@@ -37,20 +56,14 @@
             </TransitionCollection>
         </Grid.ChildrenTransitions>
         <Grid x:Name="uiSideBarGrid" Background="#FF00A4BF">
-        	<Image  Stretch="None" Source="ms-appx:///Assets/pajeon/spot_list/png/bar_logo.png" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,22,0,0"/>
-        	<Button x:Name="backButton" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
-        		Style="{StaticResource NavigationBackButtonNormalStyle}"
-        		VerticalAlignment="Center"
-        		AutomationProperties.Name="Back"
-        		AutomationProperties.AutomationId="BackButton"
-        		AutomationProperties.ItemType="Navigation Button" HorizontalAlignment="Center"/>
-        	<StackPanel VerticalAlignment="Bottom" Margin="0,0,0,31">
-        		<Button x:Name="uiRefreshButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiRefreshButton_Click" BorderThickness="0" Padding="0" Margin="0,0,0,31">
-        			<Image Source="ms-appx:///Assets/pajeon/spot_list/png/general_bar_refresh.png" Stretch="None"/>
-        		</Button>
-        		<Button x:Name="uiSettingButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiSettingButton_Click" BorderThickness="0" Padding="0">
-        			<Image Source="ms-appx:///Assets/pajeon/spot_list/png/bar_setting.png" Stretch="None"/>
-        		</Button>
+        	<StackPanel Margin="0,22,0,0" VerticalAlignment="Top">
+        		<Image  Stretch="None" Source="ms-appx:///Assets/pajeon/spot_list/png/bar_logo.png" Margin="0,0,0,31"/>
+        		<Button x:Name="backButton" Command="{Binding NavigationHelper.GoBackCommand, ElementName=pageRoot}"
+        			Style="{StaticResource NavigationBackButtonNormalStyle}"
+        			VerticalAlignment="Stretch"
+        			AutomationProperties.Name="Back"
+        			AutomationProperties.AutomationId="BackButton"
+        			AutomationProperties.ItemType="Navigation Button" HorizontalAlignment="Stretch"/>
         	</StackPanel>
         </Grid>
         <Grid x:Name="uiExplorerBarGrid" Grid.Column="1" Background="#FFE9EDF0" Opacity="0.8">

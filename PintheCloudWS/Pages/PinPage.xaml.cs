@@ -349,22 +349,18 @@ namespace PintheCloudWS.Pages
                 fileObjectViewItem.SelectFileImage = FileObjectViewModel.ING_IMAGE_URI;
             });
 
-            // Upload
-            string blobId = await this.CurrentSpot.AddFileObjectAsync(this.GetCloudStorageFileObjectById(fileObjectViewItem.Id));
-            if (blobId != null)
+            try
             {
+                string blobId = await this.CurrentSpot.AddFileObjectAsync(this.GetCloudStorageFileObjectById(fileObjectViewItem.Id));
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     fileObjectViewItem.Id = blobId;
                     fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
                 });
             }
-            else
+            catch
             {
-                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
-                });
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
             }
 
             // Hide progress message

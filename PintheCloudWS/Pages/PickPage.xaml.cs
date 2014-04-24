@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using PintheCloudWS.ViewModels;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -31,7 +33,7 @@ namespace PintheCloudWS.Pages
     {
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private FileObjectViewModel FileObjectViewModel = new FileObjectViewModel();
-
+        private SpotObject CurrentSpot = null;
 
 
         /// <summary>
@@ -63,9 +65,15 @@ namespace PintheCloudWS.Pages
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             this.NavigationHelper.OnNavigatedTo(e);
+
+            // Get Parameter.
             SpotViewItem spotViewItem = e.Parameter as SpotViewItem;
-            this.RefreshAsync(spotViewItem.AccountId, spotViewItem.SpotId);
+            this.CurrentSpot = App.SpotManager.GetSpotObject(spotViewItem.SpotId);
+            
+            // Set this pick page.
+            this.SetPickFileList();
         }
+
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
@@ -77,41 +85,82 @@ namespace PintheCloudWS.Pages
 
         #region UI Methods
 
-        private void uiFileDownloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-
-        }
-
         private void uiFileListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             // Get Selected File Obejct
             FileObjectViewItem fileObjectViewItem = e.ClickedItem as FileObjectViewItem;
-            this.LaunchFileAsync(fileObjectViewItem);
+
+            // Launch files to other reader app.
+            if (NetworkInterface.GetIsNetworkAvailable())
+                this.LaunchFileAsync(fileObjectViewItem);
+            else
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
         }
 
         #endregion
 
         #region Private Methods
 
-        private async void RefreshAsync(string accountId, string spotId)
+        private void SetPickFileList()
         {
-            // Show Progress Indicator
-            base.SetProgressRing(uiFileListProgressRing, true);
-
-            // If file exists, show it.
-            // Otherwise, show no file in spot message.
-            List<FileObject> fileList = await App.BlobStorageManager.GetFilesFromSpotAsync(accountId, spotId);
-            if (fileList.Count > 0)
+            // If internet is on, refresh
+            // Otherwise, show internet unavailable message.
+            if (NetworkInterface.GetIsNetworkAvailable())
             {
-                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    this.FileObjectViewModel.SetItems(fileList, false);
-                });
+                if (!this.FileObjectViewModel.IsDataLoaded)
+                    this.SetPickFileListAsync();
             }
             else
             {
-                base.ShowMessageDialog(AppResources.NoFileInSpotMessage);
+                uiPickFileList.Visibility = Visibility.Collapsed;
+                uiPickFileListMessage.Text = AppResources.InternetUnavailableMessage;
+                uiPickFileListMessage.Visibility = Visibility.Visible;
             }
+        }
+
+
+        private async void SetPickFileListAsync()
+        {
+            // Show Progress Indicator
+            base.SetProgressRing(uiFileListProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                uiPickFileList.Visibility = Visibility.Collapsed;
+                uiPickFileListMessage.Visibility = Visibility.Collapsed;
+            });
+
+            try
+            {
+                // Get files from the spot and set it to list.
+                List<FileObject> fileList = await this.CurrentSpot.ListFileObjectsAsync();
+                this.FileObjectViewModel.IsDataLoaded = true;
+                if (fileList.Count > 0)
+                {
+                    await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        uiPickFileList.Visibility = Visibility.Visible;
+                        uiPickFileListMessage.Visibility = Visibility.Collapsed;
+                        this.FileObjectViewModel.SetItems(fileList, false);
+                    });
+                }
+                else
+                {
+                    await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        uiPickFileList.Visibility = Visibility.Collapsed;
+                        uiPickFileListMessage.Text = AppResources.NoFileInSpotMessage;
+                        uiPickFileListMessage.Visibility = Visibility.Visible;
+                    });
+                }
+            }
+            catch
+            {
+                this.FileObjectViewModel.IsDataLoaded = true;
+                uiPickFileList.Visibility = Visibility.Collapsed;
+                uiPickFileListMessage.Text = AppResources.BadLoadingFileMessage;
+                uiPickFileListMessage.Visibility = Visibility.Visible;
+            }
+
 
             // Hide Progress Indicator
             base.SetProgressRing(uiFileListProgressRing, false);
@@ -122,16 +171,24 @@ namespace PintheCloudWS.Pages
         {
             // Show Downloading message
             base.SetProgressRing(uiFileListProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.DOWNLOAD_IMAGE_URI;
+                fileObjectViewItem.SelectFileImagePress = false;
+            });
 
-            // Download file and Launch files to other reader app.
-            StorageFile downloadFile = await ApplicationData.Current.LocalFolder.CreateFileAsync(fileObjectViewItem.Name, CreationCollisionOption.ReplaceExisting);
-            if (await App.BlobStorageManager.DownloadFileAsync(fileObjectViewItem.Id, downloadFile) != null)
+            try
             {
-                await Launcher.LaunchFileAsync(downloadFile);
+                // Download file and Launch files to other reader app.
+                await this.CurrentSpot.PreviewFileObjectAsync(this.CurrentSpot.GetFileObject(fileObjectViewItem.Id));
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    fileObjectViewItem.SelectFileImagePress = true;
+                });
             }
-            else
+            catch
             {
-                // TODO Show Fail Message
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
             }
 
             // Hide Progress Indicator
