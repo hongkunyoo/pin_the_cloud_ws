@@ -3,7 +3,7 @@
   <Identity Name="58514Seungmin.AtHere" Publisher="CN=5F5145DF-4FDD-41CD-9C55-BEE4732A445B" Version="1.1.0.0" />
   <Properties>
     <DisplayName>At Here</DisplayName>
-    <PublisherDisplayName>Pin the Cloud</PublisherDisplayName>
+    <PublisherDisplayName>Seungmin</PublisherDisplayName>
     <Logo>Assets\pajeon\icon_splash\appicon50.png</Logo>
   </Properties>
   <Prerequisites>

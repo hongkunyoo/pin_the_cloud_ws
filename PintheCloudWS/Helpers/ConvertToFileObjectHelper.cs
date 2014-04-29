@@ -9,7 +9,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DropNetRT.Models;
 
 namespace PintheCloudWS.Helpers
 {
@@ -78,26 +77,26 @@ namespace PintheCloudWS.Helpers
         /// </summary>
         /// <param name="meta">DropBox Model</param>
         /// <returns>POJO FileObject</returns>
-        public static FileObject ConvertToFileObject(MetaData meta)
-        {
-            string Name = meta.Name;
-            string UpdateAt = null;
-            try
-            {
-                UpdateAt = meta.ModifiedDate.ToString(); //14/02/2014 15:48:13
-            }
-            catch
-            {
-                UpdateAt = DateTime.Now.ToString();
-            }
-            string Id = meta.Path; // Full path
-            string ParentId = meta.Path;
-            double Size = meta.Bytes * 1.0;
-            FileObject.FileObjectType Type = (meta.IsDirectory ? FileObject.FileObjectType.FOLDER : FileObject.FileObjectType.FILE);
-            string Extension = (meta.Extension == null || "".Equals(meta.Extension)) ? "" : meta.Extension.Substring(1, meta.Extension.Length - 1); // .png
+        //public static FileObject ConvertToFileObject(Metadata meta)
+        //{
+        //    string Name = meta.Name;
+        //    string UpdateAt = null;
+        //    try
+        //    {
+        //        UpdateAt = meta.ModifiedDate.ToString(); //14/02/2014 15:48:13
+        //    }
+        //    catch
+        //    {
+        //        UpdateAt = DateTime.Now.ToString();
+        //    }
+        //    string Id = meta.Path; // Full path
+        //    string ParentId = meta.Path;
+        //    double Size = meta.Bytes * 1.0;
+        //    FileObject.FileObjectType Type = (meta.IsDirectory ? FileObject.FileObjectType.FOLDER : FileObject.FileObjectType.FILE);
+        //    string Extension = (meta.Extension == null || "".Equals(meta.Extension)) ? "" : meta.Extension.Substring(1, meta.Extension.Length - 1); // .png
 
-            return new FileObject(Id, Name, Size, Type, Extension, UpdateAt);
-        }
+        //    return new FileObject(Id, Name, Size, Type, Extension, UpdateAt);
+        //}
 
 
         /// <summary>

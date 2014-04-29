@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Navigation;
 using System.Net;
 using System.Windows;
 using System.Diagnostics;
-using DropNetRT.Models;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Pages;
 using System.Threading.Tasks;
