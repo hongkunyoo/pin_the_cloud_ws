@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PintheCloudWS.Utilities
+namespace PintheCloudWS.Models
 {
     public class FileObjectDataContext
     {
@@ -18,8 +18,6 @@ namespace PintheCloudWS.Utilities
 
         //public Table<FileObjectSQL> FileItems;
     }
-
-
 
 
     public class FileObjectSQL

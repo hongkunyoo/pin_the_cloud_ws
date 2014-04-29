@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PintheCloudWS.Utilities
+namespace PintheCloudWS.Helpers
 {
     public static class StorageExplorer
     {

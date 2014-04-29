@@ -17,6 +17,7 @@ using PintheCloudWS.ViewModels;
 using PintheCloudWS.Helpers;
 using PintheCloudWS.Converters;
 using PintheCloudWS.Locale;
+using PintheCloudWS.Exceptions;
 
 namespace PintheCloudWS.Managers
 {

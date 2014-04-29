@@ -147,51 +147,42 @@ namespace PintheCloudWS.Pages
         }
 
 
-        protected void ShowGeolocatorStatusMessageDialog()
+        protected string GeolocatorStatusMessage()
         {
             string message = String.Empty;
-            bool showMessage = false;
             switch (App.Geolocator.LocationStatus)
             {
                 case PositionStatus.Ready:
                     message = "Location is available.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.Initializing:
                     message = "Geolocation service is initializing.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.NotInitialized:
                     message = "Location status is not initialized because " +
                                 "the app has not yet requested location data.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.Disabled:
                     message = "Location services are disabled. Use the " +
                                 "Settings charm to enable them.";
-                    showMessage = true;
                     break;
 
                 case PositionStatus.NoData:
                     message = "Location service data is not available.";
-                    showMessage = true;
                     break;
 
                 case PositionStatus.NotAvailable:
                     message = "Location services are not supported on your system.";
-                    showMessage = true;
                     break;
 
                 default:
                     message = "Unknown PositionStatus value.";
-                    showMessage = true;
                     break;
             };
-            if(showMessage)
-                this.ShowMessageDialog(message);
+            return message;
         }
 
         #endregion

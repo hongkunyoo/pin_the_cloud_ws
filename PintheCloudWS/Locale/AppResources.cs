@@ -165,13 +165,6 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("BadSignInMessage");
             }
         }
-        public static string BadSignInCaption
-        {
-            get
-            {
-                return ResourceLoader.GetString("BadSignInCaption");
-            }
-        }
         public static string InternetUnavailableCaption
         {
             get

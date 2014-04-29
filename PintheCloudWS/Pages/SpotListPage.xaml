@@ -70,7 +70,7 @@
                 		<Image Source="{Binding SpotNameInitialImage, Converter={StaticResource StringToSpotNameInitialUriConverter}}" Stretch="None"/>
                 		<Image Source="{Binding IsPrivateImage}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Stretch="None"/>
                 		<StackPanel Grid.Row="1" Margin="14,15,0,0">
-                			<TextBlock Text="{Binding SpotName}" TextWrapping="Wrap" Margin="1,0,0,0" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
+                			<TextBlock Text="{Binding SpotName}" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041" TextTrimming="WordEllipsis"/>
                 			<StackPanel Orientation="Horizontal" Margin="0,12,0,0">
                 				<TextBlock Text="{Binding AccountName}" TextWrapping="Wrap" Padding="0,0,14,0" FontFamily="Segoe WP Light" FontSize="22" Foreground="#FF919FA6"/>
                 				<TextBlock Text="{Binding SpotDistance}" TextWrapping="Wrap" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
@@ -87,7 +87,7 @@
             		<StaticResource ResourceKey="uiSpotGirdViewItemTemplate"/>
             	</GridView.ItemTemplate>
 			</GridView>
-            <TextBlock x:Name="uiSpotGridMessage" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="22" Foreground="Black" FontFamily="Segoe WP"/>
+            <TextBlock x:Name="uiSpotGridMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" Foreground="Black" FontFamily="Segoe WP" Margin="96,113,0,0"/>
         </Grid>
 
         <!-- Back button and page title -->

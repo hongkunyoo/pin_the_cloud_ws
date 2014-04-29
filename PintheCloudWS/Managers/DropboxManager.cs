@@ -17,6 +17,7 @@ using DropNetRT.Models;
 using DropNetRT;
 using PintheCloudWS.Locale;
 using Windows.Storage.Streams;
+using PintheCloudWS.Exceptions;
 
 namespace PintheCloudWS.Managers
 {

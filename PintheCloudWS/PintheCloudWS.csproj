@@ -151,9 +151,6 @@
       <DependentUpon>PinPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PtcPage.cs" />
-    <Compile Include="Pages\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\SplashPage.xaml.cs">
       <DependentUpon>SplashPage.xaml</DependentUpon>
     </Compile>
@@ -166,15 +163,12 @@
     <Compile Include="Popups\NewSpotPopup.xaml.cs">
       <DependentUpon>NewSpotPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Popups\SubmitSpotPasswordPopup.xaml.cs">
-      <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DropboxWebBrowserResult.cs" />
     <Compile Include="Utilities\DropboxWebBrowserTask.cs" />
-    <Compile Include="Utilities\FileObjectDataContext.cs" />
-    <Compile Include="Utilities\ShareException.cs" />
-    <Compile Include="Utilities\StorageExplorer.cs" />
+    <Compile Include="Models\FileObjectDataContext.cs" />
+    <Compile Include="Exceptions\ShareException.cs" />
+    <Compile Include="Helpers\StorageExplorer.cs" />
     <Compile Include="Utilities\WSApplicationSessions.cs" />
     <Compile Include="Utilities\WSApplicationSettings.cs" />
     <Compile Include="ViewModels\CloudModeViewItem.cs" />
@@ -192,16 +186,12 @@
     <Content Include="Assets\pajeon\flyout\png\flyout_new_bg.png" />
     <Content Include="Assets\pajeon\flyout\png\input.png" />
     <Content Include="Assets\pajeon\flyout\png\make.png" />
-    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new.png" />
-    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new_private.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon150.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon30.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon50.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon_wide.png" />
     <Content Include="Assets\pajeon\icon_splash\splash.png" />
-    <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_guide.png" />
-    <Content Include="Assets\pajeon\pick\guide\5_filelist_edit_inactivated_guide.png" />
     <Content Include="Assets\pajeon\pick\png\checkbox.png" />
     <Content Include="Assets\pajeon\pick\png\checkbox_p.png" />
     <Content Include="Assets\pajeon\pick\png\download.png" />
@@ -219,8 +209,6 @@
     <Content Include="Assets\pajeon\pick\png\icon_file_zip.png" />
     <Content Include="Assets\pajeon\pick\png\pick_edit.png" />
     <Content Include="Assets\pajeon\pick\png\pick_view.png" />
-    <Content Include="Assets\pajeon\pick\screenshot\pick_edit.png" />
-    <Content Include="Assets\pajeon\pick\screenshot\pick_view.png" />
     <Content Include="Assets\pajeon\pin\png\back.png" />
     <Content Include="Assets\pajeon\pin\png\dropdown.png" />
     <Content Include="Assets\pajeon\pin\png\general_bar_upload.png" />
@@ -229,7 +217,6 @@
     <Content Include="Assets\pajeon\pin\png\ico_onedrive.png" />
     <Content Include="Assets\pajeon\pin\png\loading01.png" />
     <Content Include="Assets\pajeon\pin\png\sign_in.png" />
-    <Content Include="Assets\pajeon\pin\screenshot\pin.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_logo.png" />
     <Content Include="Assets\pajeon\spot_list\png\bar_setting.png" />
     <Content Include="Assets\pajeon\spot_list\png\general_fail.png" />
@@ -263,31 +250,9 @@
     <Content Include="Assets\pajeon\spot_list\png\spot_label_x.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_y.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_z.png" />
-    <Content Include="Fonts\LiveSymbol.ttf" />
     <Content Include="Assets\client_secret.json" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_appbar.pdf" />
     <None Include="Package.StoreAssociation.xml" />
     <PRIResource Include="Locale\en-US\Resources.resw" />
-    <None Include="Assets\pajeon\flyout\guide\1_ flyout_new_guide.pdf" />
-    <None Include="Assets\pajeon\flyout\guide\flyout_new_private_guide.pdf" />
-    <None Include="Assets\pajeon\pick\guide\1_pick_guide.pdf" />
-    <None Include="Assets\pajeon\pick\guide\2_sub_bar_guide.pdf" />
-    <None Include="Assets\pajeon\pick\guide\2_sub_bar_guide2_font.pdf" />
-    <None Include="Assets\pajeon\pick\guide\3_file_view_guide.pdf" />
-    <None Include="Assets\pajeon\pick\guide\4_filelist_view_guide.pdf" />
-    <None Include="Assets\pajeon\pick\guide\4_filelist_view_guide2_font.pdf" />
-    <None Include="Assets\pajeon\pick\guide\6_history_guide.pdf" />
-    <None Include="Assets\pajeon\pin\guide\1_pin_guide.pdf" />
-    <None Include="Assets\pajeon\pin\guide\2_account_guide.pdf" />
-    <None Include="Assets\pajeon\pin\guide\2_account_guide2.pdf" />
-    <None Include="Assets\pajeon\pin\guide\3_filelist_guide.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_position.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_size.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_spot_font.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_spot_position.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_spot_size.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_spot_spacing.pdf" />
-    <None Include="Assets\pajeon\spot_list\guide\spotlist_guide_swipe_position.pdf" />
     <None Include="packages.config" />
     <None Include="PintheCloudWS_StoreKey.pfx" />
     <None Include="PintheCloudWS_TemporaryKey.pfx" />
@@ -317,10 +282,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\SettingsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Pages\SplashPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -334,10 +295,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\NewSpotPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Popups\SubmitSpotPasswordPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

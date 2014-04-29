@@ -71,7 +71,7 @@ namespace PintheCloudWS.Pages
             this.CurrentSpot = App.SpotManager.GetSpotObject(spotViewItem.SpotId);
             
             // Set this pick page.
-            this.SetPickFileList();
+            this.SetPickPage();
         }
 
 
@@ -101,7 +101,7 @@ namespace PintheCloudWS.Pages
 
         #region Private Methods
 
-        private void SetPickFileList()
+        private void SetPickPage()
         {
             // If internet is on, refresh
             // Otherwise, show internet unavailable message.

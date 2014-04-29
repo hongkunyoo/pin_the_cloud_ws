@@ -129,11 +129,17 @@
   <data name="BadLocationServiceMessage" xml:space="preserve">
     <value>Location Service met error. Please try it again.</value>
   </data>
+  <data name="BadSignInMessage" xml:space="preserve">
+    <value>Sign in process met error. Please try it again</value>
+  </data>
   <data name="Bytes" xml:space="preserve">
     <value>Bytes</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="DoingSignIn" xml:space="preserve">
+    <value>Doing sign in...</value>
   </data>
   <data name="Dropbox" xml:space="preserve">
     <value>Dropbox</value>
@@ -142,7 +148,7 @@
     <value>(empty)</value>
   </data>
   <data name="EmptyAccountText/Text" xml:space="preserve">
-    <value>No Account Registered.</value>
+    <value>Account is not registered. Please sign in.</value>
   </data>
   <data name="File/Text" xml:space="preserve">
     <value>File</value>

@@ -70,7 +70,7 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
 
             // Remove Splash Page from Back Stack
-            if(this.Frame.BackStack.Count > 0)
+            if (this.Frame.BackStack.Count > 0)
                 this.Frame.BackStack.RemoveAt(this.Frame.BackStack.Count - 1);
             this.SetSpotGridView(AppResources.Loading);
         }
@@ -146,7 +146,8 @@ namespace PintheCloudWS.Pages
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 uiSpotGridView.Visibility = Visibility.Collapsed;
-                uiSpotGridMessage.Visibility = Visibility.Collapsed;
+                uiSpotGridMessage.Text = message;
+                uiSpotGridMessage.Visibility = Visibility.Visible;
             });
 
             // Check whether GPS is on or not
@@ -183,21 +184,35 @@ namespace PintheCloudWS.Pages
                     }
                     else  // GPS works bad
                     {
-                        base.ShowMessageDialog(AppResources.BadLocationServiceMessage);
+                        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            uiSpotGridView.Visibility = Visibility.Collapsed;
+                            uiSpotGridMessage.Text = AppResources.BadLocationServiceMessage;
+                            uiSpotGridMessage.Visibility = Visibility.Visible;
+                        });
                     }
                 }
                 catch (UnauthorizedAccessException)  // User didn't approve location service.
                 {
-                    base.ShowGeolocatorStatusMessageDialog();
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 }
                 catch
                 {
-                    base.ShowMessageDialog(AppResources.BadLoadingSpotMessage);
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = AppResources.BadLoadingSpotMessage;
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 }
             }
             else  // GPS is off
             {
-                base.ShowGeolocatorStatusMessageDialog();
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
+                });
             }
 
             // Hide progress indicator

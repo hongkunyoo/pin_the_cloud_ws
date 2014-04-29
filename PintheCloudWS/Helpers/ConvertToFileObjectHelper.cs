@@ -3,7 +3,6 @@ using PintheCloudWS.Helpers;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Models;
 using PintheCloudWS.ViewModels;
-using PintheCloudWS.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

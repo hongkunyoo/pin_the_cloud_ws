@@ -68,12 +68,12 @@
         </Grid>
         <Grid x:Name="uiExplorerBarGrid" Grid.Column="1" Background="#FFE9EDF0" Opacity="0.8">
         	<Grid.RowDefinitions>
-        		<RowDefinition Height="210"/>
+        		<RowDefinition Height="Auto"/>
         		<RowDefinition/>
         	</Grid.RowDefinitions>
-        	<StackPanel VerticalAlignment="Top" Margin="16,70,16,0">
+        	<StackPanel Margin="16,70,16,35" VerticalAlignment="Top">
         		<TextBlock x:Name="uiSpotNameText" TextWrapping="Wrap" Margin="0,0,0,18" FontFamily="Segoe WP" FontSize="26" Foreground="#FF404041"/>
-        		<TextBlock x:Name="uiAccountNameText" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6"/>
+        		<TextBlock x:Name="uiAccountNameText" TextWrapping="Wrap" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         	</StackPanel>
         	<ListView x:Name="uiExplorerList" Grid.Row="1" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}" SelectedIndex="-1" SelectionMode="Single" SelectionChanged="uiExplorerList_SelectionChanged" HorizontalContentAlignment="Stretch"/>
         </Grid>

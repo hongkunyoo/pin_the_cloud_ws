@@ -12,6 +12,7 @@ using PintheCloudWS.Utilities;
 using Windows.System;
 using System.Diagnostics;
 using PintheCloudWS.Helpers;
+using PintheCloudWS.Exceptions;
 
 namespace PintheCloudWS.Managers
 {
