@@ -109,11 +109,11 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("NoFileInFolderMessage");
             }
         }
-        public static string Refrshing
+        public static string Refreshing
         {
             get
             {
-                return ResourceLoader.GetString("Refrshing");
+                return ResourceLoader.GetString("Refreshing");
             }
         }
         public static string NoFileInSpotMessage

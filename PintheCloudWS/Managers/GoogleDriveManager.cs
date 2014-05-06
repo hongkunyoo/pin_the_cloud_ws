@@ -39,18 +39,15 @@ namespace PintheCloudWS.Managers
         private const string GOOGLE_DRIVE_IMAGE_URI = "/Assets/pajeon/pin/png/ico_googledrive.png";
         private const string GOOGLE_DRIVE_COLOR_HEX_STRING = "F1AE1D";
 
-        private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();
-        private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
-
         public static Dictionary<string, string> GoogleDocMapper;
         public static Dictionary<string, string> MimeTypeMapper;
         public static Dictionary<string, string> ExtensionMapper;
 
-        private DriveService service;
-        private UserCredential credential;
+        private DriveService Service;
+        private UserCredential Credential;
         private StorageAccount CurrentAccount;
-        private User user;
-        private string rootFodlerId = "";
+        private User User;
+        private string RootFodlerId = String.Empty;
         private TaskCompletionSource<bool> tcs = null;
         #endregion
 
@@ -61,22 +58,18 @@ namespace PintheCloudWS.Managers
             GoogleDriveManager.ExtensionMapper = new Dictionary<string, string>();
 
             // Document file
-            GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.document", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
             // SpreadSheet file
-            GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.spreadsheet", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             // Image file
+            // Presentation file 
+            GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.document", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.spreadsheet", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.drawing", "image/png");
-            // Presentation file
             GoogleDriveManager.GoogleDocMapper.Add("application/vnd.google-apps.presentation", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-            // Not using
-            //GoogleDocMapper.Add("application/vnd.google-apps.form", "Not Supported");
-            //GoogleDocMapper.Add("application/vnd.google-apps.folder", "Folder");
 
             GoogleDriveManager.ExtensionMapper.Add("application/vnd.google-apps.document", "doc");
             GoogleDriveManager.ExtensionMapper.Add("application/vnd.google-apps.spreadsheet", "xls");
             GoogleDriveManager.ExtensionMapper.Add("application/vnd.google-apps.drawing", "png");
             GoogleDriveManager.ExtensionMapper.Add("application/vnd.google-apps.presentation", "ppt");
-            //GoogleDriveManager.ExtensionMapper.Add("application/vnd.google-apps.formr", "");
 
             Task setMimeTypeMapperTask = this.SetMimeTypeMapper();
         }
@@ -94,23 +87,23 @@ namespace PintheCloudWS.Managers
                 //        ClientId = GOOGLE_DRIVE_CLIENT_ID,
                 //        ClientSecret = GOOGLE_DRIVE_CLIENT_SECRET
                 //    }
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                this.Credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
                     new Uri("ms-appx:///Assets/client_secret.json"),
                     new[] { DriveService.Scope.Drive },
                     this._GetUserSession(),
                     CancellationToken.None
                 );
 
-                this.service = new DriveService(new BaseClientService.Initializer()
+                this.Service = new DriveService(new BaseClientService.Initializer()
                 {
-                    HttpClientInitializer = credential,
+                    HttpClientInitializer = this.Credential,
                     ApplicationName = "athere",
                 });
-                AboutResource aboutResource = service.About;
+                AboutResource aboutResource = this.Service.About;
                 About about = await aboutResource.Get().ExecuteAsync();
-                this.user = about.User;
+                this.User = about.User;
 
-                string name = this.user.DisplayName;
+                string name = this.User.DisplayName;
                 string id = about.PermissionId;
 
                 // Register account
@@ -165,8 +158,7 @@ namespace PintheCloudWS.Managers
         {
             App.ApplicationSettings.Remove(GOOGLE_DRIVE_USER_KEY);
             App.ApplicationSettings.Remove(GOOGLE_DRIVE_SIGN_IN_KEY);
-            this.FoldersTree.Clear();
-            this.FolderRootTree.Clear();
+            StorageExplorer.RemoveKey(this.GetStorageName());
             this.CurrentAccount = null;
         }
 
@@ -228,10 +220,10 @@ namespace PintheCloudWS.Managers
         public async Task<FileObject> GetRootFolderAsync()
         {
             FileObject rootFile = new FileObject();
-            AboutResource aboutResource = service.About;
+            AboutResource aboutResource = this.Service.About;
             About about = await aboutResource.Get().ExecuteAsync();
             rootFile.Id = about.RootFolderId;
-            this.rootFodlerId = about.RootFolderId;
+            this.RootFodlerId = about.RootFolderId;
             rootFile.Name = "";
             return rootFile;
         }
@@ -239,7 +231,7 @@ namespace PintheCloudWS.Managers
 
         public async Task<List<FileObject>> GetRootFilesAsync()
         {
-            FileList fileList = await this.service.Files.List().ExecuteAsync();
+            FileList fileList = await this.Service.Files.List().ExecuteAsync();
             List<FileObject> childList = new List<FileObject>();
             foreach (Google.Apis.Drive.v2.Data.File file in fileList.Items)
             {
@@ -255,7 +247,7 @@ namespace PintheCloudWS.Managers
 
         public async Task<FileObject> GetFileAsync(string fileId)
         {
-            Google.Apis.Drive.v2.Data.File file = await service.Files.Get(fileId).ExecuteAsync();
+            Google.Apis.Drive.v2.Data.File file = await this.Service.Files.Get(fileId).ExecuteAsync();
             if (this._IsValidFile(file))
             {
                 return ConvertToFileObjectHelper.ConvertToFileObject(file);
@@ -271,7 +263,7 @@ namespace PintheCloudWS.Managers
             //    return await GetRootFilesAsync();
             //}
             List<FileObject> list = new List<FileObject>();
-            ChildList childList = await service.Children.List(folderId).ExecuteAsync();
+            ChildList childList = await this.Service.Children.List(folderId).ExecuteAsync();
             foreach (ChildReference child in childList.Items)
             {
                 list.Add(await this.GetFileAsync(child.Id));
@@ -283,7 +275,7 @@ namespace PintheCloudWS.Managers
 
         public async Task<Stream> DownloadFileStreamAsync(string fileId)
         {
-            byte[] inarray = await service.HttpClient.GetByteArrayAsync(fileId);
+            byte[] inarray = await this.Service.HttpClient.GetByteArrayAsync(fileId);
             return new MemoryStream(inarray);
         }
 
@@ -301,7 +293,7 @@ namespace PintheCloudWS.Managers
                 file.Parents.Add(p);
 
                 string extension = fileName.Split('.').Last();
-                var insert = service.Files.Insert(file, inputStream, GoogleDriveManager.MimeTypeMapper[extension]);
+                var insert = this.Service.Files.Insert(file, inputStream, GoogleDriveManager.MimeTypeMapper[extension]);
                 var task = await insert.UploadAsync();
             }
             catch
@@ -395,7 +387,7 @@ namespace PintheCloudWS.Managers
             foreach (User user in owners)
             {
                 // TODO Get that values from converted account.
-                result &= ((this.user.DisplayName.Equals(user.DisplayName)) && user.IsAuthenticatedUser.Value);
+                result &= ((this.User.DisplayName.Equals(user.DisplayName)) && user.IsAuthenticatedUser.Value);
             }
             return result;
         }
@@ -477,27 +469,6 @@ namespace PintheCloudWS.Managers
             Debug.WriteLine("Thumbnail : " + file.Thumbnail);
             Debug.WriteLine("=====================================================");
         }
-        #endregion
-
-        #region Not Using Methods
-        //private async Task DeleteFile(string fileId)
-        //{
-        //    await service.Files.Delete(fileId).ExecuteAsync();
-        //}
-        //public async Task<Stream> DownloadFileStreamAsync2(string downloadUrl)
-        //{
-        //    var downloader = new MediaDownloader(this.service);
-        //    MemoryStream ms = new MemoryStream();
-        //    var progress = await downloader.DownloadAsync(downloadUrl, ms);
-        //    if (progress.Status == DownloadStatus.Completed)
-        //    {
-        //        return ms;
-        //    }
-        //    else
-        //    {
-        //        return null;
-        //    }
-        //}
         #endregion
     }
 }

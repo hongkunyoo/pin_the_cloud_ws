@@ -89,6 +89,8 @@ namespace PintheCloudWS.Pages
 
         #endregion
 
+
+
         #region UI Methods
 
         private void uiCloudModeComboBox_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
@@ -116,6 +118,7 @@ namespace PintheCloudWS.Pages
         #endregion
 
 
+
         #region Private Methods
 
         private async void TreeUp()
@@ -126,7 +129,7 @@ namespace PintheCloudWS.Pages
                 await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
 
                 // If message is visible, set collapsed.
-                if (uiPinFileMessage.Visibility == Visibility.Visible && !uiPinFileMessage.Text.Equals(AppResources.Refrshing))
+                if (uiPinFileMessage.Visibility == Visibility.Visible && !uiPinFileMessage.Text.Equals(AppResources.Refreshing))
                     uiPinFileMessage.Visibility = Visibility.Collapsed;
 
                 // Do tree up work and set items to list

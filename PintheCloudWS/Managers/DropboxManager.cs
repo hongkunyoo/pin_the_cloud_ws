@@ -32,9 +32,6 @@ namespace PintheCloudWS.Managers
         private const string DROPBOX_IMAGE_URI = "/Assets/pajeon/pin/png/ico_dropbox.png";
         private const string DROPBOX_COLOR_HEX_STRING = "26A4DD";
 
-        private Stack<List<FileObject>> FoldersTree = new Stack<List<FileObject>>();
-        private Stack<FileObjectViewItem> FolderRootTree = new Stack<FileObjectViewItem>();
-
         //private DropNetClient _client = null;
         private StorageAccount CurrentAccount = null;
         private TaskCompletionSource<bool> tcs = null;
@@ -171,8 +168,7 @@ namespace PintheCloudWS.Managers
         {
             App.ApplicationSettings.Remove(DROPBOX_USER_KEY);
             App.ApplicationSettings.Remove(DROPBOX_SIGN_IN_KEY);
-            this.FoldersTree.Clear();
-            this.FolderRootTree.Clear();
+            StorageExplorer.RemoveKey(this.GetStorageName());
             //this._client = null;
             this.CurrentAccount = null;
         }

@@ -124,8 +124,8 @@ namespace PintheCloudWS.Pages
             Explorer explorer = selectedListBoxItem.Content as Explorer;
             this.LoadExplorer(explorer.ClassType, this.CurrentSpotViewItem);
         }
-
         #endregion
+
 
 
         #region Private Methods

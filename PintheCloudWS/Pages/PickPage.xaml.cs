@@ -71,7 +71,7 @@ namespace PintheCloudWS.Pages
             this.CurrentSpot = App.SpotManager.GetSpotObject(spotViewItem.SpotId);
             
             // Set this pick page.
-            this.SetPickPage();
+            this.SetPickPage(AppResources.Loading);
         }
 
 
@@ -83,8 +83,8 @@ namespace PintheCloudWS.Pages
         #endregion
 
 
-        #region UI Methods
 
+        #region UI Methods
         private void uiFileListView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             // Get Selected File Obejct
@@ -96,19 +96,19 @@ namespace PintheCloudWS.Pages
             else
                 base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
         }
-
         #endregion
 
-        #region Private Methods
 
-        private void SetPickPage()
+
+        #region Private Methods
+        private void SetPickPage(string message)
         {
             // If internet is on, refresh
             // Otherwise, show internet unavailable message.
             if (NetworkInterface.GetIsNetworkAvailable())
             {
                 if (!this.FileObjectViewModel.IsDataLoaded)
-                    this.SetPickFileListAsync();
+                    this.SetPickFileListAsync(message);
             }
             else
             {
@@ -119,14 +119,15 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private async void SetPickFileListAsync()
+        private async void SetPickFileListAsync(string message)
         {
             // Show Progress Indicator
             base.SetProgressRing(uiFileListProgressRing, true);
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 uiPickFileList.Visibility = Visibility.Collapsed;
-                uiPickFileListMessage.Visibility = Visibility.Collapsed;
+                uiPickFileListMessage.Text = message;
+                uiPickFileListMessage.Visibility = Visibility.Visible;
             });
 
             try
@@ -194,7 +195,6 @@ namespace PintheCloudWS.Pages
             // Hide Progress Indicator
             base.SetProgressRing(uiFileListProgressRing, false);
         }
-
         #endregion
 
     }

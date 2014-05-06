@@ -83,6 +83,8 @@ namespace PintheCloudWS.Pages
 
         #endregion
 
+
+
         #region UI Methods
 
         private void uiSpotGridView_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
@@ -114,11 +116,12 @@ namespace PintheCloudWS.Pages
         private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.NearSpotViewModel.IsDataLoaded = false;
-            this.SetSpotGridView(AppResources.Refrshing);
+            this.SetSpotGridView(AppResources.Refreshing);
         }
 
 
         #endregion
+
 
 
         #region Private Methods
