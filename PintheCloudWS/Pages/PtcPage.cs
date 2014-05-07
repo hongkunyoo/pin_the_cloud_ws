@@ -20,14 +20,15 @@ namespace PintheCloudWS.Pages
     {
         protected const string PICK_FILE_OBJECT_VIEW_MODEL_KEY = "PICK_FILE_OBJECT_VIEW_MODEL_KEY";
         protected const string PIN_FILE_OBJECT_VIEW_MODEL_KEY = "PIN_FILE_OBJECT_VIEW_MODEL_KEY";
+        protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
 
         protected const string PREV_PAGE_KEY = "PREV_PAGE";
         protected const string PIVOT_KEY = "PIVOT_KEY";
 
-        protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
+        protected const int OK_MODE = 0;
+        protected const int OK_CANCEL_MODE = 1;
 
         protected const string NULL_PASSWORD = "null";
-        public const double STATUS_BAR_HEIGHT = 32.0;
 
         private NavigationHelper navigationHelper;
 
@@ -140,21 +141,41 @@ namespace PintheCloudWS.Pages
             });
         }
 
-        protected async void ShowMessageDialog(string message)
+
+        protected async void ShowMessageDialog(string message, int mode, Context.TriggerEvent triggerEvent = null)
         {
             // Create the message dialog and set its content
             MessageDialog messageDialog = new MessageDialog(message);
 
-            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
-            messageDialog.Commands.Add(new UICommand(
-                AppResources.OK,
-                new UICommandInvokedHandler((command) => { })));
+            switch (mode)
+            { 
+                case OK_MODE:
+                    // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.OK,
+                        new UICommandInvokedHandler((command) => { })));
+
+                    // Set the command to be invoked when escape is pressed
+                    messageDialog.CancelCommandIndex = 0;
+                    break;
+
+                case OK_CANCEL_MODE:
+                    // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.OK,
+                        new UICommandInvokedHandler((command) => triggerEvent())));
+
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.Cancel,
+                        new UICommandInvokedHandler((command) => { })));
+
+                    // Set the command to be invoked when escape is pressed
+                    messageDialog.CancelCommandIndex = 1;
+                    break;
+            }
 
             // Set the command that will be invoked by default
             messageDialog.DefaultCommandIndex = 0;
-
-            // Set the command to be invoked when escape is pressed
-            messageDialog.CancelCommandIndex = 0;
 
             // Show the message dialog
             await messageDialog.ShowAsync();

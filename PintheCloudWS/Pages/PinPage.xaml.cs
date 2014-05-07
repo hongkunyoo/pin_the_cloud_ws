@@ -109,10 +109,54 @@ namespace PintheCloudWS.Pages
             this.SetPinPage(AppResources.Loading);
         }
 
+
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (StorageExplorer.GetCurrentTree() != null)
                 this.TreeUp();
+        }
+
+
+        private async void uiPinFileSignInButton_Click(object sender, RoutedEventArgs e)
+        {
+            // If Internet available, Set pin list with root folder file list.
+            // Otherwise, show internet bad message
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                // Show Loading message and save is login true for pivot moving action while sign in.
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                    uiPinFileMessage.Text = AppResources.DoingSignIn;
+                    uiPinFileMessage.Visibility = Visibility.Visible;
+
+                    uiPinFileListGrid.Visibility = Visibility.Visible;
+                    uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
+                });
+
+                try
+                {
+                    // Sign in and await that task.
+                    // If sign in success, set list.
+                    base.SetProgressRing(uiFileListProgressRing, true);
+                    IStorageManager iStorageManager = Switcher.GetCurrentStorage();
+                    if (!iStorageManager.IsSigningIn())
+                        TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());
+                    await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
+                    this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
+                }
+                catch
+                {
+                    base.ShowMessageDialog(AppResources.BadSignInMessage, OK_MODE);
+                    uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                    uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                    base.SetProgressRing(uiFileListProgressRing, false);
+                }
+            }
+            else
+            {
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+            }
         }
 
         #endregion
@@ -272,48 +316,6 @@ namespace PintheCloudWS.Pages
             return null;
         }
 
-
-        private async void uiPinFileSignInButton_Click(object sender, RoutedEventArgs e)
-        {
-            // If Internet available, Set pin list with root folder file list.
-            // Otherwise, show internet bad message
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                // Show Loading message and save is login true for pivot moving action while sign in.
-                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-                {
-                    uiPinFileListGridView.Visibility = Visibility.Collapsed;
-                    uiPinFileMessage.Text = AppResources.DoingSignIn;
-                    uiPinFileMessage.Visibility = Visibility.Visible;
-
-                    uiPinFileListGrid.Visibility = Visibility.Visible;
-                    uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
-                });
-
-                try
-                {
-                    // Sign in and await that task.
-                    // If sign in success, set list.
-                    base.SetProgressRing(uiFileListProgressRing, true);
-                    IStorageManager iStorageManager = Switcher.GetCurrentStorage();
-                    if (!iStorageManager.IsSigningIn())
-                        TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());
-                    await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
-                    this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
-                }
-                catch
-                {
-                    base.ShowMessageDialog(AppResources.BadSignInMessage);
-                    uiPinFileListGrid.Visibility = Visibility.Collapsed;
-                    uiPinFileSignInPanel.Visibility = Visibility.Visible;
-                    base.SetProgressRing(uiFileListProgressRing, false);
-                }
-            }
-            else
-            {
-                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
-            }
-        }
         #endregion Private Methods
     }
 }

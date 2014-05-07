@@ -94,7 +94,7 @@ namespace PintheCloudWS.Pages
             if (NetworkInterface.GetIsNetworkAvailable())
                 this.LaunchFileAsync(fileObjectViewItem);
             else
-                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
         }
         #endregion
 
@@ -195,6 +195,7 @@ namespace PintheCloudWS.Pages
             // Hide Progress Indicator
             base.SetProgressRing(uiFileListProgressRing, false);
         }
+
         #endregion
 
     }

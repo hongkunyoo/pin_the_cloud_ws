@@ -85,6 +85,8 @@ namespace PintheCloudWS.Managers
             this.myAccount = account;
             return true;
         }
+
+
         public async Task<PtcAccount> GetPtcAccountAsync()
         {
             // TODO : Reset after presentation

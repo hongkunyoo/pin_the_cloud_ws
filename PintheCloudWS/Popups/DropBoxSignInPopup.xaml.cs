@@ -35,7 +35,7 @@ namespace PintheCloudWS.Popups
             InitializeComponent();
             this.Popup = popup;
             this.count = 0;
-            uiWebBrowser.Margin = new Thickness(0, PtcPage.STATUS_BAR_HEIGHT, 0, 0);
+            //uiWebBrowser.Margin = new Thickness(0, PtcPage.STATUS_BAR_HEIGHT, 0, 0);
             uiWebBrowser.Navigate(new Uri(uri, UriKind.RelativeOrAbsolute));
             uiWebBrowser.ScriptNotify += (sender, e) =>
             {

@@ -137,7 +137,7 @@ namespace PintheCloudWS.Pages
             }
             else
             {
-                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
             }
         }
 

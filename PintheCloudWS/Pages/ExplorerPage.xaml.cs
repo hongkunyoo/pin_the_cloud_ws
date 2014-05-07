@@ -43,29 +43,10 @@ namespace PintheCloudWS.Pages
         private List<FileObject> CurrentFileObjectList = new List<FileObject>();
         private List<FileObjectViewItem> PinSelectedFileList = new List<FileObjectViewItem>();
 
+        private CloudModeViewModel CloudModeViewModel = new CloudModeViewModel();
+
         private SpotViewItem CurrentSpotViewItem = null;
         private SpotObject CurrentSpot = null;
-
-        //private Frame HiddenFrame = null;
-        //private SpotViewItem CurrentSpotViewItem = null;
-
-        //private List<Explorer> ExplorerList = new List<Explorer>
-        //{
-        //    new Explorer() { Title = AppResources.Pick, ClassType = typeof(PickPage) },
-        //    new Explorer() { Title = AppResources.Pin, ClassType = typeof(PinPage) },
-        //};
-
-        //public class Explorer
-        //{
-        //    public string Title { get; set; }
-
-        //    public Type ClassType { get; set; }
-
-        //    public override string ToString()
-        //    {
-        //        return Title;
-        //    }
-        //}
 
 
 
@@ -85,6 +66,8 @@ namespace PintheCloudWS.Pages
             // Set Datacontext
             uiPickFileList.DataContext = this.PickFileObjectViewModel;
             uiPinFileListGridView.DataContext = this.PinFileObjectViewModel;
+            uiCloudModeComboBox.DataContext = this.CloudModeViewModel;
+            uiCloudModeComboBox.SelectedIndex = Switcher.GetCurrentIndex();
         }
 
 
@@ -136,56 +119,33 @@ namespace PintheCloudWS.Pages
             switch (uiExplorerList.SelectedIndex)
             {
                 case EventHelper.PICK_PIVOT:
-                    // Change edit view mode
-                    string currentEditViewMode = uiPickFileListEditViewImageButton.ImageSource;
-                    if (currentEditViewMode.Equals(VIEW_IMAGE_URI))  // Edit mode
-                        ApplicationBar.Buttons.Add(this.PickDeleteAppBarButton);
-                    else if (currentEditViewMode.Equals(EDIT_IMAGE_URI))  // View mode
-                        ApplicationBar.Buttons.Remove(this.PickDeleteAppBarButton);
-
                     // Set Pick Pivot UI
-                    ApplicationBar.Buttons.Remove(this.PinFileAppBarButton);
-                    for (int i = 0; i < AppBarMenuItems.Length; i++)
-                        ApplicationBar.MenuItems.Remove(this.AppBarMenuItems[i]);
-                    uiPickPivotImage.Source = new BitmapImage(new Uri(PICK_PIVOT_HIGHLIGHT_IMAGE_URI, UriKind.Relative));
-                    uiPinPivotImage.Source = new BitmapImage(new Uri(PIN_PIVOT_IMAGE_URI, UriKind.Relative));
-                    uiPivotTitleGrid.Background = new SolidColorBrush(ColorHexStringToBrushConverter.GetColorFromHexString(PICK_PIVOT_TITLE_GRID_COLOR_HEX_STRING));
-                    uiCurrentCloudModeImage.Visibility = Visibility.Collapsed;
-
+                    uiPickPivotGrid.Visibility = Visibility.Visible;
+                    uiPinPivotGrid.Visibility = Visibility.Collapsed;
+                    uiPinAppBarButton.Visibility = Visibility.Collapsed;
                     this.SetPickPivot(AppResources.Loading);
                     break;
 
 
                 case EventHelper.PIN_PIVOT:
                     // Set Pin Pivot UI
+                    uiPickPivotGrid.Visibility = Visibility.Collapsed;
+                    uiPinPivotGrid.Visibility = Visibility.Visible;
                     IStorageManager iStorageManager = Switcher.GetCurrentStorage();
-                    ApplicationBar.Buttons.Remove(this.PickDeleteAppBarButton);
-                    ApplicationBar.Buttons.Add(this.PinFileAppBarButton);
-                    for (int i = 0; i < AppBarMenuItems.Length; i++)
-                        ApplicationBar.MenuItems.Add(this.AppBarMenuItems[i]);
-                    uiPickPivotImage.Source = new BitmapImage(new Uri(PICK_PIVOT_IMAGE_URI, UriKind.Relative));
-                    uiPinPivotImage.Source = new BitmapImage(new Uri(PIN_PIVOT_HIGHLIGHT_IMAGE_URI, UriKind.Relative));
-                    uiPivotTitleGrid.Background = new SolidColorBrush(ColorHexStringToBrushConverter.GetColorFromHexString(iStorageManager.GetStorageColorHexString()));
-                    uiCurrentCloudModeImage.Source = new BitmapImage(new Uri(iStorageManager.GetStorageImageUri(), UriKind.Relative));
-                    uiCurrentCloudModeImage.Visibility = Visibility.Visible;
+                    uiPickDeleteAppBarButton.Visibility = Visibility.Collapsed;
+                    uiPinAppBarButton.Visibility = Visibility.Visible;
+
+                    // TODO Wait signin and change cloud mode combobox name
 
                     this.SetPinPivot(AppResources.Loading);
                     break;
             }
-
-            //if (uiExplorerList.SelectedItem != null)
-            //{
-            //    App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY] = uiExplorerList.SelectedIndex;
-            //    ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
-            //    Explorer explorer = selectedListBoxItem.Content as Explorer;
-            //    this.LoadExplorer(explorer.ClassType, this.CurrentSpotViewItem);
-            //}
         }
 
 
         private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            switch (uiExplorerPivot.SelectedIndex)
+            switch (uiExplorerList.SelectedIndex)
             {
                 case EventHelper.PICK_PIVOT:
                     this.PickFileObjectViewModel.IsDataLoaded = false;
@@ -198,6 +158,121 @@ namespace PintheCloudWS.Pages
                     TaskHelper.AddTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName(), StorageExplorer.Refresh());
                     this.SetPinPivot(AppResources.Refreshing);
                     break;
+            }
+        }
+
+
+        private void uiPickFileList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        {
+            // Get Selected File Obejct
+            FileObjectViewItem fileObjectViewItem = e.ClickedItem as FileObjectViewItem;
+
+            // Launch files to other reader app.
+            if (NetworkInterface.GetIsNetworkAvailable())
+                this.LaunchFileAsync(fileObjectViewItem);
+            else
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+        }
+
+
+        private void uiCloudModeComboBox_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
+        {
+            // Get index
+            CloudModeViewItem cloudModeViewItem = uiCloudModeComboBox.SelectedItem as CloudModeViewItem;
+
+            if (Switcher.GetCurrentStorage().GetStorageName().Equals(cloudModeViewItem.CloudName)) return;
+            if (Switcher.GetCurrentStorage().IsSigningIn()) return;
+            Switcher.SetStorageTo(cloudModeViewItem.CloudName);
+
+            // If it is not in current cloud mode, change it.
+            uiPinFileCurrentPath.Text = "";
+            base.SetProgressRing(uiPinPivotProgressRing, false);
+            this.PinFileObjectViewModel.IsDataLoaded = false;
+            this.SetPinPivot(AppResources.Loading);
+        }
+
+
+        private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (StorageExplorer.GetCurrentTree() != null)
+                this.TreeUp();
+        }
+
+
+        private async void uiPinFileSignInButton_Click(object sender, RoutedEventArgs e)
+        {
+            // If Internet available, Set pin list with root folder file list.
+            // Otherwise, show internet bad message
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                // Show Loading message and save is login true for pivot moving action while sign in.
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                    uiPinFileMessage.Text = AppResources.DoingSignIn;
+                    uiPinFileMessage.Visibility = Visibility.Visible;
+
+                    uiPinFileListGrid.Visibility = Visibility.Visible;
+                    uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
+                });
+
+                try
+                {
+                    // Sign in and await that task.
+                    // If sign in success, set list.
+                    base.SetProgressRing(uiPinPivotProgressRing, true);
+                    IStorageManager iStorageManager = Switcher.GetCurrentStorage();
+                    if (!iStorageManager.IsSigningIn())
+                        TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());
+                    await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
+                    this.SetPinFileListAsync(iStorageManager, AppResources.Loading, null);
+                }
+                catch
+                {
+                    base.ShowMessageDialog(AppResources.BadSignInMessage, OK_MODE);
+                    uiPinFileListGrid.Visibility = Visibility.Collapsed;
+                    uiPinFileSignInPanel.Visibility = Visibility.Visible;
+                    base.SetProgressRing(uiPinPivotProgressRing, false);
+                }
+            }
+            else
+            {
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+            }
+        }
+
+
+        private void uiPickDeleteAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                base.ShowMessageDialog(AppResources.DeleteFileMessage, OK_CANCEL_MODE, () => 
+                {
+                    uiPickDeleteAppBarButton.IsEnabled = false;
+                    foreach (FileObjectViewItem fileObjectViewItem in this.PickSelectedFileList)
+                        this.DeleteFileAsync(fileObjectViewItem);
+                    this.PickSelectedFileList.Clear();
+                });
+            }
+            else
+            {
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+            }
+        }
+
+
+        private void uiPinAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                this.uiPinAppBarButton.IsEnabled = false;
+                foreach (FileObjectViewItem fileObjectViewItem in this.PinSelectedFileList)
+                    this.PinFileAsync(fileObjectViewItem);
+                this.PinSelectedFileList.Clear();
+            }
+            else
+            {
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
             }
         }
 
@@ -228,7 +303,7 @@ namespace PintheCloudWS.Pages
         private async void SetPickFileListAsync(string message)
         {
             // Show Progress Indicator
-            base.SetProgressRing(uiProgressRing, true);
+            base.SetProgressRing(uiPickPivotFileListProgressRing, true);
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 uiPickFileList.Visibility = Visibility.Collapsed;
@@ -248,6 +323,10 @@ namespace PintheCloudWS.Pages
                         uiPickFileList.Visibility = Visibility.Visible;
                         uiPickFileListMessage.Visibility = Visibility.Collapsed;
                         this.PickFileObjectViewModel.SetItems(fileList, false);
+
+                        // Set List Edit View Button
+                        if (this.CurrentSpotViewItem.AccountId.Equals(App.AccountManager.GetPtcId()))
+                            uiPickFileListEditViewButton.Visibility = Visibility.Visible;
                     });
                 }
                 else
@@ -270,7 +349,72 @@ namespace PintheCloudWS.Pages
 
 
             // Hide Progress Indicator
-            base.SetProgressRing(uiProgressRing, false);
+            base.SetProgressRing(uiPickPivotFileListProgressRing, false);
+        }
+
+
+        private async void LaunchFileAsync(FileObjectViewItem fileObjectViewItem)
+        {
+            // Show Downloading message
+            base.SetProgressRing(uiPickPivotFileListProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.DOWNLOAD_IMAGE_URI;
+                fileObjectViewItem.SelectFileImagePress = false;
+            });
+
+            try
+            {
+                // Download file and Launch files to other reader app.
+                await this.CurrentSpot.PreviewFileObjectAsync(this.CurrentSpot.GetFileObject(fileObjectViewItem.Id));
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    fileObjectViewItem.SelectFileImagePress = true;
+                });
+            }
+            catch
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
+            }
+
+            // Hide Progress Indicator
+            base.SetProgressRing(uiPickPivotFileListProgressRing, false);
+        }
+
+
+        private async void DeleteFileAsync(FileObjectViewItem fileObjectViewItem)
+        {
+            // Show Deleting message
+            base.SetProgressRing(uiPickPivotFileListProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.ING_IMAGE_URI;
+            });
+
+
+            // Delete
+            try
+            {
+                await App.BlobStorageManager.DeleteFileAsync(fileObjectViewItem.Id);
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    this.PickFileObjectViewModel.Items.Remove(fileObjectViewItem);
+                    if (this.PickFileObjectViewModel.Items.Count < 1)
+                    {
+                        uiPickFileListEditViewButton.Visibility = Visibility.Collapsed;
+                        uiPickFileList.Visibility = Visibility.Collapsed;
+                        uiPickFileListMessage.Text = AppResources.NoFileInSpotMessage;
+                        uiPickFileListMessage.Visibility = Visibility.Visible;
+                    }
+                });
+            }
+            catch
+            {
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
+            }
+
+            // Hide Progress Indicator
+            base.SetProgressRing(uiPickPivotFileListProgressRing, false);
         }
 
 
@@ -313,7 +457,7 @@ namespace PintheCloudWS.Pages
         {
             // Set Mutex true and Show Process Indicator
             // Clear selected file and set pin button false.
-            base.SetProgressRing(uiProgressRing, true);
+            base.SetProgressRing(uiPinPivotProgressRing, true);
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 uiPinFileListGridView.Visibility = Visibility.Collapsed;
@@ -381,7 +525,7 @@ namespace PintheCloudWS.Pages
                 uiPinFileMessage.Text = AppResources.BadLoadingFileMessage;
                 uiPinFileMessage.Visibility = Visibility.Visible;
             }
-            base.SetProgressRing(uiProgressRing, false);
+            base.SetProgressRing(uiPinPivotProgressRing, false);
         }
 
 
@@ -398,87 +542,59 @@ namespace PintheCloudWS.Pages
         }
 
 
-        ///// <summary>
-        ///// This method is responsible for loading the individual input and output sections for each scenario.  This 
-        ///// is based on navigating a hidden Frame to the ScenarioX.xaml page and then extracting out the input
-        ///// and output sections into the respective UserControl on the main page.
-        ///// </summary>
-        ///// <param name="scenarioName"></param>
-        //public void LoadExplorer(Type explorerClass, object parameter)
-        //{
-        //    // Load the ScenarioX.xaml file into the Frame.
-        //    this.HiddenFrame.Navigate(explorerClass, parameter);
-
-        //    // Get the top element, the Page, so we can look up the elements
-        //    // that represent the input and output sections of the ScenarioX file.
-        //    Page hiddenPage = HiddenFrame.Content as Page;
-
-        //    // Get each element.
-        //    UIElement contentGrid = hiddenPage.FindName("uiContentGrid") as UIElement;
-
-        //    if (contentGrid == null)
-        //    {
-        //        // Malformed input section.
-        //        return;
-        //    }
-
-        //    // Find the LayoutRoot which parents the input and output sections in the main page.
-        //    Panel panel = hiddenPage.FindName("uiLayoutRoot") as Panel;
-
-        //    if (panel != null)
-        //    {
-        //        // Get rid of the content that is currently in the intput and output sections.
-        //        panel.Children.Remove(contentGrid);
-
-        //        // Populate the input and output sections with the newly loaded content.
-        //        uiExplorerUserControl.Content = contentGrid;
-        //    }
-        //    else
-        //    {
-        //        // Malformed Scenario file.
-        //    }
-        //}
-
-
-        //private void PopulateExplorerList()
-        //{
-        //    ObservableCollection<object> ExplorerBindingList = new ObservableCollection<object>();
-
-        //    // Populate the ListBox with the list of scenarios as defined in Constants.cs.
-        //    foreach (Explorer s in ExplorerList)
-        //    {
-        //        ListViewItem item = new ListViewItem();
-        //        item.Content = s;
-        //        item.Name = s.ClassType.FullName;
-        //        item.FontSize = 22;
-        //        item.Foreground = new SolidColorBrush(ColorHexStringToBrushConverter.GetColorFromHexString("919FA6"));
-        //        ExplorerBindingList.Add(item);
-        //    }
-
-        //    // Bind the ListBox to the scenario list.
-        //    uiExplorerList.ItemsSource = ExplorerBindingList;
-
-        //    // Starting scenario is the first or based upon a previous selection.
-        //    int startingScenarioIndex = -1;
-
-        //    if (App.ApplicationSessions.Contains(SELECTED_EXPLORER_INDEX_KEY))
-        //    {
-        //        int selectedScenarioIndex = Convert.ToInt32(App.ApplicationSessions[SELECTED_EXPLORER_INDEX_KEY]);
-        //        startingScenarioIndex = selectedScenarioIndex;
-        //    }
-        //    uiExplorerList.SelectedIndex = startingScenarioIndex != -1 ? startingScenarioIndex : 0;
-        //}
-
-
-        private void uiPickDeleteAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void TreeUp()
         {
-        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+            try
+            {
+                // Wait Sync work
+                await TaskHelper.WaitTask(TaskHelper.STORAGE_EXPLORER_SYNC + Switcher.GetCurrentStorage().GetStorageName());
+
+                // If message is visible, set collapsed.
+                if (uiPinFileMessage.Visibility == Visibility.Visible && !uiPinFileMessage.Text.Equals(AppResources.Refreshing))
+                    uiPinFileMessage.Visibility = Visibility.Collapsed;
+
+                // Do tree up work and set items to list
+                List<FileObject> fileList = StorageExplorer.TreeUp();
+                this.CurrentFileObjectList = fileList;
+                this.PinFileObjectViewModel.SetItems(this.CurrentFileObjectList, true);
+                uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
+
+                // Clear trees.
+                //this.PinFileAppBarButton.IsEnabled = false;
+                this.PinSelectedFileList.Clear();
+            }
+            catch
+            {
+                return;
+            }
         }
 
 
-        private void uiPinAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private async void PinFileAsync(FileObjectViewItem fileObjectViewItem)
         {
-        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+            // Show Uploading message and file for good UX
+            base.SetProgressRing(uiPinPivotProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.ING_IMAGE_URI;
+            });
+
+            try
+            {
+                string blobId = await this.CurrentSpot.AddFileObjectAsync(this.GetCloudStorageFileObjectById(fileObjectViewItem.Id));
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    this.PickFileObjectViewModel.IsDataLoaded = false;
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
+                });
+            }
+            catch
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
+            }
+
+            // Hide progress message
+            base.SetProgressRing(uiPinPivotProgressRing, false);
         }
 
         #endregion

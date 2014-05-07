@@ -25,6 +25,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("Dropbox");
             }
         }
+        public static string DeleteFileMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("DeleteFileMessage");
+            }
+        }
         public static string GoogleDrive
         {
             get
@@ -128,6 +135,13 @@ namespace PintheCloudWS.Locale
             get
             {
                 return ResourceLoader.GetString("OK");
+            }
+        }
+        public static string Cancel
+        {
+            get
+            {
+                return ResourceLoader.GetString("Cancel");
             }
         }
         public static string NoNearSpotMessage

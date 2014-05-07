@@ -2,7 +2,6 @@
 using PintheCloudWS.Helpers;
 using PintheCloudWS.Models;
 using PintheCloudWS.Pages;
-using PintheCloudWS.Models;
 using PintheCloudWS.Utilities;
 using PintheCloudWS.ViewModels;
 using System;

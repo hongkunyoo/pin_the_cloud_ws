@@ -73,13 +73,12 @@
         		<TextBlock x:Name="uiAccountNameText" TextWrapping="Wrap" Margin="2,0,0,0" FontSize="22" FontFamily="Segoe WP Light" Foreground="#FF919FA6" HorizontalAlignment="Left" VerticalAlignment="Top"/>
         	</StackPanel>
         	<ListView x:Name="uiExplorerList" Grid.Row="1" SelectionChanged="uiExplorerList_SelectionChanged" ItemContainerStyle="{StaticResource ExplorerListViewItemContainerStyle}">
-        		<ListViewItem Content="Pick" Margin="0"/>
-        		<ListViewItem Content="Pin"/>
+        		<ListViewItem Content="Pick" Margin="0" FontFamily="Segoe WP" FontSize="22"/>
+        		<ListViewItem Content="Pin" FontFamily="Segoe WP" FontSize="22"/>
         	</ListView>
         </Grid>
         <Grid x:Name="uiContentGrid" Grid.Column="2">
-        	<ProgressRing x:Name="uiProgressRing" HorizontalAlignment="Center" Width="150" Height="150"/>
-        	<Grid x:Name="uiPickPicvotGrid" Visibility="Collapsed">
+        	<Grid x:Name="uiPickPivotGrid">
         		<Grid.ColumnDefinitions>
         			<ColumnDefinition/>
         			<ColumnDefinition/>
@@ -89,15 +88,16 @@
         				<RowDefinition Height="145"/>
         				<RowDefinition/>
         			</Grid.RowDefinitions>
+        			<ProgressRing x:Name="uiPickPivotFileListProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200" Grid.Row="1"/>
         			<Grid>
         				<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-        				<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
+        				<Button x:Name="uiPickFileListEditViewButton" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0" Visibility="Collapsed">
         					<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
         				</Button>
         			</Grid>
         			<Grid Grid.Row="1">
         				<TextBlock x:Name="uiPickFileListMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" FontFamily="Segoe WP" Foreground="Black" Margin="73,38,0,0"/>
-        				<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiFileListView_ItemClick">
+        				<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiPickFileList_ItemClick">
         					<ListView.Resources>
         						<DataTemplate x:Key="uiFileListViewItemTemplate">
         							<Grid>
@@ -151,7 +151,7 @@
         		</Grid>
         	</Grid>
 
-        	<Grid x:Name="uiPinPicvotGrid" Visibility="Collapsed">
+        	<Grid x:Name="uiPinPivotGrid" Visibility="Collapsed">
         		<Grid.RowDefinitions>
         			<RowDefinition Height="Auto"/>
         			<RowDefinition/>
@@ -204,6 +204,8 @@
         			</Grid>
         		</StackPanel>
         		<Grid Grid.Row="1">
+        			<ProgressRing x:Name="uiPinPivotProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200"/>
+
         			<Grid x:Name="uiPinFileListGrid" Visibility="Collapsed">
         				<TextBlock x:Name="uiPinFileMessage" TextWrapping="Wrap" Foreground="Black" FontFamily="Segoe WP" FontSize="22" Margin="73,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed"/>
         				<GridView x:Name="uiPinFileListGridView" Visibility="Collapsed">
