@@ -818,7 +818,7 @@
                                         <ContentPresenter x:Name="contentPresenter"
                                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                                           ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                          Content="{TemplateBinding Content}" VerticalAlignment="Center" />
+                                                          Content="{TemplateBinding Content}" VerticalAlignment="Center" Foreground="#FF919FA6" />
                                         <!-- The 'Xg' text simulates the amount of space one line of text will occupy.
                                              In the DataPlaceholder state, the Content is not loaded yet so we
                                              approximate the size of the item using placeholder text. -->
