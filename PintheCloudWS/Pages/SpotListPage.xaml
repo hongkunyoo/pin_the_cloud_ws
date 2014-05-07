@@ -15,7 +15,7 @@
         <x:String x:Key="AppName">My Application</x:String>
     </Page.Resources>
 	<local:PtcPage.BottomAppBar>
-		<AppBar BorderBrush="{x:Null}" Height="88">
+		<AppBar BorderBrush="{x:Null}">
 			<Grid Background="#FFCED6DC">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
@@ -23,12 +23,7 @@
 				</Grid.ColumnDefinitions>
 				<StackPanel Orientation="Horizontal"/>
 				<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,64,0">
-					<StackPanel VerticalAlignment="Center">
-						<Button x:Name="uiRefreshButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiRefreshButton_Click" BorderThickness="0" Padding="0" Margin="0,0,0,3">
-							<Image Source="ms-appx:///Assets/pajeon/spot_list/png/refresh.png" Stretch="None"/>
-						</Button>
-						<TextBlock x:Uid="Refresh" TextWrapping="Wrap" Foreground="Black" HorizontalAlignment="Center" FontSize="18.667"/>
-					</StackPanel>
+					<AppBarButton HorizontalAlignment="Stretch" Label="refresh" VerticalAlignment="Stretch" Icon="Refresh"/>
 				</StackPanel>
 			</Grid>
 		</AppBar>

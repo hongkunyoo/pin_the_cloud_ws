@@ -223,7 +223,6 @@
     <Content Include="Assets\pajeon\spot_list\png\bar_setting.png" />
     <Content Include="Assets\pajeon\spot_list\png\general_fail.png" />
     <Content Include="Assets\pajeon\spot_list\png\general_transparent.png" />
-    <Content Include="Assets\pajeon\spot_list\png\refresh.png" />
     <Content Include="Assets\pajeon\spot_list\png\spotlist_lock.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_a.png" />
     <Content Include="Assets\pajeon\spot_list\png\spot_label_b.png" />

@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using System;
@@ -24,9 +25,6 @@ namespace PintheCloudWS.Pages
         protected const string PIVOT_KEY = "PIVOT_KEY";
 
         protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
-
-        protected const string PICK_SELECTED_FILE_KEY = "PICK_SELECTED_FILE_KEY";
-        protected const string PIN_SELECTED_FILE_KEY = "PIN_SELECTED_FILE_KEY";
 
         protected const string NULL_PASSWORD = "null";
         public const double STATUS_BAR_HEIGHT = 32.0;
@@ -65,6 +63,18 @@ namespace PintheCloudWS.Pages
         /// 유지됩니다. 페이지를 처음 방문할 때는 이 상태가 null입니다.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            // Get previous page and set it.
+            string previousPage = null;
+            if (App.ApplicationSessions.Contains(PREV_PAGE_KEY))
+                previousPage = (string)App.ApplicationSessions[PREV_PAGE_KEY];
+            App.ApplicationSessions[PREV_PAGE_KEY] = this.Frame.CurrentSourcePageType.Name;
+            
+            // Get previous pivot.
+            int previousPivot = 0;
+            if (App.ApplicationSessions.Contains(PIVOT_KEY))
+                previousPivot = (int)App.ApplicationSessions[PIVOT_KEY];
+
+            EventHelper.FireEvent((string)App.ApplicationSessions[PREV_PAGE_KEY], previousPage, previousPivot);
         }
 
         /// <summary>
@@ -78,6 +88,7 @@ namespace PintheCloudWS.Pages
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
         }
+
 
 
         #region NavigationHelper 등록
@@ -95,19 +106,18 @@ namespace PintheCloudWS.Pages
         {
             navigationHelper.OnNavigatedTo(e);
 
-            // Windows Phone 8
-            //// Get previous page and set it.
-            //string previousPage = null;
-            //if (PhoneApplicationService.Current.State.ContainsKey(PREV_PAGE_KEY))
-            //    previousPage = (string)PhoneApplicationService.Current.State[PREV_PAGE_KEY];
-            //PhoneApplicationService.Current.State[PREV_PAGE_KEY] = this.NavigationService.CurrentSource.ToString().Split('?')[0];
+            // Get previous page and set it.
+            string previousPage = null;
+            if (App.ApplicationSessions.Contains(PREV_PAGE_KEY))
+                previousPage = (string)App.ApplicationSessions[PREV_PAGE_KEY];
+            App.ApplicationSessions[PREV_PAGE_KEY] = this.Frame.Name.Split('?')[0];
 
-            //// Get previous pivot.
-            //int previousPivot = 0;
-            //if (PhoneApplicationService.Current.State.ContainsKey(PIVOT_KEY))
-            //    previousPivot = (int)PhoneApplicationService.Current.State[PIVOT_KEY];
+            // Get previous pivot.
+            int previousPivot = 0;
+            if (App.ApplicationSessions.Contains(PIVOT_KEY))
+                previousPivot = (int)App.ApplicationSessions[PIVOT_KEY];
 
-            //EventHelper.FireEvent((string)PhoneApplicationService.Current.State[PREV_PAGE_KEY], previousPage, previousPivot);
+            EventHelper.FireEvent((string)App.ApplicationSessions[PREV_PAGE_KEY], previousPage, previousPivot);
         }
 
 
@@ -117,6 +127,8 @@ namespace PintheCloudWS.Pages
         }
 
         #endregion
+
+
 
         #region Protected Methods
 

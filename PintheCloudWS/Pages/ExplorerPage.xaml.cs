@@ -29,6 +29,9 @@ namespace PintheCloudWS.Pages
     public sealed partial class ExplorerPage : PtcPage
     {
         private const string SELECTED_EXPLORER_INDEX_KEY = "SELECTED_EXPLORER_INDEX_KEY";
+        private const string PIN_APP_BAR_BUTTON_ICON_URI = "/Assets/pajeon/pin_the_cloud/png/general_bar_upload.png";
+        private const string DELETE_APP_BAR_BUTTON_ICON_URI = "/Assets/pajeon/pin_the_cloud/png/general_bar_delete.png";
+
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         
         private Frame HiddenFrame = null;
@@ -39,7 +42,6 @@ namespace PintheCloudWS.Pages
             new Explorer() { Title = AppResources.Pick, ClassType = typeof(PickPage) },
             new Explorer() { Title = AppResources.Pin, ClassType = typeof(PinPage) },
         };
-
 
         public class Explorer
         {
@@ -68,6 +70,7 @@ namespace PintheCloudWS.Pages
         {
             this.InitializeComponent();
 
+            // Set frames for pin and pick pages.
             this.HiddenFrame = new Windows.UI.Xaml.Controls.Frame();
             this.HiddenFrame.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
         }
@@ -105,6 +108,7 @@ namespace PintheCloudWS.Pages
         #endregion
 
 
+
         #region UI Methods
 
         private void uiExplorerList_SelectionChanged(object sender, Windows.UI.Xaml.Controls.SelectionChangedEventArgs e)
@@ -118,12 +122,14 @@ namespace PintheCloudWS.Pages
             }
         }
 
+
         private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             ListViewItem selectedListBoxItem = uiExplorerList.SelectedItem as ListViewItem;
             Explorer explorer = selectedListBoxItem.Content as Explorer;
             this.LoadExplorer(explorer.ClassType, this.CurrentSpotViewItem);
         }
+
         #endregion
 
 
@@ -199,6 +205,18 @@ namespace PintheCloudWS.Pages
                 startingScenarioIndex = selectedScenarioIndex;
             }
             uiExplorerList.SelectedIndex = startingScenarioIndex != -1 ? startingScenarioIndex : 0;
+        }
+
+
+        private void uiPickDeleteAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
+
+        private void uiPinAppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        	// TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
         }
 
         #endregion

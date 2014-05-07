@@ -15,7 +15,7 @@
         <x:String x:Key="AppName">My Application</x:String>
     </local:PtcPage.Resources>
 	<local:PtcPage.BottomAppBar>
-		<AppBar Height="88" BorderBrush="{x:Null}">
+		<AppBar BorderBrush="{x:Null}">
 			<Grid Background="#FFCED6DC" Opacity="0.9">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition/>
@@ -23,12 +23,9 @@
 				</Grid.ColumnDefinitions>
 				<StackPanel Orientation="Horizontal"/>
 				<StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,64,0" HorizontalAlignment="Right">
-					<StackPanel VerticalAlignment="Center">
-						<Button x:Name="uiRefreshButton" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiRefreshButton_Click" BorderThickness="0" Padding="0" Margin="0,0,0,3">
-							<Image Source="ms-appx:///Assets/pajeon/spot_list/png/refresh.png" Stretch="None"/>
-						</Button>
-						<TextBlock x:Uid="Refresh" TextWrapping="Wrap" Foreground="Black" HorizontalAlignment="Center" FontSize="18.667"/>
-					</StackPanel>
+					<AppBarButton x:Name="uiPickDeleteAppBarButton" Label="delete" Icon="Delete" IsEnabled="False" Visibility="Collapsed" Click="uiPickDeleteAppBarButton_Click"/>
+					<AppBarButton x:Name="uiPinAppBarButton" Label="pin" Icon="Upload" IsEnabled="False" Visibility="Collapsed" Click="uiPinAppBarButton_Click"/>
+					<AppBarButton x:Name="uiRefreshButton" Label="refresh" Icon="Refresh" Click="uiRefreshButton_Click"/>
 				</StackPanel>
 			</Grid>
 		</AppBar>

@@ -17,7 +17,7 @@ namespace PintheCloudWS.ViewModels
         public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox.png";
         public const string CHECK_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox_p.png";
 
-        public const string DOWNLOAD_IMAGE_URI = "/Assets/pajeon/pick/png/download.png.mtc";
+        public const string DOWNLOAD_IMAGE_URI = "/Assets/pajeon/pick/png/download.png";
 
         public const string TRANSPARENT_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_transparent.png";
 

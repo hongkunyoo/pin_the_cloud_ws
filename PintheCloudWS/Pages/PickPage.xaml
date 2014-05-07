@@ -15,7 +15,7 @@
         <x:String x:Key="AppName">My Application</x:String>
     </local:PtcPage.Resources>
 
-		<local:PtcPage.BottomAppBar>
+    <local:PtcPage.BottomAppBar>
 		<AppBar Foreground="#FF878E8E" Background="#FF404041" BorderBrush="{x:Null}">
 			<Grid>
 				<Grid.ColumnDefinitions>
@@ -68,7 +68,7 @@
 				</Grid.RowDefinitions>
 				<Grid>
 					<TextBlock x:Uid="File" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-					<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0" Visibility="Collapsed">
+					<Button HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0">
 						<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
 					</Button>
 				</Grid>

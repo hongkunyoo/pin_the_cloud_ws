@@ -30,7 +30,7 @@ namespace PintheCloudWS.Pages
     /// 대부분의 응용 프로그램에 공통되는 특성을 제공하는 기본 페이지입니다.
     /// </summary>
     public sealed partial class PickPage : PtcPage
-    {
+    {   
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
         private FileObjectViewModel FileObjectViewModel = new FileObjectViewModel();
         private SpotObject CurrentSpot = null;
