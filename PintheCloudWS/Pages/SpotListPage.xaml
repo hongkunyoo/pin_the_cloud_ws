@@ -23,7 +23,7 @@
 				</Grid.ColumnDefinitions>
 				<StackPanel Orientation="Horizontal"/>
 				<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,64,0">
-					<AppBarButton HorizontalAlignment="Stretch" Label="refresh" VerticalAlignment="Stretch" Icon="Refresh"/>
+					<AppBarButton x:Name="uiRefreshButton" HorizontalAlignment="Stretch" Label="refresh" VerticalAlignment="Stretch" Icon="Refresh" Click="uiRefreshButton_Click"/>
 				</StackPanel>
 			</Grid>
 		</AppBar>

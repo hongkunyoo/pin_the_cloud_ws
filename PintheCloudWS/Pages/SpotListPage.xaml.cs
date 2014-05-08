@@ -222,7 +222,6 @@ namespace PintheCloudWS.Pages
             base.SetProgressRing(uiSpotListProgressRing, false);
         }
 
-
         #endregion
     }
 }
