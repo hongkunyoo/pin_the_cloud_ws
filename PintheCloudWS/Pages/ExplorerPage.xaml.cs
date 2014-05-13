@@ -100,6 +100,7 @@ namespace PintheCloudWS.Pages
             this.SetPinPivot(AppResources.Loading);
         }
 
+
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             this.NavigationHelper.OnNavigatedFrom(e);

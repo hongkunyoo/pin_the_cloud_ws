@@ -153,6 +153,9 @@
       <DependentUpon>PinPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PtcPage.cs" />
+    <Compile Include="Pages\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\SplashPage.xaml.cs">
       <DependentUpon>SplashPage.xaml</DependentUpon>
     </Compile>
@@ -164,6 +167,9 @@
     </Compile>
     <Compile Include="Popups\NewSpotPopup.xaml.cs">
       <DependentUpon>NewSpotPopup.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Popups\SubmitSpotPasswordPopup.xaml.cs">
+      <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\DropboxWebBrowserResult.cs" />
@@ -284,6 +290,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\SplashPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -297,6 +307,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\NewSpotPopup.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Popups\SubmitSpotPasswordPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

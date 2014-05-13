@@ -113,19 +113,28 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void uiSettingsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
+
+        private void uiAppBarNewSpotButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
+
+        private void uiAppBarRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.NearSpotViewModel.IsDataLoaded = false;
             this.SetSpotGridView(AppResources.Refreshing);
         }
-
-
         #endregion
 
 
 
         #region Private Methods
-
         private void SetSpotGridView(string message)
         {
             // If Internet available, Set spot list
@@ -221,7 +230,6 @@ namespace PintheCloudWS.Pages
             // Hide progress indicator
             base.SetProgressRing(uiSpotListProgressRing, false);
         }
-
         #endregion
     }
 }

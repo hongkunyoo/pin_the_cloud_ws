@@ -150,12 +150,6 @@
   <data name="Empty" xml:space="preserve">
     <value>(empty)</value>
   </data>
-  <data name="EmptyAccountText/Text" xml:space="preserve">
-    <value>Account is not registered. Please sign in.</value>
-  </data>
-  <data name="File/Text" xml:space="preserve">
-    <value>File</value>
-  </data>
   <data name="GB" xml:space="preserve">
     <value>GB</value>
   </data>
@@ -164,9 +158,6 @@
   </data>
   <data name="GoogleDrive" xml:space="preserve">
     <value>GoogleDrive</value>
-  </data>
-  <data name="History/Text" xml:space="preserve">
-    <value>History</value>
   </data>
   <data name="InternetUnavailableMessage" xml:space="preserve">
     <value>Could not connect to At Here. Please check WIFI and try again.</value>
@@ -204,17 +195,8 @@
   <data name="OneDrive" xml:space="preserve">
     <value>OneDrive</value>
   </data>
-  <data name="Pick" xml:space="preserve">
-    <value>Pick</value>
-  </data>
-  <data name="Pin" xml:space="preserve">
-    <value>Pin</value>
-  </data>
   <data name="PrivateMode/Text" xml:space="preserve">
     <value>Private Mode</value>
-  </data>
-  <data name="Refresh/Text" xml:space="preserve">
-    <value>refresh</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
     <value>Refreshing...</value>
@@ -227,5 +209,32 @@
   </data>
   <data name="SpotName/Text" xml:space="preserve">
     <value>Spot Name</value>
+  </data>
+  <data name="uiDeleteAppBarButton/Label" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="uiEmptyAccountText/Text" xml:space="preserve">
+    <value>Account is not registered. Please sign in.</value>
+  </data>
+  <data name="uiFileText/Text" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="uiHistoryText/Text" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="uiNewAppBarButton/Label" xml:space="preserve">
+    <value>New</value>
+  </data>
+  <data name="uiPickListViewItem/Content" xml:space="preserve">
+    <value>Pick</value>
+  </data>
+  <data name="uiPinAppBarButton/Label" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="uiPinListViewItem/Content" xml:space="preserve">
+    <value>Pin</value>
+  </data>
+  <data name="uiRefreshAppBarButton/Label" xml:space="preserve">
+    <value>Refresh</value>
   </data>
 </root>
