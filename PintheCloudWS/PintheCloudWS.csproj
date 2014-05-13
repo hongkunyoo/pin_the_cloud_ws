@@ -194,6 +194,8 @@
     <Content Include="Assets\pajeon\flyout\png\flyout_new_bg.png" />
     <Content Include="Assets\pajeon\flyout\png\input.png" />
     <Content Include="Assets\pajeon\flyout\png\make.png" />
+    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new.png" />
+    <Content Include="Assets\pajeon\flyout\screenshot\flyout_new_private.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon150.png" />
     <Content Include="Assets\pajeon\icon_splash\appicon30.png" />
@@ -259,6 +261,8 @@
     <Content Include="Assets\pajeon\spot_list\png\spot_label_z.png" />
     <Content Include="Assets\client_secret.json" />
     <Content Include="Fonts\LiveSymbol.ttf" />
+    <None Include="Assets\pajeon\flyout\guide\flyout_new_guide.pdf" />
+    <None Include="Assets\pajeon\flyout\guide\flyout_new_private_guide.pdf" />
     <None Include="Package.StoreAssociation.xml" />
     <PRIResource Include="Locale\en-US\Resources.resw" />
     <None Include="packages.config" />
@@ -266,7 +270,6 @@
     <None Include="PintheCloudWS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\StoreLogo.scale-100.png" />
     <Content Include="Common\ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

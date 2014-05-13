@@ -189,14 +189,17 @@
   <data name="NoNearSpotMessage" xml:space="preserve">
     <value>There is no near spot. Make it yours.</value>
   </data>
+  <data name="NoPasswordMessage" xml:space="preserve">
+    <value>Password is blank. Please enter it.</value>
+  </data>
+  <data name="NullPasswordMessage" xml:space="preserve">
+    <value>Password can't be null. Please confirm password.</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>Ok</value>
   </data>
   <data name="OneDrive" xml:space="preserve">
     <value>OneDrive</value>
-  </data>
-  <data name="PrivateMode/Text" xml:space="preserve">
-    <value>Private Mode</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
     <value>Refreshing...</value>
@@ -206,9 +209,6 @@
   </data>
   <data name="SignOut" xml:space="preserve">
     <value>Sign Out</value>
-  </data>
-  <data name="SpotName/Text" xml:space="preserve">
-    <value>Spot Name</value>
   </data>
   <data name="uiDeleteAppBarButton/Label" xml:space="preserve">
     <value>Delete</value>
@@ -234,7 +234,13 @@
   <data name="uiPinListViewItem/Content" xml:space="preserve">
     <value>Pin</value>
   </data>
+  <data name="uiPrivateModeText/Text" xml:space="preserve">
+    <value>Private Mode</value>
+  </data>
   <data name="uiRefreshAppBarButton/Label" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="uiSpotNameText/Text" xml:space="preserve">
+    <value>Spot Name</value>
   </data>
 </root>

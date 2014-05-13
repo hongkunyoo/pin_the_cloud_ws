@@ -116,11 +116,18 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("NoFileInFolderMessage");
             }
         }
-        public static string Refreshing
+        public static string NoPasswordMessage
         {
             get
             {
-                return ResourceLoader.GetString("Refreshing");
+                return ResourceLoader.GetString("NoPasswordMessage");
+            }
+        }
+        public static string NullPasswordMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("NullPasswordMessage");
             }
         }
         public static string NoFileInSpotMessage
@@ -191,6 +198,13 @@ namespace PintheCloudWS.Locale
             get
             {
                 return ResourceLoader.GetString("DoingSignIn");
+            }
+        }
+        public static string Refreshing
+        {
+            get
+            {
+                return ResourceLoader.GetString("Refreshing");
             }
         }
         public static string Empty

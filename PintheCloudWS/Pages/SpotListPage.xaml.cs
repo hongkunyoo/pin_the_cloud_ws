@@ -125,16 +125,62 @@ namespace PintheCloudWS.Pages
         }
 
 
+        private void uiPrivateModeToggleSwitchButton_Toggled(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (uiPrivateModeToggleSwitchButton.IsOn)
+                uiPrivateModePasswordTextBox.Visibility = Visibility.Visible;
+            else
+                uiPrivateModePasswordTextBox.Visibility = Visibility.Collapsed;
+        }
+
+
+        private void uiMakeSpotButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            uiAppBarNewSpotButton.Flyout.Hide();
+
+            // Get spot name from text or hint which is default spot name.
+            uiSpotNameTextBox.Text = uiSpotNameTextBox.Text.Trim();
+            string spotName = uiSpotNameTextBox.Text;
+            if (spotName.Equals(String.Empty))
+                spotName = uiSpotNameTextBox.PlaceholderText;
+
+            // If Private is checked, get password and go to upload.
+            // Otherwise, go upload.
+            if (uiPrivateModePasswordTextBox.Visibility == Visibility.Visible)
+            {
+                uiPrivateModePasswordTextBox.Text = uiPrivateModePasswordTextBox.Text.Trim();
+                string password = uiPrivateModePasswordTextBox.Text;
+                if (!password.Equals(String.Empty))  // Password is not null
+                {
+                    if (!password.Equals(NULL_PASSWORD))  // Password is not "null"
+                        this.MakeNewSpot(spotName, true, password);
+                    else  // Password is "null"
+                        base.ShowMessageDialog(AppResources.NullPasswordMessage, OK_MODE);
+                }
+                else  // Password is null
+                {
+                    base.ShowMessageDialog(AppResources.NoPasswordMessage, OK_MODE);
+                }
+            }
+            else  // private is not checked
+            {
+                this.MakeNewSpot(spotName, false);
+            }
+        }
+
+
         private void uiAppBarRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.NearSpotViewModel.IsDataLoaded = false;
             this.SetSpotGridView(AppResources.Refreshing);
         }
+
         #endregion
 
 
 
         #region Private Methods
+
         private void SetSpotGridView(string message)
         {
             // If Internet available, Set spot list
@@ -230,6 +276,62 @@ namespace PintheCloudWS.Pages
             // Hide progress indicator
             base.SetProgressRing(uiSpotListProgressRing, false);
         }
+
+
+        private async void MakeNewSpot(string spotName, bool isPrivate, string spotPassword = NULL_PASSWORD)
+        {
+            //if (NetworkInterface.GetIsNetworkAvailable())
+            //{
+            //    // Check whether GPS is on or not
+            //    if (GeoHelper.GetLocationStatus() != PositionStatus.Disabled)  // GPS is on
+            //    {
+            //        // Show Pining message and Progress Indicator
+            //        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            //        {
+            //            uiNewSpotMessage.Text = AppResources.PiningSpot;
+            //            uiNewSpotMessage.Visibility = Visibility.Visible;
+            //        });
+            //        base.SetProgressIndicator(true);
+
+            //        try
+            //        {
+            //            // Wait sign in tastk
+            //            // Get this Ptc account to make a new spot
+            //            await TaskHelper.WaitTask(App.AccountManager.GetPtcId());
+            //            PtcAccount account = await App.AccountManager.GetPtcAccountAsync();
+
+            //            // Make a new spot around position where the user is.
+            //            Geoposition geo = await GeoHelper.GetGeopositionAsync();
+            //            SpotObject spotObject = new SpotObject(spotName, geo.Coordinate.Latitude, geo.Coordinate.Longitude, account.Email, account.Name, 0, isPrivate, spotPassword, DateTime.Now.ToString());
+            //            await App.SpotManager.CreateSpotAsync(spotObject);
+            //            ((SpotViewModel)PhoneApplicationService.Current.State[SPOT_VIEW_MODEL_KEY]).IsDataLoaded = false;
+            //            this.SpotId = spotObject.Id;
+
+            //            // Move to Explorer page which is in the spot.
+            //            string parameters = "?spotId=" + this.SpotId + "&spotName=" + spotName + "&accountId=" + account.Email + "&accountName=" + account.Name;
+            //            NavigationService.Navigate(new Uri(EventHelper.EXPLORER_PAGE + parameters, UriKind.Relative));
+            //        }
+            //        catch
+            //        {
+            //            // Show Pining message and Progress Indicator
+            //            uiNewSpotMessage.Text = AppResources.BadCreateSpotMessage;
+            //        }
+            //        finally
+            //        {
+            //            base.SetProgressIndicator(false);
+            //        }
+            //    }
+            //    else  // GPS is not on
+            //    {
+            //        MessageBox.Show(AppResources.NoLocationServiceMessage, AppResources.NoLocationServiceCaption, MessageBoxButton.OK);
+            //    }
+            //}
+            //else
+            //{
+            //    MessageBox.Show(AppResources.InternetUnavailableMessage, AppResources.InternetUnavailableCaption, MessageBoxButton.OK);
+            //}
+        }
+
         #endregion
     }
 }
