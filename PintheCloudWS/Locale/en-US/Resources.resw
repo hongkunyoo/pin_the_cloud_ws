@@ -120,6 +120,9 @@
   <data name="AtHere" xml:space="preserve">
     <value>At Here</value>
   </data>
+  <data name="BadCreateSpotMessage" xml:space="preserve">
+    <value>Create spot process met error. Please try it again</value>
+  </data>
   <data name="BadLoadingFileMessage" xml:space="preserve">
     <value>Loading files met error. Please try it again.</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="OneDrive" xml:space="preserve">
     <value>OneDrive</value>
+  </data>
+  <data name="PiningSpot" xml:space="preserve">
+    <value>Pining Spot...</value>
   </data>
   <data name="Refreshing" xml:space="preserve">
     <value>Refreshing...</value>

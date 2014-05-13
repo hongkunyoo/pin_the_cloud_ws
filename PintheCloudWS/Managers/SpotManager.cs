@@ -89,8 +89,8 @@ namespace PintheCloudWS.Managers
         public async Task<List<SpotObject>> GetNearSpotListAsync(Geoposition currentGeoposition)
         {
             // Get current coordinate
-            double currentLatitude = currentGeoposition.Coordinate.Latitude;
-            double currentLongtitude = currentGeoposition.Coordinate.Longitude;
+            double currentLatitude = currentGeoposition.Coordinate.Point.Position.Latitude;
+            double currentLongtitude = currentGeoposition.Coordinate.Point.Position.Longitude;
 
             // Get spots formed JArray
             // If loading spot doesn't occur error, Convert jarray spots to spot list

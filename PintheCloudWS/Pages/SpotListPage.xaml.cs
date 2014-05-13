@@ -34,7 +34,7 @@ namespace PintheCloudWS.Pages
     {
         // Instances
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
-        public SpotViewModel NearSpotViewModel = new SpotViewModel();
+        private SpotViewModel NearSpotViewModel = new SpotViewModel();
 
 
 
@@ -51,6 +51,7 @@ namespace PintheCloudWS.Pages
         {
             this.InitializeComponent();
             uiSpotGridView.DataContext = this.NearSpotViewModel;
+            uiSpotNameTextBox.PlaceholderText = (string)App.ApplicationSettings[StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY];
         }
 
 
@@ -234,9 +235,7 @@ namespace PintheCloudWS.Pages
                         {
                             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
-                                uiSpotGridView.Visibility = Visibility.Collapsed;
                                 uiSpotGridMessage.Text = AppResources.NoNearSpotMessage;
-                                uiSpotGridMessage.Visibility = Visibility.Visible;
                             });
                         }
                     }
@@ -244,32 +243,24 @@ namespace PintheCloudWS.Pages
                     {
                         await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                         {
-                            uiSpotGridView.Visibility = Visibility.Collapsed;
                             uiSpotGridMessage.Text = AppResources.BadLocationServiceMessage;
-                            uiSpotGridMessage.Visibility = Visibility.Visible;
                         });
                     }
                 }
                 catch (UnauthorizedAccessException)  // User didn't approve location service.
                 {
-                    uiSpotGridView.Visibility = Visibility.Collapsed;
                     uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
-                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 }
                 catch
                 {
-                    uiSpotGridView.Visibility = Visibility.Collapsed;
                     uiSpotGridMessage.Text = AppResources.BadLoadingSpotMessage;
-                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 }
             }
             else  // GPS is off
             {
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    uiSpotGridView.Visibility = Visibility.Collapsed;
                     uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
-                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 });
             }
 
@@ -280,56 +271,58 @@ namespace PintheCloudWS.Pages
 
         private async void MakeNewSpot(string spotName, bool isPrivate, string spotPassword = NULL_PASSWORD)
         {
-            //if (NetworkInterface.GetIsNetworkAvailable())
-            //{
-            //    // Check whether GPS is on or not
-            //    if (GeoHelper.GetLocationStatus() != PositionStatus.Disabled)  // GPS is on
-            //    {
-            //        // Show Pining message and Progress Indicator
-            //        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            //        {
-            //            uiNewSpotMessage.Text = AppResources.PiningSpot;
-            //            uiNewSpotMessage.Visibility = Visibility.Visible;
-            //        });
-            //        base.SetProgressIndicator(true);
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                // Check whether GPS is on or not
+                if (GeoHelper.GetLocationStatus() != PositionStatus.Disabled)  // GPS is on
+                {
+                    // Show Pining message and Progress Indicator
+                    base.SetProgressRing(uiSpotListProgressRing, true);
+                    await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        uiSpotGridView.Visibility = Visibility.Collapsed;
+                        uiSpotGridMessage.Text = AppResources.PiningSpot;
+                        uiSpotGridMessage.Visibility = Visibility.Visible;
+                    });
 
-            //        try
-            //        {
-            //            // Wait sign in tastk
-            //            // Get this Ptc account to make a new spot
-            //            await TaskHelper.WaitTask(App.AccountManager.GetPtcId());
-            //            PtcAccount account = await App.AccountManager.GetPtcAccountAsync();
+                    try
+                    {
+                        // Wait sign in tastk
+                        // Get this Ptc account to make a new spot
+                        await TaskHelper.WaitTask(App.AccountManager.GetPtcId());
+                        PtcAccount account = await App.AccountManager.GetPtcAccountAsync();
 
-            //            // Make a new spot around position where the user is.
-            //            Geoposition geo = await GeoHelper.GetGeopositionAsync();
-            //            SpotObject spotObject = new SpotObject(spotName, geo.Coordinate.Latitude, geo.Coordinate.Longitude, account.Email, account.Name, 0, isPrivate, spotPassword, DateTime.Now.ToString());
-            //            await App.SpotManager.CreateSpotAsync(spotObject);
-            //            ((SpotViewModel)PhoneApplicationService.Current.State[SPOT_VIEW_MODEL_KEY]).IsDataLoaded = false;
-            //            this.SpotId = spotObject.Id;
+                        // Make a new spot around position where the user is.
+                        Geoposition geo = await GeoHelper.GetGeopositionAsync();
+                        SpotObject spotObject = new SpotObject(spotName, geo.Coordinate.Point.Position.Latitude, geo.Coordinate.Point.Position.Longitude, account.Email, account.Name, 0, isPrivate, spotPassword, DateTime.Now.ToString());
+                        await App.SpotManager.CreateSpotAsync(spotObject);
+                        this.NearSpotViewModel.IsDataLoaded = false;
+                        this.Frame.Navigate(typeof(ExplorerPage), new SpotViewItem(spotObject));
+                    }
+                    catch
+                    {
+                        // Show Pining message and Progress Indicator
+                        uiSpotGridMessage.Text = AppResources.BadCreateSpotMessage;
+                    }
 
-            //            // Move to Explorer page which is in the spot.
-            //            string parameters = "?spotId=" + this.SpotId + "&spotName=" + spotName + "&accountId=" + account.Email + "&accountName=" + account.Name;
-            //            NavigationService.Navigate(new Uri(EventHelper.EXPLORER_PAGE + parameters, UriKind.Relative));
-            //        }
-            //        catch
-            //        {
-            //            // Show Pining message and Progress Indicator
-            //            uiNewSpotMessage.Text = AppResources.BadCreateSpotMessage;
-            //        }
-            //        finally
-            //        {
-            //            base.SetProgressIndicator(false);
-            //        }
-            //    }
-            //    else  // GPS is not on
-            //    {
-            //        MessageBox.Show(AppResources.NoLocationServiceMessage, AppResources.NoLocationServiceCaption, MessageBoxButton.OK);
-            //    }
-            //}
-            //else
-            //{
-            //    MessageBox.Show(AppResources.InternetUnavailableMessage, AppResources.InternetUnavailableCaption, MessageBoxButton.OK);
-            //}
+                    // Hide Progress ring.
+                    base.SetProgressRing(uiSpotListProgressRing, false);
+                }
+                else  // GPS is not on
+                {
+                    await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                    {
+                        uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
+                    });
+                }
+            }
+            else
+            {
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    uiSpotGridMessage.Text = AppResources.InternetUnavailableMessage;
+                });
+            }
         }
 
         #endregion

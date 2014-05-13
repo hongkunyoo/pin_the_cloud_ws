@@ -165,9 +165,6 @@
     <Compile Include="Popups\DropBoxSignInPopup.xaml.cs">
       <DependentUpon>DropBoxSignInPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Popups\NewSpotPopup.xaml.cs">
-      <DependentUpon>NewSpotPopup.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Popups\SubmitSpotPasswordPopup.xaml.cs">
       <DependentUpon>SubmitSpotPasswordPopup.xaml</DependentUpon>
     </Compile>
@@ -306,10 +303,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Popups\DropBoxSignInPopup.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Popups\NewSpotPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

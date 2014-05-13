@@ -165,6 +165,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("BadLoadingSpotMessage");
             }
         }
+        public static string BadCreateSpotMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("BadCreateSpotMessage");
+            }
+        }
         public static string BadLoadingFileMessage
         {
             get
@@ -205,6 +212,13 @@ namespace PintheCloudWS.Locale
             get
             {
                 return ResourceLoader.GetString("Refreshing");
+            }
+        }
+        public static string PiningSpot
+        {
+            get
+            {
+                return ResourceLoader.GetString("PiningSpot");
             }
         }
         public static string Empty
