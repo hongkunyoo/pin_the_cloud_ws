@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using System;
@@ -19,15 +20,15 @@ namespace PintheCloudWS.Pages
     {
         protected const string PICK_FILE_OBJECT_VIEW_MODEL_KEY = "PICK_FILE_OBJECT_VIEW_MODEL_KEY";
         protected const string PIN_FILE_OBJECT_VIEW_MODEL_KEY = "PIN_FILE_OBJECT_VIEW_MODEL_KEY";
+        protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
 
         protected const string PREV_PAGE_KEY = "PREV_PAGE";
         protected const string PIVOT_KEY = "PIVOT_KEY";
 
-        protected const string SPOT_VIEW_MODEL_KEY = "SPOT_VIEW_MODEL_KEY";
-        protected const string SELECTED_FILE_KEY = "SELECTED_FILE_KEY";
+        protected const int OK_MODE = 0;
+        protected const int OK_CANCEL_MODE = 1;
 
         protected const string NULL_PASSWORD = "null";
-        public const double STATUS_BAR_HEIGHT = 32.0;
 
         private NavigationHelper navigationHelper;
 
@@ -63,6 +64,18 @@ namespace PintheCloudWS.Pages
         /// 유지됩니다. 페이지를 처음 방문할 때는 이 상태가 null입니다.</param>
         private void navigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            // Get previous page and set it.
+            string previousPage = null;
+            if (App.ApplicationSessions.Contains(PREV_PAGE_KEY))
+                previousPage = (string)App.ApplicationSessions[PREV_PAGE_KEY];
+            App.ApplicationSessions[PREV_PAGE_KEY] = this.Frame.CurrentSourcePageType.Name;
+            
+            // Get previous pivot.
+            int previousPivot = 0;
+            if (App.ApplicationSessions.Contains(PIVOT_KEY))
+                previousPivot = (int)App.ApplicationSessions[PIVOT_KEY];
+
+            EventHelper.FireEvent((string)App.ApplicationSessions[PREV_PAGE_KEY], previousPage, previousPivot);
         }
 
         /// <summary>
@@ -76,6 +89,7 @@ namespace PintheCloudWS.Pages
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
         }
+
 
 
         #region NavigationHelper 등록
@@ -93,19 +107,18 @@ namespace PintheCloudWS.Pages
         {
             navigationHelper.OnNavigatedTo(e);
 
-            // Windows Phone 8
-            //// Get previous page and set it.
-            //string previousPage = null;
-            //if (PhoneApplicationService.Current.State.ContainsKey(PREV_PAGE_KEY))
-            //    previousPage = (string)PhoneApplicationService.Current.State[PREV_PAGE_KEY];
-            //PhoneApplicationService.Current.State[PREV_PAGE_KEY] = this.NavigationService.CurrentSource.ToString().Split('?')[0];
+            // Get previous page and set it.
+            string previousPage = null;
+            if (App.ApplicationSessions.Contains(PREV_PAGE_KEY))
+                previousPage = (string)App.ApplicationSessions[PREV_PAGE_KEY];
+            App.ApplicationSessions[PREV_PAGE_KEY] = this.Frame.Name.Split('?')[0];
 
-            //// Get previous pivot.
-            //int previousPivot = 0;
-            //if (PhoneApplicationService.Current.State.ContainsKey(PIVOT_KEY))
-            //    previousPivot = (int)PhoneApplicationService.Current.State[PIVOT_KEY];
+            // Get previous pivot.
+            int previousPivot = 0;
+            if (App.ApplicationSessions.Contains(PIVOT_KEY))
+                previousPivot = (int)App.ApplicationSessions[PIVOT_KEY];
 
-            //EventHelper.FireEvent((string)PhoneApplicationService.Current.State[PREV_PAGE_KEY], previousPage, previousPivot);
+            EventHelper.FireEvent((string)App.ApplicationSessions[PREV_PAGE_KEY], previousPage, previousPivot);
         }
 
 
@@ -116,7 +129,9 @@ namespace PintheCloudWS.Pages
 
         #endregion
 
-        #region Protected Shared Logical Methods
+
+
+        #region Protected Methods
 
         protected async void SetProgressRing(ProgressRing progressRing, bool value)
         {
@@ -126,72 +141,83 @@ namespace PintheCloudWS.Pages
             });
         }
 
-        protected async void ShowMessageDialog(string message)
+
+        protected async void ShowMessageDialog(string message, int mode, Context.TriggerEvent triggerEvent = null)
         {
             // Create the message dialog and set its content
             MessageDialog messageDialog = new MessageDialog(message);
 
-            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
-            messageDialog.Commands.Add(new UICommand(
-                AppResources.OK,
-                new UICommandInvokedHandler((command) => { })));
+            switch (mode)
+            { 
+                case OK_MODE:
+                    // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.OK,
+                        new UICommandInvokedHandler((command) => { })));
+
+                    // Set the command to be invoked when escape is pressed
+                    messageDialog.CancelCommandIndex = 0;
+                    break;
+
+                case OK_CANCEL_MODE:
+                    // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.OK,
+                        new UICommandInvokedHandler((command) => triggerEvent())));
+
+                    messageDialog.Commands.Add(new UICommand(
+                        AppResources.Cancel,
+                        new UICommandInvokedHandler((command) => { })));
+
+                    // Set the command to be invoked when escape is pressed
+                    messageDialog.CancelCommandIndex = 1;
+                    break;
+            }
 
             // Set the command that will be invoked by default
             messageDialog.DefaultCommandIndex = 0;
-
-            // Set the command to be invoked when escape is pressed
-            messageDialog.CancelCommandIndex = 0;
 
             // Show the message dialog
             await messageDialog.ShowAsync();
         }
 
 
-        protected void ShowGeolocatorStatusMessageDialog()
+        protected string GeolocatorStatusMessage()
         {
             string message = String.Empty;
-            bool showMessage = false;
             switch (App.Geolocator.LocationStatus)
             {
                 case PositionStatus.Ready:
                     message = "Location is available.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.Initializing:
                     message = "Geolocation service is initializing.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.NotInitialized:
                     message = "Location status is not initialized because " +
                                 "the app has not yet requested location data.";
-                    showMessage = false;
                     break;
 
                 case PositionStatus.Disabled:
                     message = "Location services are disabled. Use the " +
                                 "Settings charm to enable them.";
-                    showMessage = true;
                     break;
 
                 case PositionStatus.NoData:
                     message = "Location service data is not available.";
-                    showMessage = true;
                     break;
 
                 case PositionStatus.NotAvailable:
                     message = "Location services are not supported on your system.";
-                    showMessage = true;
                     break;
 
                 default:
                     message = "Unknown PositionStatus value.";
-                    showMessage = true;
                     break;
             };
-            if(showMessage)
-                this.ShowMessageDialog(message);
+            return message;
         }
 
         #endregion

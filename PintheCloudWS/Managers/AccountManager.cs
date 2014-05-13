@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,16 +25,12 @@ namespace PintheCloudWS.Managers
         }
         public string GetPtcId()
         {
-            if (!App.ApplicationSettings.Contains(PTCACCOUNT_ID))
-                System.Diagnostics.Debugger.Break();
-
             return (string)App.ApplicationSettings[PTCACCOUNT_ID];
         }
 
         public async Task<bool> SignIn()
         {
             if (!this.IsSignIn()) return false;
-
             PtcAccount account = await this.GetPtcAccountAsync();
             if (account == null) return false;
             this.myAccount = account;
@@ -57,16 +54,10 @@ namespace PintheCloudWS.Managers
         public async Task<bool> CreateNewPtcAccountAsync(PtcAccount account)
         {
             MSPtcAccount mspa = PtcAccount.ConvertToMSPtcAccount(account);
-            try
-            {
-                PtcAccount p = await this.GetPtcAccountAsync(account.Email);
-                if (p != null) return false;
-                await App.MobileService.GetTable<MSPtcAccount>().InsertAsync(mspa);
-            }
-            catch (MobileServiceInvalidOperationException)
-            {
-                return false;
-            }
+            PtcAccount p = await this.GetPtcAccountAsync(account.Email);
+            if (p != null) return false;
+            await App.MobileService.GetTable<MSPtcAccount>().InsertAsync(mspa);
+
             this.SavePtcId(account.Email, account.ProfilePassword);
             this.myAccount = account;
             return true;
@@ -76,51 +67,26 @@ namespace PintheCloudWS.Managers
         public async Task<bool> DeletePtcAccount(PtcAccount account)
         {
             MSPtcAccount mspa = PtcAccount.ConvertToMSPtcAccount(account);
-            //List<MSStorageAccount> saList = new List<MSStorageAccount>();
-            //foreach (var i in account.StorageAccounts)
-            //{
-            //    saList.Add(StorageAccount.ConvertToMSStorageAccount(i.Value));
-            //}
-            try
-            {
-                await App.MobileService.GetTable<MSPtcAccount>().DeleteAsync(mspa);
-                //foreach (var i in saList)
-                //{
-                //    await App.MobileService.GetTable<MSStorageAccount>().DeleteAsync(i);
-                //}
-            }
-            catch (MobileServiceInvalidOperationException)
-            {
-                return false;
-            }
+            await App.MobileService.GetTable<MSPtcAccount>().DeleteAsync(mspa);
+
             App.ApplicationSettings.Remove(PTCACCOUNT_ID);
             App.ApplicationSettings.Save();
             this.myAccount = null;
             return true;
         }
+
+
         public async Task<bool> UpdatePtcAccount(PtcAccount account)
         {
             MSPtcAccount mspa = PtcAccount.ConvertToMSPtcAccount(account);
             List<MSStorageAccount> saList = new List<MSStorageAccount>();
-            //foreach (var i in account.StorageAccounts)
-            //{
-            //    saList.Add(StorageAccount.ConvertToMSStorageAccount(i.Value));
-            //}
-            try
-            {
-                await App.MobileService.GetTable<MSPtcAccount>().UpdateAsync(mspa);
-                //foreach (var i in saList)
-                //{
-                //    await App.MobileService.GetTable<MSStorageAccount>().UpdateAsync(i);
-                //}
-            }
-            catch (MobileServiceInvalidOperationException)
-            {
-                return false;
-            }
+            await App.MobileService.GetTable<MSPtcAccount>().UpdateAsync(mspa);
+
             this.myAccount = account;
             return true;
         }
+
+
         public async Task<PtcAccount> GetPtcAccountAsync()
         {
             // TODO : Reset after presentation
@@ -130,26 +96,27 @@ namespace PintheCloudWS.Managers
             //{
             //    if (App.ApplicationSettings.Contains(PTCACCOUNT_ID))
             //    {
-            //        PtcAccount account = await this.GetPtcAccountAsync((string)App.ApplicationSettings[PTCACCOUNT_ID]);
-            //        if (account == null)
+            //        try
+            //        {
+            //            PtcAccount account = await this.GetPtcAccountAsync((string)App.ApplicationSettings[PTCACCOUNT_ID]);
+            //            if (account == null) tcs.SetResult(null);
+            //            else tcs.SetResult(account);
+            //        }
+            //        catch
             //        {
             //            tcs.SetResult(null);
-            //            return tcs.Task.Result;
             //        }
-            //        tcs.SetResult(account);
-            //        return tcs.Task.Result;
             //    }
             //    else
             //    {
             //        tcs.SetResult(null);
-            //        return tcs.Task.Result;
             //    }
             //}
             //else
             //{
             //    tcs.SetResult(this.myAccount);
-            //    return tcs.Task.Result;
             //}
+            //return tcs.Task.Result;
 
             TaskCompletionSource<PtcAccount> tcs = new TaskCompletionSource<PtcAccount>();
             PtcAccount account = new PtcAccount();
@@ -162,40 +129,22 @@ namespace PintheCloudWS.Managers
             return tcs.Task.Result;
         }
 
-        /*
-        public PtcAccount GetPtcAccount()
-        {
-            return this.myAccount;
-        }
-        */
 
         public async Task<PtcAccount> GetPtcAccountAsync(string accountId, string password = null)
         {
-            System.Linq.Expressions.Expression<Func<MSPtcAccount, bool>> lamda = (a => a.email == accountId);
+            Expression<Func<MSPtcAccount, bool>> lamda = (a => a.email == accountId);
             if (password != null)
-                lamda = (a => a.email == accountId || a.profile_password == password);
+                lamda = (a => a.email == accountId && a.profile_password == password);
 
-            MobileServiceCollection<MSPtcAccount, MSPtcAccount> list = null;
-            try
-            {
-                list = await App.MobileService.GetTable<MSPtcAccount>()
-                    .Where(lamda)
-                    .ToCollectionAsync();
-            }
-            catch (MobileServiceInvalidOperationException)
-            {
-                throw new Exception("AccountManager.GetAccount() ERROR");
-            }
+            MobileServiceCollection<MSPtcAccount, MSPtcAccount> list =
+                await App.MobileService.GetTable<MSPtcAccount>().Where(lamda).ToCollectionAsync();
 
-            if (list.Count == 1)
+            if (list.Count >= 1)
             {
                 PtcAccount account = PtcAccount.ConvertToPtcAccount(list.First());
-                //account.StorageAccounts = await this.GetStorageAccountsAsync(account.Email);
                 this.myAccount = account;
                 return account;
             }
-            else if (list.Count > 1)
-                throw new Exception("AccountManager.GetAccount() ERROR");
             else
                 return null;
         }
@@ -204,65 +153,22 @@ namespace PintheCloudWS.Managers
         public async Task<bool> CreateStorageAccountAsync(StorageAccount sa)
         {
             MSStorageAccount mssa = StorageAccount.ConvertToMSStorageAccount(sa);
-            mssa.ptc_account_id = GetPtcId();
-            try
-            {
-                await App.MobileService.GetTable<MSStorageAccount>().InsertAsync(mssa);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                return false;
-            }
+            mssa.ptc_account_id = this.GetPtcId();
+            await App.MobileService.GetTable<MSStorageAccount>().InsertAsync(mssa);
+            return true;
         }
+
+
         public async Task<StorageAccount> GetStorageAccountAsync(string storageAccountId)
         {
-            MobileServiceCollection<MSStorageAccount, MSStorageAccount> accounts = null;
-            try
-            {
-                accounts = await App.MobileService.GetTable<MSStorageAccount>()
-                    .Where(a => a.account_platform_id == storageAccountId)
-                    .ToCollectionAsync();
-            }
-            catch (MobileServiceInvalidOperationException ex)
-            {
-                Debug.WriteLine(ex.ToString());
-                throw new Exception("AccountManager.GetAccount() ERROR");
-            }
+            MobileServiceCollection<MSStorageAccount, MSStorageAccount> accounts =
+                await App.MobileService.GetTable<MSStorageAccount>()
+                .Where(a => a.account_platform_id == storageAccountId).ToCollectionAsync();
 
-            if (accounts.Count == 1)
+            if (accounts.Count >= 1)
                 return StorageAccount.ConvertToStorageAccount(accounts.First());
-            else if (accounts.Count > 1)
-                throw new Exception("AccountManager.GetAccount() ERROR");
             else
                 return null;
         }
-
-
-        #region Private Methods
-
-        //private async Task<Dictionary<string, StorageAccount>> GetStorageAccountsAsync(String ptc_account_id)
-        //{
-        //    Dictionary<string, StorageAccount> map = new Dictionary<string,StorageAccount>();
-        //    MobileServiceCollection<MSStorageAccount, MSStorageAccount> sas = null;
-        //    try
-        //    {
-        //        sas = await App.MobileService.GetTable<MSStorageAccount>()
-        //            .Where(a => a.ptc_account_id == ptc_account_id)
-        //            .ToCollectionAsync();
-        //    }
-        //    catch (MobileServiceInvalidOperationException)
-        //    {
-        //        throw new Exception("AccountManager.GetAccount() ERROR");
-        //    }
-
-        //    foreach(var i in sas)
-        //    {
-        //        map.Add(i.account_platform_id_type, StorageAccount.ConvertToStorageAccount(i));
-        //    }
-        //    return map;
-        //}
-        #endregion
     }
 }

@@ -35,13 +35,6 @@ namespace PintheCloudWS
     {
         /*** Root static instance variable ***/
 
-        /*** Root static instance variable ***/
-
-        // Azure
-        private const string AZURE_MOBILE_SERVICE_ID = "MicrosoftAccount:2914cb486d0f9106050de9ad70564d53";
-        private const string AZURE_MOBILE_SERVICE_TOKEN
-            = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjAifQ.eyJleHAiOjEzOTQ5Nzg4NTcsImlzcyI6InVybjptaWNyb3NvZnQ6d2luZG93cy1henVyZTp6dW1vIiwidmVyIjoyLCJhdWQiOiJNaWNyb3NvZnRBY2NvdW50IiwidWlkIjoiTWljcm9zb2Z0QWNjb3VudDoyOTE0Y2I0ODZkMGY5MTA2MDUwZGU5YWQ3MDU2NGQ1MyIsInVybjptaWNyb3NvZnQ6Y3JlZGVudGlhbHMiOiJrc2VzY21WaXA1b2ZrZDhUenBQQ1h3PT0ifQ.cUrvBbXsHQOiz0ZRu8FxA5HxqpQbPRSQQb8_N0-6eAo";
-
         // App
         public static MobileServiceClient MobileService = null;
         public static WSApplicationSessions ApplicationSessions = null;
@@ -79,8 +72,6 @@ namespace PintheCloudWS
                 "https://pinthecloud.azure-mobile.net/",
                 "yvulzHAGRgNsGnPLHKcEFCPJcuyzKj23"
             );
-            MobileServiceUser mobileServiceUser = new MobileServiceUser(App.AZURE_MOBILE_SERVICE_ID);
-            mobileServiceUser.MobileServiceAuthenticationToken = App.AZURE_MOBILE_SERVICE_TOKEN;
             ApplicationSessions = new WSApplicationSessions();
             ApplicationSettings = new WSApplicationSettings();
 

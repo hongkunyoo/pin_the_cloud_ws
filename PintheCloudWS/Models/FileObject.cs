@@ -219,6 +219,8 @@ namespace PintheCloudWS.Models
             fo.FileList = GetChildList(db, fos.Id);
             return fo;
         }
+
+
         public static List<FileObject> GetChildList(object db, string ParentId)
         {
             //var dbList = from fos in db.Table<FileObjectSQL>() where fos.ParentId == ParentId select fos;
@@ -231,7 +233,6 @@ namespace PintheCloudWS.Models
             //return list;
             return null;
         }
-
     }
 
     #region Mobile Service Object

@@ -15,31 +15,27 @@ using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Diagnostics;
-using DropNetRT.Models;
 using PintheCloudWS.Managers;
 using PintheCloudWS.Pages;
+using System.Threading.Tasks;
 
 namespace PintheCloudWS.Popups
 {
     public partial class DropBoxSignInPopup : UserControl
     {
-        private Popup Popup = null;
+        private Popup Popup;
+        private int count;
 
 
         public DropBoxSignInPopup(Popup popup, string uri)
         {
             InitializeComponent();
             this.Popup = popup;
-            //uiWebBrowser.Width = Application.Current.Host.Content.ActualWidth;
-            //uiWebBrowser.Height = Application.Current.Host.Content.ActualHeight;
-            uiWebBrowser.Margin = new Thickness(0, PtcPage.STATUS_BAR_HEIGHT, 0, 0);
-            //uiWebBrowser.IsScriptEnabled = true;
+            this.count = 0;
+            //uiWebBrowser.Margin = new Thickness(0, PtcPage.STATUS_BAR_HEIGHT, 0, 0);
             uiWebBrowser.Navigate(new Uri(uri, UriKind.RelativeOrAbsolute));
             uiWebBrowser.ScriptNotify += (sender, e) =>
             {
@@ -49,25 +45,22 @@ namespace PintheCloudWS.Popups
         }
 
 
-        //private async void webBrowser_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
-        //{
-        //    //Debug.WriteLine(e.Uri.ToString());
-        //    if (e.Uri.ToString().StartsWith("http://")
-        //        && e.Uri.ToString().Contains(DropboxManager.DROPBOX_AUTH_URI))
-        //    {
-        //        this.Popup.IsOpen = false;
-        //        await uiWebBrowser.ClearCookiesAsync();
-        //    }
-        //}
+        public async Task ClearCache()
+        {
+            //await uiWebBrowser.ClearInternetCacheAsync();
+            //await uiWebBrowser.ClearCookiesAsync();
+        }
+
 
         private void uiWebBrowser_NavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, Windows.UI.Xaml.Controls.WebViewNavigationCompletedEventArgs args)
         {
-        	// TODO: Add event handler implementation here.
-            System.Diagnostics.Debug.WriteLine("Here");
-            if (args.Uri.ToString().StartsWith("http://")
-                && args.Uri.ToString().Contains(DropboxManager.DROPBOX_AUTH_URI))
+            count++;
+            //if (e.Uri.ToString().StartsWith("http://")
+            //    && e.Uri.ToString().Contains(DropboxManager.DROPBOX_AUTH_URI))
+            if (count == 3)
             {
                 this.Popup.IsOpen = false;
+                //await uiWebBrowser.ClearCookiesAsync();
             }
         }
     }

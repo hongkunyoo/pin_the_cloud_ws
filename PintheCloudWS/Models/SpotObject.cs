@@ -102,18 +102,14 @@ namespace PintheCloudWS.Models
             /////////////////////////////////////////
             // TODO : Need to add Storage Capacity
             /////////////////////////////////////////
-            try
-            {
-                IStorageManager StorageManager = Switcher.GetCurrentStorage();
-                string sourceId = fo.Id;
-                if (StorageManager.GetStorageName().Equals(AppResources.GoogleDrive))
-                    sourceId = fo.DownloadUrl;
-                return await App.BlobStorageManager.UploadFileStreamAsync(this.PtcAccountId, this.Id, fo.Name, await StorageManager.DownloadFileStreamAsync(sourceId));
-            }
-            catch
-            {
-                return null;
-            }
+            if (fo == null)
+                throw new Exception();
+            IStorageManager StorageManager = Switcher.GetCurrentStorage();
+            string sourceId = fo.Id;
+            if (StorageManager.GetStorageName().Equals(AppResources.GoogleDrive))
+                sourceId = fo.DownloadUrl;
+            return await App.BlobStorageManager.UploadFileStreamAsync
+                (this.PtcAccountId, this.Id, fo.Name, await StorageManager.DownloadFileStreamAsync(sourceId));
             /////////////////////////////////////////////////////////////////////////////////////////////////
             /// In the future, Maybe there will be codes for the mobile service table insertion. BUT Not NOW
             /// /////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,33 +152,20 @@ namespace PintheCloudWS.Models
 
         public async Task<bool> DownloadFileObjectAsync(IStorageManager StorageManager, FileObject fo)
         {
-            try
-            {
-                //IStorageManager StorageManager = Switcher.GetMainStorage();
-                Stream instream = await App.BlobStorageManager.DownloadFileStreamAsync(fo.Id);
-                FileObject root = await StorageManager.GetRootFolderAsync();
-                return await StorageManager.UploadFileStreamAsync(root.Id, fo.Name, instream);
-            }
-            catch
-            {
-                return false;
-            }
+            Stream instream = await App.BlobStorageManager.DownloadFileStreamAsync(fo.Id);
+            FileObject root = await StorageManager.GetRootFolderAsync();
+            return await StorageManager.UploadFileStreamAsync(root.Id, fo.Name, instream);
         }
+
 
         public async Task<bool> PreviewFileObjectAsync(FileObject fo)
         {
-            try
-            {
-                StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(SpotObject.PREVIEW_FILE_LOCATION, CreationCollisionOption.OpenIfExists);
-                StorageFile file = await folder.CreateFileAsync(fo.Name, CreationCollisionOption.ReplaceExisting);
-                file = await App.BlobStorageManager.DownloadFileAsync(fo.Id, file);
-                return await Launcher.LaunchFileAsync(file);
-            }
-            catch
-            {
-                return false;
-            }
+            StorageFolder folder = await ApplicationData.Current.LocalFolder.CreateFolderAsync(SpotObject.PREVIEW_FILE_LOCATION, CreationCollisionOption.OpenIfExists);
+            StorageFile file = await folder.CreateFileAsync(fo.Name, CreationCollisionOption.ReplaceExisting);
+            file = await App.BlobStorageManager.DownloadFileAsync(fo.Id, file);
+            return await Launcher.LaunchFileAsync(file);
         }
+
 
         public async Task<bool> PutProfileObjectAsync(ProfileObject po)
         {

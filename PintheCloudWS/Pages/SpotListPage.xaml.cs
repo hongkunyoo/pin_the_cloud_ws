@@ -1,4 +1,5 @@
 ﻿using PintheCloudWS.Common;
+using PintheCloudWS.Helpers;
 using PintheCloudWS.Locale;
 using PintheCloudWS.Models;
 using PintheCloudWS.ViewModels;
@@ -69,7 +70,7 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
 
             // Remove Splash Page from Back Stack
-            if(this.Frame.BackStack.Count > 0)
+            if (this.Frame.BackStack.Count > 0)
                 this.Frame.BackStack.RemoveAt(this.Frame.BackStack.Count - 1);
             this.SetSpotGridView(AppResources.Loading);
         }
@@ -81,6 +82,8 @@ namespace PintheCloudWS.Pages
         }
 
         #endregion
+
+
 
         #region UI Methods
 
@@ -110,23 +113,28 @@ namespace PintheCloudWS.Pages
         }
 
 
-        private void uiSettingButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void uiSettingsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            this.Frame.Navigate(typeof(SettingsPage));
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
         }
 
-        private void uiRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+
+        private void uiAppBarNewSpotButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+        }
+
+
+        private void uiAppBarRefreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.NearSpotViewModel.IsDataLoaded = false;
-            this.SetSpotGridView(AppResources.Refrshing);
+            this.SetSpotGridView(AppResources.Refreshing);
         }
-
-
         #endregion
 
 
-        #region Private Methods
 
+        #region Private Methods
         private void SetSpotGridView(string message)
         {
             // If Internet available, Set spot list
@@ -138,7 +146,7 @@ namespace PintheCloudWS.Pages
             }
             else
             {
-                base.ShowMessageDialog(AppResources.InternetUnavailableMessage);
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
             }
         }
 
@@ -147,57 +155,81 @@ namespace PintheCloudWS.Pages
         {
             // Show Progress Indicator
             base.SetProgressRing(uiSpotListProgressRing, true);
-
-            // Check whether GPS works well or not
-            try
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                Geoposition currentGeoposition = await App.Geolocator.GetGeopositionAsync();
-                if (currentGeoposition != null)  // GPS works well
-                {
-                    // If there is near spots, Clear and Add spots to list
-                    // Otherwise, Show none message.
-                    List<SpotObject> spots = await App.SpotManager.GetNearSpotListAsync(currentGeoposition);
+                uiSpotGridView.Visibility = Visibility.Collapsed;
+                uiSpotGridMessage.Text = message;
+                uiSpotGridMessage.Visibility = Visibility.Visible;
+            });
 
-                    if (spots != null)
+            // Check whether GPS is on or not
+            if (GeoHelper.GetLocationStatus() != PositionStatus.Disabled)  // GPS is on
+            {
+                try
+                {
+                    // Check whether GPS works well or not
+                    Geoposition currentGeoposition = await GeoHelper.GetGeopositionAsync();
+                    if (currentGeoposition != null)  // GPS works well
                     {
+                        // If there is near spots, Clear and Add spots to list
+                        // Otherwise, Show none message.
+                        List<SpotObject> spots = await App.SpotManager.GetNearSpotListAsync(currentGeoposition);
+                        this.NearSpotViewModel.IsDataLoaded = true;
                         if (spots.Count > 0)  // There are near spots
                         {
                             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                             {
-                                this.NearSpotViewModel.IsDataLoaded = true;
+                                uiSpotGridView.Visibility = Visibility.Visible;
+                                uiSpotGridMessage.Visibility = Visibility.Collapsed;
                                 this.NearSpotViewModel.SetItems(spots);
                             });
                         }
                         else  // No near spots
                         {
-                            this.NearSpotViewModel.IsDataLoaded = true;
-                            base.ShowMessageDialog(AppResources.NoNearSpotMessage);
+                            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                            {
+                                uiSpotGridView.Visibility = Visibility.Collapsed;
+                                uiSpotGridMessage.Text = AppResources.NoNearSpotMessage;
+                                uiSpotGridMessage.Visibility = Visibility.Visible;
+                            });
                         }
                     }
-                    else
+                    else  // GPS works bad
                     {
-                        base.ShowMessageDialog(AppResources.BadLoadingSpotMessage);
+                        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            uiSpotGridView.Visibility = Visibility.Collapsed;
+                            uiSpotGridMessage.Text = AppResources.BadLocationServiceMessage;
+                            uiSpotGridMessage.Visibility = Visibility.Visible;
+                        });
                     }
                 }
-                else  // GPS works bad
+                catch (UnauthorizedAccessException)  // User didn't approve location service.
                 {
-                    base.ShowMessageDialog(AppResources.BadLocationServiceMessage);
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
+                }
+                catch
+                {
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = AppResources.BadLoadingSpotMessage;
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
                 }
             }
-            catch (UnauthorizedAccessException)
+            else  // GPS is off
             {
-                base.ShowGeolocatorStatusMessageDialog();
-            }
-            catch (Exception)
-            {
-                base.ShowGeolocatorStatusMessageDialog();
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    uiSpotGridView.Visibility = Visibility.Collapsed;
+                    uiSpotGridMessage.Text = base.GeolocatorStatusMessage();
+                    uiSpotGridMessage.Visibility = Visibility.Visible;
+                });
             }
 
             // Hide progress indicator
             base.SetProgressRing(uiSpotListProgressRing, false);
         }
-
-
         #endregion
     }
 }

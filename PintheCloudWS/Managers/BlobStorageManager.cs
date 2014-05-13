@@ -12,6 +12,7 @@ using PintheCloudWS.Utilities;
 using Windows.System;
 using System.Diagnostics;
 using PintheCloudWS.Helpers;
+using PintheCloudWS.Exceptions;
 
 namespace PintheCloudWS.Managers
 {
@@ -31,9 +32,9 @@ namespace PintheCloudWS.Managers
         /// </summary>
         private string CONTAINER_NAME = "spot-container";
 
-        private CloudStorageAccount storageAccount;
-        private CloudBlobClient blobClient;
-        private CloudBlobContainer container;
+        private CloudStorageAccount StorageAccount;
+        private CloudBlobClient BlobClient;
+        private CloudBlobContainer Container;
         # endregion
 
 
@@ -42,9 +43,9 @@ namespace PintheCloudWS.Managers
         /// </summary>
         public BlobStorageManager()
         {
-            this.storageAccount = CloudStorageAccount.Parse(this.BLOB_CONNECTION);
-            this.blobClient = this.storageAccount.CreateCloudBlobClient();
-            this.container = blobClient.GetContainerReference(this.CONTAINER_NAME);
+            this.StorageAccount = CloudStorageAccount.Parse(this.BLOB_CONNECTION);
+            this.BlobClient = this.StorageAccount.CreateCloudBlobClient();
+            this.Container = this.BlobClient.GetContainerReference(this.CONTAINER_NAME);
         }
 
 
@@ -55,7 +56,7 @@ namespace PintheCloudWS.Managers
         /// <returns>FileObject containing file meta information</returns>
         public async Task<FileObject> GetFileAsync(string id)
         {
-            CloudBlockBlob blockBlob = (CloudBlockBlob)await container.GetBlobReferenceFromServerAsync(id);
+            CloudBlockBlob blockBlob = (CloudBlockBlob)await this.Container.GetBlobReferenceFromServerAsync(id);
             return ConvertToFileObjectHelper.ConvertToFileObject(blockBlob);
         }
 
@@ -96,7 +97,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(id);
 
                 await blockBlob.DownloadToFileAsync(downloadFile);
                 return downloadFile;
@@ -133,7 +134,7 @@ namespace PintheCloudWS.Managers
             try
             {
                 Stream downStream = new MemoryStream();
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(id);
                 await blockBlob.DownloadToStreamAsync(downStream.AsOutputStream());
                 return downStream;
             }
@@ -156,7 +157,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(account + "/" + spotId + "/" + fileName);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(account + "/" + spotId + "/" + fileName);
                 using (Stream s = stream)
                 {
                     await blockBlob.UploadFromStreamAsync(s.AsInputStream());
@@ -179,7 +180,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(id);
                 await blockBlob.DeleteAsync();
             }
             catch
@@ -200,7 +201,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(accountId + "/" + spotId);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(accountId + "/" + spotId);
                 await blockBlob.DeleteAsync();
             }
             catch
@@ -220,7 +221,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(account);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(account);
                 await blockBlob.DeleteAsync();
             }
             catch
@@ -242,7 +243,7 @@ namespace PintheCloudWS.Managers
         {
             try
             {
-                CloudBlockBlob blockBlob = container.GetBlockBlobReference(id);
+                CloudBlockBlob blockBlob = this.Container.GetBlockBlobReference(id);
                 using (Stream s = await uploadfile.OpenStreamForReadAsync())
                 {
                     await blockBlob.UploadFromStreamAsync(s.AsInputStream());
@@ -263,7 +264,7 @@ namespace PintheCloudWS.Managers
 
             do
             {
-                BlobResultSegment blobListSegment = await this.blobClient.ListBlobsSegmentedAsync(prefix, token);
+                BlobResultSegment blobListSegment = await this.BlobClient.ListBlobsSegmentedAsync(prefix, token);
                 list.AddRange(this._GetDataList(blobListSegment.Results));
                 token = blobListSegment.ContinuationToken;
             } while (token != null);

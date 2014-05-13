@@ -60,20 +60,21 @@ namespace PintheCloudWS.Pages
             this.NavigationHelper.OnNavigatedTo(e);
 
             // Check nick name at frist login.
+            if (!App.ApplicationSettings.Contains(Switcher.MAIN_PLATFORM_TYPE_KEY))
+                App.ApplicationSettings[Switcher.MAIN_PLATFORM_TYPE_KEY] = AppResources.OneDrive;
+
+            // Check nick name at frist login.
             if (!App.ApplicationSettings.Contains(StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY))
-            {
                 App.ApplicationSettings[StorageAccount.ACCOUNT_DEFAULT_SPOT_NAME_KEY] = AppResources.AtHere;
-            }
 
             // Check location access consent at frist login.
             if (!App.ApplicationSettings.Contains(StorageAccount.LOCATION_ACCESS_CONSENT_KEY))
-            {
                 App.ApplicationSettings[StorageAccount.LOCATION_ACCESS_CONSENT_KEY] = false;
-            }
 
+            // For Test
+            this.SettingsForPresentation();
 
-            SettingsForPresentation();
-
+            // Do Signin work of each cloud storage.
             if (App.AccountManager.IsSignIn())
             {
                 if (NetworkInterface.GetIsNetworkAvailable())
@@ -99,6 +100,7 @@ namespace PintheCloudWS.Pages
         {
             this.NavigationHelper.OnNavigatedFrom(e);
         }
+
 
         /// <summary>
         /// This Method is for the presentation. It should be Deleted after the presentation

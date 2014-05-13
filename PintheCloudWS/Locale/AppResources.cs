@@ -25,6 +25,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("Dropbox");
             }
         }
+        public static string DeleteFileMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("DeleteFileMessage");
+            }
+        }
         public static string GoogleDrive
         {
             get
@@ -109,11 +116,11 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("NoFileInFolderMessage");
             }
         }
-        public static string Refrshing
+        public static string Refreshing
         {
             get
             {
-                return ResourceLoader.GetString("Refrshing");
+                return ResourceLoader.GetString("Refreshing");
             }
         }
         public static string NoFileInSpotMessage
@@ -130,6 +137,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("OK");
             }
         }
+        public static string Cancel
+        {
+            get
+            {
+                return ResourceLoader.GetString("Cancel");
+            }
+        }
         public static string NoNearSpotMessage
         {
             get
@@ -144,6 +158,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("BadLoadingSpotMessage");
             }
         }
+        public static string BadLoadingFileMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("BadLoadingFileMessage");
+            }
+        }
         public static string BadLocationServiceMessage
         {
             get
@@ -156,13 +177,6 @@ namespace PintheCloudWS.Locale
             get
             {
                 return ResourceLoader.GetString("BadSignInMessage");
-            }
-        }
-        public static string BadSignInCaption
-        {
-            get
-            {
-                return ResourceLoader.GetString("BadSignInCaption");
             }
         }
         public static string InternetUnavailableCaption

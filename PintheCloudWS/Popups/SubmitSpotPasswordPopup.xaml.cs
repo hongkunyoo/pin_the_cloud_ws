@@ -1,6 +1,4 @@
-﻿using PintheCloudWS.Helpers;
-using PintheCloudWS.Pages;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,16 +19,9 @@ namespace PintheCloudWS.Popups
 {
     public sealed partial class SubmitSpotPasswordPopup : UserControl
     {
-        private Popup Popup = null;
-        private string SpotId = null;
-        private string SpotPassword = null;
-
-        public bool result = false;
-
-
-        public SubmitSpotPasswordPopup(Popup popup, string spotId, string spotPassword, double width, double height, double topMargin)
+        public SubmitSpotPasswordPopup()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }
