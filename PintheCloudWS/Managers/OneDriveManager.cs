@@ -79,6 +79,7 @@ namespace PintheCloudWS.Managers
             {
                 tcs.SetResult(false);
             }
+
             return tcs.Task.Result;
         }
 

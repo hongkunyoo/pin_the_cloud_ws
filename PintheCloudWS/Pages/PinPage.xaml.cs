@@ -197,6 +197,7 @@ namespace PintheCloudWS.Pages
         {
             // If it wasn't already signed in, show signin button.
             // Otherwise, load files
+            System.Diagnostics.Debug.WriteLine("NOT HERE?");
             IStorageManager iStorageManager = Switcher.GetCurrentStorage();
             if (!iStorageManager.IsSignIn())  // wasn't signed in.
             {
@@ -207,6 +208,7 @@ namespace PintheCloudWS.Pages
             }
             else  // already signed in.
             {
+                System.Diagnostics.Debug.WriteLine("In HERE!");
                 uiPinFileListGrid.Visibility = Visibility.Visible;
                 uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
 

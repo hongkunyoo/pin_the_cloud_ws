@@ -130,7 +130,6 @@ namespace PintheCloudWS.Helpers
                         DictionaryTree.Remove(key);
                     }
                     DictionaryTree.Add(key, stack);
-
                     ////////////////////////////////////////////
                     // Saving to SQL job
                     ////////////////////////////////////////////

@@ -195,6 +195,10 @@ namespace PintheCloudWS.Pages
 
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            if (!Switcher.GetCurrentStorage().IsSignIn())
+            {
+                Switcher.GetCurrentStorage().SignIn();
+            }
             if (StorageExplorer.GetCurrentTree() != null)
                 this.TreeUp();
         }
