@@ -15,8 +15,7 @@ namespace PintheCloudWS.Helpers
     {
         private static Dictionary<string, FileObject> DictionaryRoot = new Dictionary<string, FileObject>();
         private static Dictionary<string, Stack<FileObject>> DictionaryTree = new Dictionary<string, Stack<FileObject>>();
-        //private static Dictionary<string, string> DictionaryKey = new Dictionary<string, string>();
-        public static string STORAGE_EXPLORER_SYNC = "STORAGE_EXPLORER_SYNC";
+
         private static string SYNC_KEYS = "SYNC_KEYS";
         private static string ROOT_ID = "ROOT_ID";
 
@@ -220,11 +219,10 @@ namespace PintheCloudWS.Helpers
 
         public static List<FileObject> GetFilesFromRootFolder()
         {
-            if (GetCurrentRoot() == null) System.Diagnostics.Debugger.Break();
-            if (GetCurrentRoot().FileList == null) System.Diagnostics.Debugger.Break();
+            if (GetCurrentRoot() == null) return null;
+            if (GetCurrentRoot().FileList == null) return null;
 
             GetCurrentTree().Clear();
-            Stack<FileObject> stack = new Stack<FileObject>();
             GetCurrentTree().Push(GetCurrentRoot());
             return GetCurrentRoot().FileList;
         }
@@ -232,23 +230,17 @@ namespace PintheCloudWS.Helpers
 
         public static List<FileObject> GetTreeForFolder(FileObject folder)
         {
-            if (folder.FileList == null) System.Diagnostics.Debugger.Break();
-            List<FileObject> list = folder.FileList;
-            if (!GetCurrentTree().Contains(folder))
-                GetCurrentTree().Push(folder);
-            if (list == null) System.Diagnostics.Debugger.Break();
-            return list;
+            if (folder == null) return null;
+            if (folder.FileList == null) return null;
+            if (!GetCurrentTree().Contains(folder)) GetCurrentTree().Push(folder);
+            return folder.FileList;
         }
 
 
         public static List<FileObject> TreeUp()
         {
-            if (GetCurrentTree().Count > 1)
-            {
-                GetCurrentTree().Pop();
-                return GetTreeForFolder(GetCurrentTree().First());
-            }
-            return null;
+            if (GetCurrentTree().Count > 1) GetCurrentTree().Pop();
+            return GetTreeForFolder(GetCurrentTree().First());
         }
 
 
@@ -257,29 +249,21 @@ namespace PintheCloudWS.Helpers
             FileObject[] array = GetCurrentTree().Reverse<FileObject>().ToArray<FileObject>();
             string str = String.Empty;
             foreach (FileObject f in array)
-            {
                 str = str + f.Name + "/";
-                System.Diagnostics.Debug.WriteLine(f.Name);
-            }
-
             return str;
         }
 
 
         public static FileObject GetCurrentRoot()
         {
-            if (DictionaryRoot.ContainsKey(Switcher.GetCurrentStorage().GetStorageName()))
-                return DictionaryRoot[Switcher.GetCurrentStorage().GetStorageName()];
-            else
-                return null;
+            if (!DictionaryRoot.ContainsKey(Switcher.GetCurrentStorage().GetStorageName())) return null;
+            return DictionaryRoot[Switcher.GetCurrentStorage().GetStorageName()];
         }
 
         public static Stack<FileObject> GetCurrentTree()
         {
-            if (DictionaryTree.ContainsKey(Switcher.GetCurrentStorage().GetStorageName()))
-                return DictionaryTree[Switcher.GetCurrentStorage().GetStorageName()];
-            else
-                return null;
+            if (!DictionaryTree.ContainsKey(Switcher.GetCurrentStorage().GetStorageName())) return null;
+            return DictionaryTree[Switcher.GetCurrentStorage().GetStorageName()];
         }
     }
 }

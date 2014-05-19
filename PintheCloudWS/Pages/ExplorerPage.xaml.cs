@@ -65,7 +65,7 @@ namespace PintheCloudWS.Pages
 
             // Set Datacontext
             uiPickFileList.DataContext = this.PickFileObjectViewModel;
-            uiPinFileListGridView.DataContext = this.PinFileObjectViewModel;
+            uiPinFileList.DataContext = this.PinFileObjectViewModel;
             uiCloudModeComboBox.DataContext = this.CloudModeViewModel;
             uiCloudModeComboBox.SelectedIndex = Switcher.GetCurrentIndex();
         }
@@ -195,10 +195,6 @@ namespace PintheCloudWS.Pages
 
         private void uiPinFileListUpButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            if (!Switcher.GetCurrentStorage().IsSignIn())
-            {
-                Switcher.GetCurrentStorage().SignIn();
-            }
             if (StorageExplorer.GetCurrentTree() != null)
                 this.TreeUp();
         }
@@ -213,7 +209,7 @@ namespace PintheCloudWS.Pages
                 // Show Loading message and save is login true for pivot moving action while sign in.
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                    uiPinFileList.Visibility = Visibility.Collapsed;
                     uiPinFileMessage.Text = AppResources.DoingSignIn;
                     uiPinFileMessage.Visibility = Visibility.Visible;
 
@@ -278,6 +274,38 @@ namespace PintheCloudWS.Pages
             else
             {
                 base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+            }
+        }
+
+
+
+        // Pin file selection event.
+        private void uiPinFileList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
+        {
+            // Get Selected File Obejct
+            FileObjectViewItem fileObjectViewItem = e.ClickedItem as FileObjectViewItem;
+
+            // If user select folder, go in.
+            // Otherwise, add it to list.
+            if (fileObjectViewItem.ThumnailType.Equals(FileObjectViewModel.FOLDER))  // If folder, get files it the folder
+            {
+                this.SetPinFileListAsync(Switcher.GetCurrentStorage(), AppResources.Loading, fileObjectViewItem);
+            }
+            else  // If file, Do selection
+            {
+                if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_NOT_IMAGE_URI))
+                {
+                    this.PinSelectedFileList.Add(fileObjectViewItem);
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_IMAGE_URI;
+                    this.uiPinAppBarButton.IsEnabled = true;
+                }
+                else if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_IMAGE_URI))
+                {
+                    this.PinSelectedFileList.Remove(fileObjectViewItem);
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
+                    if (this.PinSelectedFileList.Count < 1)
+                        this.uiPinAppBarButton.IsEnabled = false;
+                }
             }
         }
 
@@ -449,7 +477,7 @@ namespace PintheCloudWS.Pages
                 {
                     await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                        uiPinFileList.Visibility = Visibility.Collapsed;
                         uiPinFileMessage.Text = AppResources.InternetUnavailableMessage;
                         uiPinFileMessage.Visibility = Visibility.Visible;
                     });
@@ -465,7 +493,7 @@ namespace PintheCloudWS.Pages
             base.SetProgressRing(uiPinPivotProgressRing, true);
             await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                uiPinFileList.Visibility = Visibility.Collapsed;
                 uiPinFileMessage.Text = message;
                 uiPinFileMessage.Visibility = Visibility.Visible;
             });
@@ -491,7 +519,7 @@ namespace PintheCloudWS.Pages
                     await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
                         this.PinFileObjectViewModel.IsDataLoaded = true;
-                        uiPinFileListGridView.Visibility = Visibility.Visible;
+                        uiPinFileList.Visibility = Visibility.Visible;
                         uiPinFileCurrentPath.Text = StorageExplorer.GetCurrentPath();
                         this.PinFileObjectViewModel.SetItems(this.CurrentFileObjectList, true);
                     });
@@ -518,7 +546,7 @@ namespace PintheCloudWS.Pages
                 {
                     await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                     {
-                        uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                        uiPinFileList.Visibility = Visibility.Collapsed;
                         uiPinFileMessage.Text = AppResources.BadLoadingFileMessage;
                         uiPinFileMessage.Visibility = Visibility.Visible;
                     });
@@ -526,7 +554,7 @@ namespace PintheCloudWS.Pages
             }
             catch
             {
-                uiPinFileListGridView.Visibility = Visibility.Collapsed;
+                uiPinFileList.Visibility = Visibility.Collapsed;
                 uiPinFileMessage.Text = AppResources.BadLoadingFileMessage;
                 uiPinFileMessage.Visibility = Visibility.Visible;
             }

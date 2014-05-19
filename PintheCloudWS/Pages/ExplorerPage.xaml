@@ -99,7 +99,7 @@
         				<TextBlock x:Name="uiPickFileListMessage" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="22" FontFamily="Segoe WP" Foreground="Black" Margin="73,38,0,0"/>
         				<ListView x:Name="uiPickFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiPickFileList_ItemClick">
         					<ListView.Resources>
-        						<DataTemplate x:Key="uiFileListViewItemTemplate">
+        						<DataTemplate x:Key="uiPickFileListViewItemTemplate">
         							<Grid>
         								<Grid Margin="50,0,80,0">
         									<Grid.RowDefinitions>
@@ -131,10 +131,10 @@
         						</DataTemplate>
         					</ListView.Resources>
         					<ListView.ItemTemplate>
-        						<StaticResource ResourceKey="uiFileListViewItemTemplate"/>
+        						<StaticResource ResourceKey="uiPickFileListViewItemTemplate"/>
         					</ListView.ItemTemplate>
         					<ListView.ItemContainerStyle>
-        						<StaticResource ResourceKey="PickFileListViewItemContainerStyle"/>
+        						<StaticResource ResourceKey="FileListViewItemContainerStyle"/>
         					</ListView.ItemContainerStyle>
         				</ListView>
         			</Grid>
@@ -190,55 +190,69 @@
         					<StaticResource ResourceKey="uiCloudModeComboBoxItemTemplate"/>
         				</ComboBox.ItemTemplate>
         			</ComboBox>
-        			<Grid Background="#FFF1F1F2" Opacity="0.8">
-        				<Button x:Name="uiPinFileListUpButton" Foreground="Black" BorderBrush="Transparent" Click="uiPinFileListUpButton_Click" FontSize="22" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CustomButtonStyle}" BorderThickness="0">
-        					<Grid Height="32">
-        						<Grid.ColumnDefinitions>
-        							<ColumnDefinition Width="55"/>
-        							<ColumnDefinition/>
-        						</Grid.ColumnDefinitions>
-        						<Image Source="ms-appx:///Assets/pajeon/pin/png/back.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,8,0,0"/>
-        						<TextBlock x:Name="uiPinFileCurrentPath" FontFamily="Segoe WP Light" Foreground="#FF919FA6" TextTrimming="WordEllipsis" Grid.Column="1" VerticalAlignment="Center" FontSize="18" Margin="18,0,0,0"/>
-        					</Grid>
-        				</Button>
-        			</Grid>
+        			<Button x:Name="uiPinFileListUpButton" Foreground="Black" BorderBrush="Transparent" Click="uiPinFileListUpButton_Click" FontSize="22" HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource CustomButtonStyle}" BorderThickness="0">
+        				<Grid Height="32">
+        					<Grid.ColumnDefinitions>
+        						<ColumnDefinition Width="55"/>
+        						<ColumnDefinition/>
+        					</Grid.ColumnDefinitions>
+        					<Image Source="ms-appx:///Assets/pajeon/pin/png/back.png" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="11,8,0,0"/>
+        					<TextBlock x:Name="uiPinFileCurrentPath" FontFamily="Segoe WP Light" Foreground="#FF919FA6" TextTrimming="WordEllipsis" Grid.Column="1" VerticalAlignment="Center" FontSize="18" Margin="18,0,0,0"/>
+        				</Grid>
+        			</Button>
         		</StackPanel>
         		<Grid Grid.Row="1">
         			<ProgressRing x:Name="uiPinPivotProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200"/>
-
-        			<Grid x:Name="uiPinFileListGrid" Visibility="Collapsed">
-        				<TextBlock x:Name="uiPinFileMessage" TextWrapping="Wrap" Foreground="Black" FontFamily="Segoe WP" FontSize="22" Margin="73,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed"/>
-        				<GridView x:Name="uiPinFileListGridView" Visibility="Collapsed">
-        					<GridView.Resources>
-        						<DataTemplate x:Key="uiFileListGridViewItemTemplate">
-        							<Grid Width="380">
-        								<Grid.ColumnDefinitions>
-        									<ColumnDefinition/>
-        									<ColumnDefinition Width="Auto"/>
-        								</Grid.ColumnDefinitions>
-        								<StackPanel Orientation="Horizontal">
-        									<Image Stretch="None" Source="{Binding ThumnailType}" Margin="9,7,14,0"/>
-        									<TextBlock x:Name="uiFileNameText" Text="{Binding Name}" TextWrapping="Wrap" FontFamily="Segoe WP" FontSize="22" Foreground="#FF404041" Margin="0,22,0,0"/>
-        								</StackPanel>
-        								<StackPanel Orientation="Horizontal" Grid.Column="1" Margin="0,24,0,0">
-        									<TextBlock TextWrapping="Wrap" Text="{Binding Size}" FontFamily="Segoe WP Light" FontSize="18" Foreground="#FF919FA6"/>
-        									<TextBlock TextWrapping="Wrap" Text="{Binding SizeUnit}" FontFamily="Segoe WP Light" Margin="0,0,15,0" FontSize="18" Foreground="#FF919FA6"/>
-        									<Image Stretch="None" Source="{Binding SelectFileImage}" Margin="0"/>
-        								</StackPanel>
-        							</Grid>
-        						</DataTemplate>
-        					</GridView.Resources>
-        					<GridView.ItemContainerStyle>
-        						<StaticResource ResourceKey="FileListGridViewItemContainerStyle"/>
-        					</GridView.ItemContainerStyle>
-        				</GridView>
-        			</Grid>
-        			<StackPanel x:Name="uiPinFileSignInPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Orientation="Horizontal" Margin="73,38,0,0" Visibility="Collapsed">
-        				<TextBlock TextWrapping="Wrap" x:Uid="uiEmptyAccountText" FontFamily="Segoe WP" Foreground="Black" FontSize="22" Margin="0,0,121,0"/>
-        				<Button x:Name="uiPinFileSignInButton" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiPinFileSignInButton_Click" Visibility="Collapsed">
+        			<StackPanel x:Name="uiPinFileSignInPanel" Margin="73,38,0,0" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
+        				<TextBlock TextWrapping="Wrap" x:Uid="uiEmptyAccountText" FontFamily="Segoe WP" Foreground="Black" FontSize="22" Margin="0,0,10,0"/>
+        				<Button x:Name="uiPinFileSignInButton" VerticalAlignment="Stretch" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiPinFileSignInButton_Click" HorizontalAlignment="Stretch">
         					<Image Source="/Assets/pajeon/pin/png/sign_in.png" Stretch="None"/>
         				</Button>
         			</StackPanel>
+
+        			<Grid x:Name="uiPinFileListGrid" Visibility="Collapsed">
+        				<TextBlock x:Name="uiPinFileMessage" TextWrapping="Wrap" Foreground="Black" FontFamily="Segoe WP" FontSize="22" Margin="73,38,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed"/>
+						<ListView x:Name="uiPinFileList" ItemsSource="{Binding Items}" SelectionMode="None" IsItemClickEnabled="True" ItemClick="uiPinFileList_ItemClick">
+        					<ListView.Resources>
+        						<DataTemplate x:Key="uiPinFileListViewItemTemplate">
+        							<Grid>
+        								<Grid Margin="50,0,80,0">
+        									<Grid.RowDefinitions>
+        										<RowDefinition/>
+        										<RowDefinition Height="1"/>
+        									</Grid.RowDefinitions>
+        									<Grid.ColumnDefinitions>
+        										<ColumnDefinition/>
+        										<ColumnDefinition Width="104"/>
+        									</Grid.ColumnDefinitions>
+        									<StackPanel Orientation="Horizontal">
+        										<Image Source="{Binding ThumnailType, Converter={StaticResource StringToThumnailUriConverter}}" Stretch="None" Margin="9,7,14,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        										<StackPanel Margin="0,22,0,0">
+        											<TextBlock x:Name="uiFileName" Text="{Binding Name}" Margin="0,0,0,14" Foreground="#FF404041" FontSize="22" FontFamily="Segoe WP" TextTrimming="CharacterEllipsis"/>
+        											<StackPanel Orientation="Horizontal">
+        												<TextBlock x:Name="uiSize" Text="{Binding Size}" TextWrapping="Wrap" FontSize="18" Foreground="#FF919FA6" />
+        												<TextBlock x:Name="uiSizeUnit" TextWrapping="Wrap" Text="{Binding SizeUnit}" FontSize="18" Foreground="#FF919FA6"/>
+        											</StackPanel>
+        										</StackPanel>
+        									</StackPanel>
+        									<Grid Grid.Column="1">
+        										<Button x:Name="uiFileDownloadButton" IsEnabled="{Binding SelectFileImagePress}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}">
+        											<Image Source="{Binding SelectFileImage}" Stretch="None"/>
+        										</Button>
+        									</Grid>
+        									<Grid Grid.ColumnSpan="2" Grid.Row="1" Background="#FFA6B6BE"/>
+        								</Grid>
+        							</Grid>
+        						</DataTemplate>
+        					</ListView.Resources>
+        					<ListView.ItemTemplate>
+        						<StaticResource ResourceKey="uiPinFileListViewItemTemplate"/>
+        					</ListView.ItemTemplate>
+        					<ListView.ItemContainerStyle>
+        						<StaticResource ResourceKey="FileListViewItemContainerStyle"/>
+        					</ListView.ItemContainerStyle>
+        				</ListView>
+        			</Grid>
         		</Grid>
 
         	</Grid>

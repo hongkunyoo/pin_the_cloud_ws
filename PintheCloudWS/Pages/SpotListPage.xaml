@@ -40,14 +40,14 @@
 									</Grid.RowDefinitions>
 									<StackPanel Margin="0,0,0,38">
 										<TextBlock x:Uid="uiSpotNameText" TextWrapping="Wrap" Foreground="#FF404041" FontSize="22" Padding="0,0,0,14" Margin="0,0,0,14"/>
-										<TextBox x:Name="uiSpotNameTextBox" TextWrapping="Wrap" Foreground="#FF6F7A81" Background="#FFE6E7E8" FontFamily="Segoe WP Light" FontSize="25" Height="54" Style="{StaticResource CustomTextBoxStyle}"/>
+										<TextBox x:Name="uiSpotNameTextBox" TextWrapping="Wrap" Foreground="#FF6F7A81" Background="#FFE6E7E8" FontFamily="Segoe WP Light" FontSize="25" Style="{StaticResource CustomTextBoxStyle}" MaxLength="20" VerticalAlignment="Center"/>
 									</StackPanel>
 									<StackPanel Grid.Row="1" Margin="0,0,0,38">
 										<Grid Margin="0,0,0,14">
 											<TextBlock x:Uid="uiPrivateModeText" TextWrapping="Wrap" Foreground="#FF404041" FontSize="22" HorizontalAlignment="Left"/>
 											<ToggleSwitch x:Name="uiPrivateModeToggleSwitchButton" Header="ToggleSwitch" HorizontalAlignment="Right" VerticalAlignment="Stretch" Toggled="uiPrivateModeToggleSwitchButton_Toggled" Style="{StaticResource CustomToggleSwitchStyle}" Height="29" Width="59" MinWidth="59"/>
 										</Grid>
-										<TextBox x:Name="uiPrivateModePasswordTextBox" TextWrapping="Wrap" Foreground="#FF6F7A81" Background="#FFE6E7E8" FontFamily="Segoe WP Light" FontSize="25" Height="54" Style="{StaticResource CustomTextBoxStyle}" Visibility="Collapsed"/>
+										<TextBox x:Name="uiPrivateModePasswordTextBox" TextWrapping="Wrap" Foreground="#FF6F7A81" Background="#FFE6E7E8" FontFamily="Segoe WP Light" FontSize="25" Style="{StaticResource CustomTextBoxStyle}" Visibility="Collapsed" MaxLength="10"/>
 									</StackPanel>
 									<Button x:Name="uiMakeSpotButton" HorizontalAlignment="Center" Style="{StaticResource ImageButtonPressSmallStyle}" Click="uiMakeSpotButton_Click" Grid.Row="2" VerticalAlignment="Stretch">
 										<Image Source="ms-appx:///Assets/pajeon/flyout/png/make.png" Stretch="None"/>

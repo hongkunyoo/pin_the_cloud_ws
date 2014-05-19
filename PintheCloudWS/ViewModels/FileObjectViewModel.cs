@@ -14,8 +14,8 @@ namespace PintheCloudWS.ViewModels
     public class FileObjectViewModel : INotifyPropertyChanged
     {
         // Instances
-        public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox.png";
-        public const string CHECK_IMAGE_URI = "/Assets/pajeon/pin/png/checkbox_p.png";
+        public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/pick/png/checkbox.png";
+        public const string CHECK_IMAGE_URI = "/Assets/pajeon/pick/png/checkbox_p.png";
 
         public const string DOWNLOAD_IMAGE_URI = "/Assets/pajeon/pick/png/download.png";
 
