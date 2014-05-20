@@ -21,6 +21,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // 기본 페이지 항목 템플릿에 대한 설명은 http://go.microsoft.com/fwlink/?LinkId=234237에 나와 있습니다.
@@ -32,7 +33,8 @@ namespace PintheCloudWS.Pages
     /// </summary>
     public sealed partial class ExplorerPage : PtcPage
     {
-        //private const string SELECTED_EXPLORER_INDEX_KEY = "SELECTED_EXPLORER_INDEX_KEY";
+        private const string EDIT_IMAGE_URI = "ms-appx:/Assets/pajeon/pick/png/pick_edit.png";
+        private const string VIEW_IMAGE_URI = "ms-appx:/Assets/pajeon/pick/png/pick_view.png";
 
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
@@ -124,6 +126,7 @@ namespace PintheCloudWS.Pages
                     uiPickPivotGrid.Visibility = Visibility.Visible;
                     uiPinPivotGrid.Visibility = Visibility.Collapsed;
                     uiPinAppBarButton.Visibility = Visibility.Collapsed;
+
                     this.SetPickPivot(AppResources.Loading);
                     break;
 
@@ -136,7 +139,12 @@ namespace PintheCloudWS.Pages
                     uiPickDeleteAppBarButton.Visibility = Visibility.Collapsed;
                     uiPinAppBarButton.Visibility = Visibility.Visible;
 
-                    // TODO Wait signin and change cloud mode combobox name
+                    // Wait signin and change cloud mode combobox name
+                    using (var itr = StorageHelper.GetStorageEnumerator())
+                    {
+                        while (itr.MoveNext())
+                            this.SetCloudModeComboBox(itr.Current);
+                    }
 
                     this.SetPinPivot(AppResources.Loading);
                     break;
@@ -163,16 +171,97 @@ namespace PintheCloudWS.Pages
         }
 
 
+        private void uiPickFileListEditViewButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // Change edit view mode
+            BitmapImage currentEditViewModeBitmapImage = (BitmapImage)uiPickFileListEditViewButtonImage.Source;
+            string currentEditViewMode = currentEditViewModeBitmapImage.UriSource.ToString();
+            if (currentEditViewMode.Equals(VIEW_IMAGE_URI))  // To View mode
+            {
+                // Change mode image and remove app bar buttons.
+                if (this.PickSelectedFileList.Count > 0)
+                {
+                    this.PickSelectedFileList.Clear();
+                    uiPickDeleteAppBarButton.IsEnabled = false;
+                }
+                uiPickDeleteAppBarButton.Visibility = Visibility.Collapsed;
+                uiPickFileListEditViewButtonImage.Source = new BitmapImage(new Uri(EDIT_IMAGE_URI));
+
+                // Change select check image of each file object view item.
+                foreach (FileObjectViewItem fileObjectViewItem in this.PickFileObjectViewModel.Items)
+                {
+                    if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_IMAGE_URI)
+                        || fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_NOT_IMAGE_URI))
+                    {
+                        fileObjectViewItem.SelectFileImage = FileObjectViewModel.DOWNLOAD_IMAGE_URI;
+                        fileObjectViewItem.SelectFileImagePress = true;
+                    }
+                }
+            }
+
+            else if (currentEditViewMode.Equals(EDIT_IMAGE_URI))  // To Edit mode
+            {
+                // Change mode image and remove app bar buttons.
+                uiPickDeleteAppBarButton.Visibility = Visibility.Visible;
+                uiPickFileListEditViewButtonImage.Source = new BitmapImage(new Uri(VIEW_IMAGE_URI));
+
+                // Change select check image of each file object view item.
+                foreach (FileObjectViewItem fileObjectViewItem in this.PickFileObjectViewModel.Items)
+                {
+                    if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.DOWNLOAD_IMAGE_URI))
+                    {
+                        fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
+                        fileObjectViewItem.SelectFileImagePress = false;
+                    }
+                }
+            }
+        }
+
+
         private void uiPickFileList_ItemClick(object sender, Windows.UI.Xaml.Controls.ItemClickEventArgs e)
         {
             // Get Selected File Obejct
             FileObjectViewItem fileObjectViewItem = e.ClickedItem as FileObjectViewItem;
 
-            // Launch files to other reader app.
-            if (NetworkInterface.GetIsNetworkAvailable())
-                this.LaunchFileAsync(fileObjectViewItem);
-            else
-                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+
+            // If it is view mode, click is preview.
+            // If it is edit mode, click is selection.
+            BitmapImage currentEditViewModeBitmapImage = (BitmapImage)uiPickFileListEditViewButtonImage.Source;
+            string currentEditViewMode = currentEditViewModeBitmapImage.UriSource.ToString();
+            if (currentEditViewMode.Equals(EDIT_IMAGE_URI))  // View mode
+            {
+                if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.DOWNLOAD_IMAGE_URI))
+                {
+                    // Launch files to other reader app.
+                    if (NetworkInterface.GetIsNetworkAvailable())
+                        this.LaunchFileAsync(fileObjectViewItem);
+                    else
+                        base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+                }
+            }
+            else if (currentEditViewMode.Equals(VIEW_IMAGE_URI))  // Edit mode
+            {
+                if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_NOT_IMAGE_URI))
+                {
+                    this.PickSelectedFileList.Add(fileObjectViewItem);
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_IMAGE_URI;
+                    uiPickDeleteAppBarButton.IsEnabled = true;
+                }
+
+                else if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_IMAGE_URI))
+                {
+                    this.PickSelectedFileList.Remove(fileObjectViewItem);
+                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
+                    if (this.PickSelectedFileList.Count < 1)
+                        uiPickDeleteAppBarButton.IsEnabled = false;
+                }
+            }
+        }
+
+
+        private void uiFileDownloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
         }
 
 
@@ -247,7 +336,7 @@ namespace PintheCloudWS.Pages
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
-                base.ShowMessageDialog(AppResources.DeleteFileMessage, OK_CANCEL_MODE, () => 
+                base.ShowMessageDialog(AppResources.DeleteFileMessage, OK_CANCEL_MODE, () =>
                 {
                     uiPickDeleteAppBarButton.IsEnabled = false;
                     foreach (FileObjectViewItem fileObjectViewItem in this.PickSelectedFileList)
@@ -360,6 +449,36 @@ namespace PintheCloudWS.Pages
                         // Set List Edit View Button
                         if (this.CurrentSpotViewItem.AccountId.Equals(App.AccountManager.GetPtcId()))
                             uiPickFileListEditViewButton.Visibility = Visibility.Visible;
+
+                        // Change edit view mode
+                        BitmapImage currentEditViewModeBitmapImage = (BitmapImage)uiPickFileListEditViewButtonImage.Source;
+                        string currentEditViewMode = currentEditViewModeBitmapImage.UriSource.ToString();
+                        if (currentEditViewMode.Equals(EDIT_IMAGE_URI))  // To View mode
+                        {
+                            // Change select check image of each file object view item.
+                            foreach (FileObjectViewItem fileObjectViewItem in this.PickFileObjectViewModel.Items)
+                            {
+                                if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_IMAGE_URI)
+                                    || fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.CHECK_NOT_IMAGE_URI))
+                                {
+                                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.DOWNLOAD_IMAGE_URI;
+                                    fileObjectViewItem.SelectFileImagePress = true;
+                                }
+                            }
+                        }
+
+                        else if (currentEditViewMode.Equals(VIEW_IMAGE_URI))  // To Edit mode
+                        {
+                            // Change select check image of each file object view item.
+                            foreach (FileObjectViewItem fileObjectViewItem in this.PickFileObjectViewModel.Items)
+                            {
+                                if (fileObjectViewItem.SelectFileImage.Equals(FileObjectViewModel.DOWNLOAD_IMAGE_URI))
+                                {
+                                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;
+                                    fileObjectViewItem.SelectFileImagePress = false;
+                                }
+                            }
+                        }
                     });
                 }
                 else
@@ -443,7 +562,7 @@ namespace PintheCloudWS.Pages
             }
             catch
             {
-                    fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
             }
 
             // Hide Progress Indicator
@@ -628,6 +747,28 @@ namespace PintheCloudWS.Pages
 
             // Hide progress message
             base.SetProgressRing(uiPinPivotProgressRing, false);
+        }
+
+
+        private async void SetCloudModeComboBox(IStorageManager iStorageManager)
+        {
+            int platformIndex = Switcher.GetStorageIndex(iStorageManager.GetStorageName());
+            try
+            {
+                if (!iStorageManager.IsSignIn()) throw new Exception();
+                await TaskHelper.WaitSignInTask(iStorageManager.GetStorageName());
+                StorageAccount storageAccount = await iStorageManager.GetStorageAccountAsync();
+                if (storageAccount == null) throw new Exception();
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    this.CloudModeViewModel.Items[platformIndex].AccountName = storageAccount.UserName;
+                });
+            }
+            catch
+            {
+                // It haven't signed in
+                this.CloudModeViewModel.Items[platformIndex].AccountName = AppResources.Empty;
+            }
         }
 
         #endregion

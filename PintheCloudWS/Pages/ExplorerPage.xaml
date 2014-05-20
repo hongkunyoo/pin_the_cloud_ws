@@ -91,8 +91,8 @@
         			<ProgressRing x:Name="uiPickPivotFileListProgressRing" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="200" Grid.Row="1"/>
         			<Grid>
         				<TextBlock x:Uid="uiFileText" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="62,65,0,0" FontFamily="Segoe WP" FontSize="45" Foreground="#FF404041"/>
-        				<Button x:Name="uiPickFileListEditViewButton" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0" Visibility="Collapsed">
-        					<Image Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
+        				<Button x:Name="uiPickFileListEditViewButton" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,73,90,0" Visibility="Collapsed" Click="uiPickFileListEditViewButton_Click">
+        					<Image x:Name="uiPickFileListEditViewButtonImage" Source="/Assets/pajeon/pick/png/pick_edit.png" Stretch="None"/>
         				</Button>
         			</Grid>
         			<Grid Grid.Row="1">
@@ -121,7 +121,7 @@
         										</StackPanel>
         									</StackPanel>
         									<Grid Grid.Column="1">
-        										<Button x:Name="uiFileDownloadButton" IsEnabled="{Binding SelectFileImagePress}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}">
+        										<Button x:Name="uiFileDownloadButton" IsEnabled="{Binding SelectFileImagePress}" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}" Click="uiFileDownloadButton_Click">
         											<Image Source="{Binding SelectFileImage}" Stretch="None"/>
         										</Button>
         									</Grid>
