@@ -122,7 +122,7 @@
         									</StackPanel>
         									<Grid Grid.Column="1">
         										<Button x:Name="uiFileDownloadButton" IsEnabled="{Binding SelectFileImagePress}" HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}" Click="uiFileDownloadButton_Click">
-        											<Image Source="{Binding SelectFileImage}" Stretch="None"/>
+        											<Image Source="{Binding SelectFileImage, Mode=TwoWay}" Stretch="None"/>
         										</Button>
         									</Grid>
         									<Grid Grid.ColumnSpan="2" Grid.Row="1" Background="#FFA6B6BE"/>
@@ -236,9 +236,7 @@
         										</StackPanel>
         									</StackPanel>
         									<Grid Grid.Column="1">
-        										<Button x:Name="uiFileDownloadButton" IsEnabled="{Binding SelectFileImagePress}" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource ImageButtonPressSmallStyle}" Margin="0,15,0,0" Tag="{Binding Id}">
-        											<Image Source="{Binding SelectFileImage}" Stretch="None"/>
-        										</Button>
+        										<Image Source="{Binding SelectFileImage}" Stretch="None" Margin="0,15,0,0"/>
         									</Grid>
         									<Grid Grid.ColumnSpan="2" Grid.Row="1" Background="#FFA6B6BE"/>
         								</Grid>

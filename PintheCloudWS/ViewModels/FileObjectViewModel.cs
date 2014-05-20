@@ -14,18 +14,18 @@ namespace PintheCloudWS.ViewModels
     public class FileObjectViewModel : INotifyPropertyChanged
     {
         // Instances
-        public const string CHECK_NOT_IMAGE_URI = "/Assets/pajeon/pick/png/checkbox.png";
-        public const string CHECK_IMAGE_URI = "/Assets/pajeon/pick/png/checkbox_p.png";
+        public const string CHECK_NOT_IMAGE_URI = "ms-appx:/Assets/pajeon/pick/png/checkbox.png";
+        public const string CHECK_IMAGE_URI = "ms-appx:/Assets/pajeon/pick/png/checkbox_p.png";
 
-        public const string DOWNLOAD_IMAGE_URI = "/Assets/pajeon/pick/png/download.png";
+        public const string DOWNLOAD_IMAGE_URI = "ms-appx:/Assets/pajeon/pick/png/download.png";
 
-        public const string TRANSPARENT_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_transparent.png";
+        public const string TRANSPARENT_IMAGE_URI = "ms-appx:/Assets/pajeon/spot_list/png/general_transparent.png";
 
-        public const string DELETE_IMAGE_URI = "/Assets/pajeon/at_here/png/upload_list_delete.png";
-        public const string IS_PRIVATE_IMAGE_URI = "/Assets/pajeon/spot_list/png/spotlist_lock.png";
+        public const string DELETE_IMAGE_URI = "ms-appx:/Assets/pajeon/at_here/png/upload_list_delete.png";
+        public const string IS_PRIVATE_IMAGE_URI = "ms-appx:/Assets/pajeon/spot_list/png/spotlist_lock.png";
 
-        public const string ING_IMAGE_URI = "/Assets/pajeon/at_here/130319_png/loading01.png";
-        public const string FAIL_IMAGE_URI = "/Assets/pajeon/spot_list/png/general_fail.png";
+        public const string ING_IMAGE_URI = "ms-appx:/Assets/pajeon/pin/png/loading01.png";
+        public const string FAIL_IMAGE_URI = "ms-appx:/Assets/pajeon/spot_list/png/general_fail.png";
 
         public const string FOLDER = "FOLDER";
 

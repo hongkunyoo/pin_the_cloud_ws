@@ -223,7 +223,6 @@ namespace PintheCloudWS.Pages
             // Get Selected File Obejct
             FileObjectViewItem fileObjectViewItem = e.ClickedItem as FileObjectViewItem;
 
-
             // If it is view mode, click is preview.
             // If it is edit mode, click is selection.
             BitmapImage currentEditViewModeBitmapImage = (BitmapImage)uiPickFileListEditViewButtonImage.Source;
@@ -261,7 +260,51 @@ namespace PintheCloudWS.Pages
 
         private void uiFileDownloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            // TODO: 여기에 구현된 이벤트 처리기를 추가하십시오.
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                IStorageManager storageManager = Switcher.GetCurrentStorage();
+                if (storageManager.IsSignIn())
+                {
+                    string fileId = ((Button)sender).Tag.ToString();
+                    foreach(FileObjectViewItem fileObjectViewItem in this.PickFileObjectViewModel.Items)
+                    {
+                        if (fileObjectViewItem.Id == fileId)
+                        {
+                            this.PickFileAsync(storageManager, fileObjectViewItem);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    //MessageBoxResult result = MessageBox.Show(AppResources.NoCurrentCloudSignInMessage, storageManager.GetStorageName(), MessageBoxButton.OKCancel);
+                    //if (result == MessageBoxResult.OK)
+                    //{
+                    //    // Show Loading message and save is login true for pivot moving action while sign in.
+                    //    base.SetListUnableAndShowMessage(uiPickFileList, uiPickFileListMessage, AppResources.DoingSignIn);
+
+                    //    try
+                    //    {
+                    //        if (!storageManager.IsSigningIn())
+                    //            TaskHelper.AddSignInTask(storageManager.GetStorageName(), storageManager.SignIn());
+                    //        await TaskHelper.WaitSignInTask(storageManager.GetStorageName());
+                    //    }
+                    //    catch
+                    //    {
+                    //        base.Dispatcher.BeginInvoke(() =>
+                    //        {
+                    //            uiPickFileList.Visibility = Visibility.Visible;
+                    //            uiPickFileListMessage.Visibility = Visibility.Collapsed;
+                    //            MessageBox.Show(AppResources.BadSignInMessage, AppResources.BadSignInCaption, MessageBoxButton.OK);
+                    //        });
+                    //    }
+                    //}
+                }
+            }
+            else
+            {
+                base.ShowMessageDialog(AppResources.InternetUnavailableMessage, OK_MODE);
+            }
         }
 
 
@@ -522,6 +565,48 @@ namespace PintheCloudWS.Pages
                 await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     fileObjectViewItem.SelectFileImagePress = true;
+                });
+            }
+            catch
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.FAIL_IMAGE_URI;
+            }
+
+            // Hide Progress Indicator
+            base.SetProgressRing(uiPickPivotFileListProgressRing, false);
+        }
+
+
+        private async void PickFileAsync(IStorageManager storageManager, FileObjectViewItem fileObjectViewItem)
+        {
+            // Show Downloading message
+            base.SetProgressRing(uiPickPivotFileListProgressRing, true);
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                fileObjectViewItem.SelectFileImage = FileObjectViewModel.ING_IMAGE_URI;
+                fileObjectViewItem.SelectFileImagePress = false;
+            });
+
+            try
+            {
+                // Download
+                await TaskHelper.WaitSignInTask(storageManager.GetStorageName());
+                await this.CurrentSpot.DownloadFileObjectAsync(storageManager, this.CurrentSpot.GetFileObject(fileObjectViewItem.Id));
+                await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+               { 
+                    this.PinFileObjectViewModel.IsDataLoaded = false;
+
+                    BitmapImage currentEditViewModeBitmapImage = (BitmapImage)uiPickFileListEditViewButtonImage.Source;
+                    string currentEditViewMode = currentEditViewModeBitmapImage.UriSource.ToString();
+                    if (currentEditViewMode.Equals(EDIT_IMAGE_URI))  // View Mode
+                    {
+                        fileObjectViewItem.SelectFileImage = FileObjectViewModel.DOWNLOAD_IMAGE_URI;
+                        fileObjectViewItem.SelectFileImagePress = true;
+                    }
+                    else if (currentEditViewMode.Equals(VIEW_IMAGE_URI))  // Edit Mode
+                    {
+                        fileObjectViewItem.SelectFileImage = FileObjectViewModel.CHECK_NOT_IMAGE_URI;           
+                    }
                 });
             }
             catch
