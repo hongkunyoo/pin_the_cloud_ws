@@ -277,28 +277,35 @@ namespace PintheCloudWS.Pages
                 }
                 else
                 {
-                    //MessageBoxResult result = MessageBox.Show(AppResources.NoCurrentCloudSignInMessage, storageManager.GetStorageName(), MessageBoxButton.OKCancel);
-                    //if (result == MessageBoxResult.OK)
-                    //{
-                    //    // Show Loading message and save is login true for pivot moving action while sign in.
-                    //    base.SetListUnableAndShowMessage(uiPickFileList, uiPickFileListMessage, AppResources.DoingSignIn);
+                    base.ShowMessageDialog(AppResources.NoCurrentCloudSignInMessage, OK_CANCEL_MODE, async () =>
+                    {
+                        // Show Loading message and save is login true for pivot moving action while sign in.
+                        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            uiPickFileList.Visibility = Visibility.Collapsed;
+                            uiPickFileListMessage.Text = AppResources.DoingSignIn;
+                            uiPickFileListMessage.Visibility = Visibility.Visible;
+                        });
+                        base.SetProgressRing(uiPickPivotFileListProgressRing, true);
 
-                    //    try
-                    //    {
-                    //        if (!storageManager.IsSigningIn())
-                    //            TaskHelper.AddSignInTask(storageManager.GetStorageName(), storageManager.SignIn());
-                    //        await TaskHelper.WaitSignInTask(storageManager.GetStorageName());
-                    //    }
-                    //    catch
-                    //    {
-                    //        base.Dispatcher.BeginInvoke(() =>
-                    //        {
-                    //            uiPickFileList.Visibility = Visibility.Visible;
-                    //            uiPickFileListMessage.Visibility = Visibility.Collapsed;
-                    //            MessageBox.Show(AppResources.BadSignInMessage, AppResources.BadSignInCaption, MessageBoxButton.OK);
-                    //        });
-                    //    }
-                    //}
+                        try
+                        {
+                            if (!storageManager.IsSigningIn())
+                                TaskHelper.AddSignInTask(storageManager.GetStorageName(), storageManager.SignIn());
+                            await TaskHelper.WaitSignInTask(storageManager.GetStorageName());
+                        }
+                        catch
+                        {
+                            base.ShowMessageDialog(AppResources.BadSignInMessage, OK_MODE);
+                        }
+
+                        await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                        {
+                            uiPickFileList.Visibility = Visibility.Visible;
+                            uiPickFileListMessage.Visibility = Visibility.Collapsed;
+                        });
+                        base.SetProgressRing(uiPickPivotFileListProgressRing, false);
+                    });
                 }
             }
             else
@@ -348,12 +355,12 @@ namespace PintheCloudWS.Pages
                     uiPinFileListGrid.Visibility = Visibility.Visible;
                     uiPinFileSignInPanel.Visibility = Visibility.Collapsed;
                 });
+                base.SetProgressRing(uiPinPivotProgressRing, true);
 
                 try
                 {
                     // Sign in and await that task.
                     // If sign in success, set list.
-                    base.SetProgressRing(uiPinPivotProgressRing, true);
                     IStorageManager iStorageManager = Switcher.GetCurrentStorage();
                     if (!iStorageManager.IsSigningIn())
                         TaskHelper.AddSignInTask(iStorageManager.GetStorageName(), iStorageManager.SignIn());

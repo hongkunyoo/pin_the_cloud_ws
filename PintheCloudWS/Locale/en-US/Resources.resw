@@ -180,6 +180,9 @@
   <data name="MB" xml:space="preserve">
     <value>MB</value>
   </data>
+  <data name="NoCurrentCloudSignInMessage" xml:space="preserve">
+    <value>Current cloud haven't been signed in. Please sign in.</value>
+  </data>
   <data name="NoFileInFolderMessage" xml:space="preserve">
     <value>There is no files in this folder.</value>
   </data>

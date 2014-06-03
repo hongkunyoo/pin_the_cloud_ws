@@ -158,6 +158,13 @@ namespace PintheCloudWS.Locale
                 return ResourceLoader.GetString("NoNearSpotMessage");
             }
         }
+        public static string NoCurrentCloudSignInMessage
+        {
+            get
+            {
+                return ResourceLoader.GetString("NoCurrentCloudSignInMessage");
+            }
+        }
         public static string BadLoadingSpotMessage
         {
             get
